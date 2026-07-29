@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Karteikarten">
+<meta name="theme-color" content="#F2E9D8">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>Karteikarten — Deutsch ⇄ Română</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --paper:#F2E9D8; --paper-dark:#E7DAC0; --ink:#242A31; --ink-soft:#57606b;
+    --red:#B23A2E; --green:#3F7D53; --gold:#C99A2E; --line:#c9bba0;
+    --der:#2C5F8A; --die:#B23A6A; --das:#3F7D53;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html, body{ height:100%; overscroll-behavior-y:contain; }
+  body{
+    margin:0;
+    height:100dvh;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(255,255,255,0.35), transparent 40%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 26px),
+      var(--paper);
+    color:var(--ink); font-family:'Literata', serif;
+    display:flex; flex-direction:column;
+    padding-top:calc(var(--safe-top) + 10px);
+    overflow:hidden;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
+  }
+  .brand{ font-family:'Special Elite', monospace; font-size:1.15rem; line-height:1.1; }
+  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.56rem; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
+  .top-right{ display:flex; align-items:center; gap:10px; }
+  .stats{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
+  .stats b{ color:var(--ink); font-size:0.85rem; }
+  .gear-btn{
+    width:40px; height:40px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper);
+    font-size:1.15rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .gear-btn:active{ background:var(--paper-dark); }
+
+  /* ---------- main scroll area ---------- */
+  .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; }
+
+  .card{
+    position:relative; background:#fbf7ee; border:1px solid var(--line); border-radius:14px;
+    box-shadow: 0 14px 30px rgba(36,42,49,0.16), 0 2px 6px rgba(36,42,49,0.1);
+    padding:22px 18px 18px; flex:1; display:flex; flex-direction:column; min-height:0;
+  }
+  .card::before{
+    content:""; position:absolute; top:0; left:20px; width:30px; height:12px;
+    background:rgba(201,154,46,0.35); border:1px solid rgba(201,154,46,0.5); transform:rotate(-2deg);
+  }
+  .tag-row{ display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono', monospace;
+    font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; }
+  .tag{ border:1px solid var(--line); border-radius:20px; padding:3px 10px; }
+  .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
+  .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:8px; }
+  .prompt-word{ font-size:clamp(1.5rem, 7vw, 2rem); font-weight:700; line-height:1.2; margin-bottom:20px; }
+  .art{ font-weight:600; }
+  .art-der{color:var(--der);} .art-die{color:var(--die);} .art-das{color:var(--das);}
+
+  .options{ display:flex; flex-direction:column; gap:10px; margin-top:auto; }
+  .opt{
+    text-align:left; font-family:'Literata', serif; font-size:1rem; background:var(--paper);
+    border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
+    display:flex; gap:10px; align-items:flex-start; min-height:52px;
+    transition:background 0.12s ease, transform 0.06s ease;
+  }
+  .opt .letter{ font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink-soft); flex-shrink:0; }
+  .opt:active:not(:disabled){ background:var(--paper-dark); transform:scale(0.98); }
+  .opt:disabled{ cursor:default; }
+  .opt.correct{ background:rgba(63,125,83,0.18); border-color:var(--green); }
+  .opt.wrong{ background:rgba(178,58,46,0.16); border-color:var(--red); }
+
+  .stamp{
+    position:absolute; top:38%; right:16px; font-family:'Special Elite', monospace; font-size:1.15rem;
+    padding:6px 14px; border:3px solid; border-radius:6px; transform:rotate(-12deg) scale(0.7); opacity:0;
+    pointer-events:none; letter-spacing:1.5px; transition:transform 0.26s cubic-bezier(.36,1.4,.4,1), opacity 0.2s ease;
+    background:rgba(251,247,238,0.9);
+  }
+  .stamp.show{ opacity:0.92; transform:rotate(-12deg) scale(1); }
+  .stamp.ok{ color:var(--green); border-color:var(--green); }
+  .stamp.no{ color:var(--red); border-color:var(--red); }
+
+  .warning{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--red); text-align:center; margin:auto; padding:0 10px; }
+
+  /* ---------- bottom action bar (sticky) ---------- */
+  .bottombar{
+    flex-shrink:0; padding:10px 16px calc(12px + var(--safe-bottom));
+    background:linear-gradient(to top, var(--paper) 60%, transparent);
+  }
+  .progress-track{ height:4px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:10px; }
+  .progress-fill{ height:100%; background:var(--ink); width:0%; transition:width 0.25s ease; }
+  .next-btn{
+    width:100%; font-family:'IBM Plex Mono', monospace; font-size:0.9rem; letter-spacing:1px;
+    background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:15px 18px;
+    min-height:52px; opacity:0; pointer-events:none; transition:opacity 0.15s ease;
+  }
+  .next-btn.show{ opacity:1; pointer-events:auto; }
+  .next-btn:active{ background:#3a4149; }
+
+  .end-screen{ text-align:center; margin:auto; padding:10px; }
+  .end-screen .stamp-final{
+    display:inline-block; font-family:'Special Elite', monospace; font-size:1.15rem;
+    border:3px solid var(--ink); border-radius:8px; padding:8px 20px; transform:rotate(-3deg); margin-bottom:18px; letter-spacing:1.5px;
+  }
+  .score-big{ font-family:'IBM Plex Mono', monospace; font-size:2.4rem; font-weight:600; margin-bottom:4px; }
+  .score-sub{ color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:0.78rem; margin-bottom:22px; }
+  .restart-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:0.85rem; letter-spacing:1px; background:var(--ink);
+    color:var(--paper); border:none; border-radius:10px; padding:14px 24px; min-height:52px; width:100%; max-width:280px;
+  }
+  .restart-btn:active{ background:#3a4149; }
+
+  /* ---------- settings bottom sheet ---------- */
+  .sheet-overlay{
+    position:fixed; inset:0; background:rgba(36,42,49,0.45); z-index:50;
+    opacity:0; pointer-events:none; transition:opacity 0.2s ease;
+  }
+  .sheet-overlay.show{ opacity:1; pointer-events:auto; }
+  .sheet{
+    position:fixed; left:0; right:0; bottom:0; z-index:51;
+    background:var(--paper); border-radius:20px 20px 0 0;
+    box-shadow:0 -8px 30px rgba(0,0,0,0.25);
+    padding:10px 18px calc(20px + var(--safe-bottom));
+    max-height:78vh; overflow-y:auto;
+    transform:translateY(100%); transition:transform 0.25s cubic-bezier(.32,.72,0,1);
+  }
+  .sheet.show{ transform:translateY(0); }
+  .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
+  .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
+  .sheet-section{ margin-bottom:20px; }
+  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:10px; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-size:0.82rem; border:1.5px solid var(--ink); border-radius:20px;
+    padding:9px 16px; background:var(--paper); user-select:none; min-height:40px; display:flex; align-items:center;
+  }
+  .chip.active{ background:var(--ink); color:var(--paper); }
+  .chip.disabled{ opacity:0.4; }
+  .btn-row{ display:flex; flex-direction:column; gap:8px; }
+  .btn-block{
+    font-family:'IBM Plex Mono', monospace; font-size:0.8rem; background:var(--paper); text-align:left;
+    border:1.5px solid var(--ink-soft); color:var(--ink); border-radius:10px; padding:13px 14px; min-height:48px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .btn-block:active{ background:var(--paper-dark); }
+  .btn-block:disabled{ opacity:0.4; }
+  .file-input{ display:none; }
+  .legend{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
+  .legend span.art{ font-weight:600; margin-right:3px; }
+  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft); margin-top:8px; }
+  .upload-status.ok{ color:var(--green); }
+  .upload-status.err{ color:var(--red); }
+  .sheet-close{
+    width:100%; font-family:'IBM Plex Mono', monospace; font-size:0.85rem; background:var(--ink); color:var(--paper);
+    border:none; border-radius:10px; padding:14px; min-height:50px; margin-top:6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Karteikarten<small>DE ⇄ RO · A1–B2</small></div>
+  <div class="top-right">
+    <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
+    <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card" id="card"></div>
+</div>
+
+<div class="bottombar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="next-btn" id="nextBtnBottom">Următoarea →</button>
+</div>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="settingsSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Setări listă</div>
+
+  <div class="sheet-section">
+    <div class="sheet-label">Niveluri</div>
+    <div class="chip-row">
+      <span class="chip level-chip active" data-level="A1">A1</span>
+      <span class="chip level-chip" data-level="A2">A2</span>
+      <span class="chip level-chip" data-level="B1">B1</span>
+      <span class="chip level-chip" data-level="B2">B2</span>
+      <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
+    </div>
+  </div>
+
+  <div class="sheet-section">
+    <div class="sheet-label">Listă proprie</div>
+    <div class="btn-row">
+      <button class="btn-block" id="uploadBtn"><span>Încarcă fișier (CSV / XLSX)</span><span>›</span></button>
+      <input type="file" id="fileInput" class="file-input" accept=".csv,.tsv,.txt,.xlsx,.xls">
+      <button class="btn-block" id="templateBtn"><span>Descarcă template CSV</span><span>›</span></button>
+    </div>
+    <div class="upload-status" id="uploadStatus"></div>
+  </div>
+
+  <div class="sheet-section">
+    <div class="sheet-label">Export</div>
+    <div class="btn-row">
+      <button class="btn-block" id="exportWordsBtn"><span>Exportă cuvintele curente</span><span>›</span></button>
+      <button class="btn-block" id="exportStatsBtn"><span>Exportă statisticile</span><span>›</span></button>
+    </div>
+  </div>
+
+  <div class="sheet-section">
+    <div class="sheet-label">Legendă gen</div>
+    <div class="legend">
+      <span><span class="art art-der">der</span> masc.</span>
+      <span><span class="art art-die">die</span> fem.</span>
+      <span><span class="art art-das">das</span> neutru</span>
+    </div>
+  </div>
+
+  <button class="sheet-close" id="closeSheetBtn">Închide</button>
+</div>
+
+<script>
+/* ---------- BUILT-IN VOCAB (set de start, nu listă oficială exhaustivă) ---------- */
+const BUILTIN_RAW = [
+["A1-01","Haus","casă","das","A1"],["A1-02","Auto","mașină","das","A1"],["A1-03","Tisch","masă","der","A1"],
+["A1-04","Stuhl","scaun","der","A1"],["A1-05","Buch","carte","das","A1"],["A1-06","Wasser","apă","das","A1"],
+["A1-07","Brot","pâine","das","A1"],["A1-08","Milch","lapte","die","A1"],["A1-09","Apfel","măr","der","A1"],
+["A1-10","Banane","banană","die","A1"],["A1-11","Katze","pisică","die","A1"],["A1-12","Hund","câine","der","A1"],
+["A1-13","Kind","copil","das","A1"],["A1-14","Mann","bărbat","der","A1"],["A1-15","Frau","femeie","die","A1"],
+["A1-16","Familie","familie","die","A1"],["A1-17","Freund","prieten","der","A1"],["A1-18","Schule","școală","die","A1"],
+["A1-19","Lehrer","profesor","der","A1"],["A1-20","Arbeit","muncă","die","A1"],["A1-21","Zeit","timp","die","A1"],
+["A1-22","Tag","zi","der","A1"],["A1-23","Nacht","noapte","die","A1"],["A1-24","Jahr","an","das","A1"],
+["A1-25","Monat","lună (calendar)","der","A1"],["A1-26","Woche","săptămână","die","A1"],["A1-27","Stunde","oră","die","A1"],
+["A1-28","Stadt","oraș","die","A1"],["A1-29","Land","țară","das","A1"],["A1-30","Straße","stradă","die","A1"],
+["A1-31","Zug","tren","der","A1"],["A1-32","Bus","autobuz","der","A1"],["A1-33","Flugzeug","avion","das","A1"],
+["A1-34","Tasche","geantă","die","A1"],["A1-35","Geld","bani","das","A1"],["A1-36","Preis","preț","der","A1"],
+["A1-37","Farbe","culoare","die","A1"],["A1-38","Name","nume","der","A1"],["A1-39","Adresse","adresă","die","A1"],
+["A1-40","Telefon","telefon","das","A1"],["A1-41","Tür","ușă","die","A1"],["A1-42","Fenster","fereastră","das","A1"],
+["A1-43","Zimmer","cameră","das","A1"],["A1-44","Küche","bucătărie","die","A1"],["A1-45","Bett","pat","das","A1"],
+["A1-46","Wohnung","apartament","die","A1"],["A1-47","Blume","floare","die","A1"],["A1-48","Baum","copac","der","A1"],
+["A1-49","Sonne","soare","die","A1"],["A1-50","Himmel","cer","der","A1"],["A1-51","Regen","ploaie","der","A1"],
+["A1-52","Schnee","zăpadă","der","A1"],["A1-53","gehen","a merge","","A1"],["A1-54","kommen","a veni","","A1"],
+["A1-55","essen","a mânca","","A1"],["A1-56","trinken","a bea","","A1"],["A1-57","schlafen","a dormi","","A1"],
+["A1-58","sprechen","a vorbi","","A1"],["A1-59","lesen","a citi","","A1"],["A1-60","schreiben","a scrie","","A1"],
+["A2-01","Rechnung","notă de plată","die","A2"],["A2-02","Kunde","client","der","A2"],["A2-03","Verkäufer","vânzător","der","A2"],
+["A2-04","Geschäft","magazin","das","A2"],["A2-05","Supermarkt","supermarket","der","A2"],["A2-06","Kasse","casă de marcat","die","A2"],
+["A2-07","Angebot","ofertă","das","A2"],["A2-08","Termin","programare","der","A2"],["A2-09","Krankenhaus","spital","das","A2"],
+["A2-10","Arzt","medic","der","A2"],["A2-11","Medikament","medicament","das","A2"],["A2-12","Apotheke","farmacie","die","A2"],
+["A2-13","Verspätung","întârziere","die","A2"],["A2-14","Fahrkarte","bilet (călătorie)","die","A2"],["A2-15","Gepäck","bagaj","das","A2"],
+["A2-16","Ausflug","excursie","der","A2"],["A2-17","Urlaub","concediu","der","A2"],["A2-18","Reise","călătorie","die","A2"],
+["A2-19","Flughafen","aeroport","der","A2"],["A2-20","Rezeption","recepție","die","A2"],["A2-21","Nachbar","vecin","der","A2"],
+["A2-22","Vermieter","proprietar (chirie)","der","A2"],["A2-23","Miete","chirie","die","A2"],["A2-24","Vertrag","contract","der","A2"],
+["A2-25","Unterschrift","semnătură","die","A2"],["A2-26","Bewerbung","candidatură (job)","die","A2"],["A2-27","Lebenslauf","CV","der","A2"],
+["A2-28","Gehalt","salariu","das","A2"],["A2-29","Chef","șef","der","A2"],["A2-30","Kollege","coleg","der","A2"],
+["A2-31","Besprechung","ședință","die","A2"],["A2-32","Projekt","proiect","das","A2"],["A2-33","Bericht","raport","der","A2"],
+["A2-34","Ausbildung","formare profesională","die","A2"],["A2-35","Erfahrung","experiență","die","A2"],["A2-36","Fähigkeit","abilitate","die","A2"],
+["A2-37","Meinung","opinie","die","A2"],["A2-38","Entscheidung","decizie","die","A2"],["A2-39","Möglichkeit","posibilitate","die","A2"],
+["A2-40","Nachricht","mesaj / știre","die","A2"],["A2-41","vergessen","a uita","","A2"],["A2-42","versuchen","a încerca","","A2"],
+["A2-43","erklären","a explica","","A2"],["A2-44","entscheiden","a decide","","A2"],["A2-45","sich beeilen","a se grăbi","","A2"],
+["A2-46","bezahlen","a plăti (o factură)","","A2"],["A2-47","wechseln","a schimba","","A2"],["A2-48","vermieten","a închiria (cuiva)","","A2"],
+["A2-49","sich bewerben","a candida (job)","","A2"],["A2-50","unterschreiben","a semna","","A2"],
+["B1-01","Umwelt","mediu înconjurător","die","B1"],["B1-02","Gesellschaft","societate","die","B1"],["B1-03","Wirtschaft","economie","die","B1"],
+["B1-04","Politik","politică","die","B1"],["B1-05","Regierung","guvern","die","B1"],["B1-06","Gesetz","lege","das","B1"],
+["B1-07","Ansicht","perspectivă / părere","die","B1"],["B1-08","Verantwortung","responsabilitate","die","B1"],["B1-09","Entwicklung","dezvoltare","die","B1"],
+["B1-10","Zukunft","viitor","die","B1"],["B1-11","Vergangenheit","trecut","die","B1"],["B1-12","Erfolg","succes","der","B1"],
+["B1-13","Misserfolg","eșec","der","B1"],["B1-14","Herausforderung","provocare","die","B1"],["B1-15","Lösung","soluție","die","B1"],
+["B1-16","Ursache","cauză","die","B1"],["B1-17","Wirkung","efect","die","B1"],["B1-18","Zusammenhang","legătură / context","der","B1"],
+["B1-19","Bedeutung","semnificație","die","B1"],["B1-20","Einfluss","influență","der","B1"],["B1-21","Vorteil","avantaj","der","B1"],
+["B1-22","Nachteil","dezavantaj","der","B1"],["B1-23","Unterschied","diferență","der","B1"],["B1-24","Ähnlichkeit","asemănare","die","B1"],
+["B1-25","Vorschlag","propunere","der","B1"],["B1-26","Kritik","critică","die","B1"],["B1-27","Streit","ceartă","der","B1"],
+["B1-28","Beziehung","relație","die","B1"],["B1-29","Vertrauen","încredere","das","B1"],["B1-30","Konflikt","conflict","der","B1"],
+["B1-31","Kompromiss","compromis","der","B1"],["B1-32","Verhalten","comportament","das","B1"],["B1-33","Einstellung","atitudine","die","B1"],
+["B1-34","Wert","valoare","der","B1"],["B1-35","Ziel","scop","das","B1"],["B1-36","Absicht","intenție","die","B1"],
+["B1-37","Bedingung","condiție","die","B1"],["B1-38","Voraussetzung","premisă","die","B1"],["B1-39","Wahrscheinlichkeit","probabilitate","die","B1"],
+["B1-40","Chance","șansă","die","B1"],["B1-41","sich engagieren","a se implica","","B1"],["B1-42","beeinflussen","a influența","","B1"],
+["B1-43","sich anpassen","a se adapta","","B1"],["B1-44","vermeiden","a evita","","B1"],["B1-45","bewältigen","a face față (unei situații)","","B1"],
+["B1-46","vertreten","a reprezenta","","B1"],["B1-47","kritisieren","a critica","","B1"],["B1-48","überzeugen","a convinge","","B1"],
+["B1-49","sich beschweren","a se plânge","","B1"],["B1-50","vorschlagen","a propune","","B1"],
+["B2-01","Wahrnehmung","percepție","die","B2"],["B2-02","Voreingenommenheit","prejudecată","die","B2"],["B2-03","Widerspruch","contradicție","der","B2"],
+["B2-04","Auseinandersetzung","dezbatere / confruntare","die","B2"],["B2-05","Rahmenbedingung","condiție-cadru","die","B2"],["B2-06","Nachhaltigkeit","sustenabilitate","die","B2"],
+["B2-07","Ressource","resursă","die","B2"],["B2-08","Konsequenz","consecință","die","B2"],["B2-09","Tendenz","tendință","die","B2"],
+["B2-10","Ausmaß","amploare","das","B2"],["B2-11","Spielraum","marjă de manevră","der","B2"],["B2-12","Anspruch","pretenție / exigență","der","B2"],
+["B2-13","Umsetzung","implementare","die","B2"],["B2-14","Voraussage","predicție","die","B2"],["B2-15","Auswirkung","impact","die","B2"],
+["B2-16","Verzicht","renunțare","der","B2"],["B2-17","Verpflichtung","obligație","die","B2"],["B2-18","Zuständigkeit","competență / jurisdicție","die","B2"],
+["B2-19","Beeinträchtigung","afectare / prejudiciu","die","B2"],["B2-20","Bewusstsein","conștientizare","das","B2"],["B2-21","Skepsis","scepticism","die","B2"],
+["B2-22","Gleichgewicht","echilibru","das","B2"],["B2-23","Ungleichheit","inegalitate","die","B2"],["B2-24","Vielfalt","diversitate","die","B2"],
+["B2-25","Wandel","schimbare / transformare","der","B2"],["B2-26","Stellungnahme","poziție oficială","die","B2"],["B2-27","Schwerpunkt","accent / prioritate","der","B2"],
+["B2-28","Spannungsfeld","zonă de tensiune","das","B2"],["B2-29","Ansatz","abordare","der","B2"],["B2-30","Widerstand","rezistență","der","B2"],
+["B2-31","sich auseinandersetzen","a dezbate / aborda","","B2"],["B2-32","hervorheben","a sublinia","","B2"],["B2-33","verdeutlichen","a clarifica","","B2"],
+["B2-34","sich abzeichnen","a se contura","","B2"],["B2-35","begünstigen","a favoriza","","B2"],["B2-36","einschränken","a limita","","B2"],
+["B2-37","gewährleisten","a garanta","","B2"],["B2-38","sich etablieren","a se stabili / impune","","B2"],["B2-39","nachvollziehen","a înțelege logic","","B2"],
+["B2-40","abwägen","a cântări (argumente)","","B2"]
+];
+
+const BUILTIN = BUILTIN_RAW.map(r => ({id:r[0], de:r[1], ro:r[2], artikel:r[3], level:r[4]}));
+
+let customWords = [];
+let selectedLevels = new Set(["A1"]);
+let customActive = false;
+let wordStats = {};
+
+let pool = [];
+let currentIndex = 0;
+let roundSize = 15;
+let roundQuestions = [];
+let sessionScore = 0;
+let sessionTotal = 0;
+let roundNumber = 1;
+
+/* ---------- storage helpers ---------- */
+async function loadStats(){
+  try{
+    const r = await window.storage.get('wordStats', false);
+    wordStats = r && r.value ? JSON.parse(r.value) : {};
+  }catch(e){ wordStats = {}; }
+}
+async function saveStats(){
+  try{ await window.storage.set('wordStats', JSON.stringify(wordStats), false); }catch(e){}
+}
+function recordAnswer(id, correct){
+  if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0};
+  wordStats[id].attempts++;
+  if(correct) wordStats[id].correct++;
+  saveStats();
+}
+
+/* ---------- utils ---------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatSide(word, side){
+  if(side === 'de'){
+    const artHtml = word.artikel ? `<span class="art art-${word.artikel}">${word.artikel}</span> ` : '';
+    return { value: word.de, html: artHtml + escapeHtml(word.de) };
+  }
+  return { value: word.ro, html: escapeHtml(word.ro) };
+}
+function allWordsById(){
+  const map = {};
+  BUILTIN.forEach(w => map[w.id] = w);
+  customWords.forEach(w => map[w.id] = w);
+  return map;
+}
+function csvEscape(v){
+  const s = String(v == null ? '' : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+function downloadBlob(content, filename, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- active pool ---------- */
+function activeWords(){
+  let words = BUILTIN.filter(w => selectedLevels.has(w.level));
+  if(customActive) words = words.concat(customWords);
+  return words;
+}
+
+/* ---------- round building ---------- */
+function buildRound(){
+  const words = activeWords();
+  const card = document.getElementById('card');
+  if(words.length < 4){
+    card.innerHTML = `<div class="warning">Selectează mai multe niveluri sau încarcă o listă mai mare<br>(minim 4 cuvinte distincte necesare).</div>`;
+    document.getElementById('nextBtnBottom').classList.remove('show');
+    return;
+  }
+  pool = shuffle(words);
+  const size = Math.min(roundSize, pool.length);
+  roundQuestions = pool.slice(0, size).map(word => {
+    const deToRo = Math.random() < 0.5;
+    const promptSide = deToRo ? 'de' : 'ro';
+    const answerSide = deToRo ? 'ro' : 'de';
+    const prompt = formatSide(word, promptSide);
+    const correct = formatSide(word, answerSide);
+    const others = shuffle(words.filter(w => w.id !== word.id));
+    const distractors = [];
+    for(const o of others){
+      const val = formatSide(o, answerSide);
+      if(val.value !== correct.value && !distractors.some(d => d.value === val.value)) distractors.push(val);
+      if(distractors.length === 3) break;
+    }
+    const options = shuffle([correct, ...distractors]);
+    return { id: word.id, prompt, correct, options, direction: deToRo ? 'DE → RO' : 'RO → DE' };
+  });
+  currentIndex = 0;
+  document.getElementById('roundNo').textContent = roundNumber;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = roundQuestions[currentIndex];
+  const letters = ['a','b','c','d'];
+  const card = document.getElementById('card');
+  card.innerHTML = `
+    <div class="tag-row">
+      <span class="tag direction-tag">${q.direction}</span>
+      <span class="tag">${currentIndex+1}/${roundQuestions.length}</span>
+    </div>
+    <div class="prompt-label">Traduce</div>
+    <div class="prompt-word">${q.prompt.html}</div>
+    <div class="options" id="options">
+      ${q.options.map((opt,i)=>`<button class="opt" data-value="${encodeURIComponent(opt.value)}"><span class="letter">${letters[i]})</span> <span>${opt.html}</span></button>`).join("")}
+    </div>
+    <div class="stamp" id="stamp"></div>
+  `;
+  document.getElementById('progressFill').style.width = ((currentIndex)/roundQuestions.length)*100 + '%';
+  document.getElementById('nextBtnBottom').classList.remove('show');
+  document.querySelectorAll('.opt').forEach(btn => btn.addEventListener('click', () => handleAnswer(btn, q)));
+}
+
+function handleAnswer(btn, q){
+  const chosen = decodeURIComponent(btn.dataset.value);
+  const isCorrect = chosen === q.correct.value;
+  sessionTotal++; if(isCorrect) sessionScore++;
+  document.getElementById('sessionScore').textContent = sessionScore;
+  document.getElementById('sessionTotal').textContent = sessionTotal;
+  recordAnswer(q.id, isCorrect);
+
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled = true;
+    const val = decodeURIComponent(b.dataset.value);
+    if(val === q.correct.value) b.classList.add('correct');
+    if(b === btn && !isCorrect) b.classList.add('wrong');
+  });
+
+  const stamp = document.getElementById('stamp');
+  stamp.textContent = isCorrect ? 'RICHTIG!' : 'GREȘIT';
+  stamp.classList.add(isCorrect ? 'ok' : 'no');
+  requestAnimationFrame(()=> stamp.classList.add('show'));
+  document.getElementById('nextBtnBottom').classList.add('show');
+}
+
+function nextQuestion(){
+  if(currentIndex < roundQuestions.length - 1){ currentIndex++; renderQuestion(); }
+  else showEndScreen();
+}
+document.getElementById('nextBtnBottom').addEventListener('click', nextQuestion);
+
+function showEndScreen(){
+  const card = document.getElementById('card');
+  const pct = sessionTotal ? Math.round((sessionScore/sessionTotal)*100) : 0;
+  card.innerHTML = `
+    <div class="end-screen">
+      <div class="stamp-final">RUNDĂ TERMINATĂ</div>
+      <div class="score-big">${sessionScore} / ${sessionTotal}</div>
+      <div class="score-sub">scor total pe sesiune · ${pct}% corecte</div>
+      <button class="restart-btn" id="restartBtn">Rundă nouă →</button>
+    </div>`;
+  document.getElementById('nextBtnBottom').classList.remove('show');
+  document.getElementById('restartBtn').addEventListener('click', ()=>{ roundNumber++; buildRound(); });
+}
+
+/* ---------- bottom sheet open/close ---------- */
+const sheet = document.getElementById('settingsSheet');
+const sheetOverlay = document.getElementById('sheetOverlay');
+function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); }
+function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
+document.getElementById('openSheetBtn').addEventListener('click', openSheet);
+document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
+sheetOverlay.addEventListener('click', closeSheet);
+
+/* ---------- level chips ---------- */
+document.querySelectorAll('.level-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    const lvl = chip.dataset.level;
+    if(selectedLevels.has(lvl)){
+      if(selectedLevels.size === 1 && !customActive) return;
+      selectedLevels.delete(lvl); chip.classList.remove('active');
+    } else {
+      selectedLevels.add(lvl); chip.classList.add('active');
+    }
+    roundNumber = 1;
+    buildRound();
+  });
+});
+
+const customChip = document.getElementById('customChip');
+customChip.addEventListener('click', ()=>{
+  if(customWords.length === 0) return;
+  customActive = !customActive;
+  customChip.classList.toggle('active', customActive);
+  roundNumber = 1;
+  buildRound();
+});
+
+/* ---------- file upload ---------- */
+document.getElementById('uploadBtn').addEventListener('click', ()=> document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change', handleFile);
+
+function normalizeHeader(h){
+  return String(h||'').trim().toLowerCase()
+    .replace('romană','romana').replace('română','romana').replace('nivel','nivel');
+}
+
+function parseRowsToWords(rows){
+  if(!rows.length) throw new Error('Fișierul este gol.');
+  const header = rows[0].map(normalizeHeader);
+  const idxId = header.indexOf('id');
+  const idxDe = header.findIndex(h => h==='german' || h==='germana' || h==='germană');
+  const idxRo = header.findIndex(h => h==='romana');
+  const idxArt = header.indexOf('artikel');
+  const idxLevel = header.indexOf('nivel');
+  if(idxDe === -1 || idxRo === -1) throw new Error('Lipsesc coloanele obligatorii "german" și/sau "romana".');
+
+  const words = [];
+  for(let i=1;i<rows.length;i++){
+    const row = rows[i];
+    if(!row || row.every(c => String(c||'').trim()==='')) continue;
+    const de = String(row[idxDe]||'').trim();
+    const ro = String(row[idxRo]||'').trim();
+    if(!de || !ro) continue;
+    let artikel = idxArt !== -1 ? String(row[idxArt]||'').trim().toLowerCase() : '';
+    if(artikel && !['der','die','das'].includes(artikel)){
+      throw new Error(`Rândul ${i+1}: articol necunoscut "${artikel}".`);
+    }
+    const id = idxId !== -1 && row[idxId] ? String(row[idxId]).trim() : `C-${String(words.length+1).padStart(3,'0')}`;
+    words.push({id, de, ro, artikel, level:'Custom'});
+  }
+  if(words.length < 4) throw new Error('Fișierul trebuie să conțină cel puțin 4 cuvinte valide.');
+  return words;
+}
+
+function parseDelimited(text, delimiter){
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){ if(text[i+1] === '"'){ field += '"'; i++; } else inQuotes = false; }
+      else field += c;
+    } else {
+      if(c === '"') inQuotes = true;
+      else if(c === delimiter){ row.push(field); field=''; }
+      else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else if(c === '\r'){ }
+      else field += c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  return rows.filter(r => r.length && !(r.length===1 && r[0]===''));
+}
+
+function handleFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('uploadStatus');
+  status.textContent = 'Se încarcă...'; status.className = 'upload-status';
+  const name = file.name.toLowerCase();
+
+  const finish = (words) => {
+    customWords = words;
+    customActive = true;
+    customChip.style.opacity = '1';
+    customChip.textContent = `Custom (${words.length})`;
+    customChip.classList.add('active');
+    status.textContent = `✓ ${words.length} cuvinte încărcate din "${file.name}".`;
+    status.className = 'upload-status ok';
+    roundNumber = 1;
+    buildRound();
+  };
+  const fail = (err) => { status.textContent = `Eroare: ${err.message}`; status.className = 'upload-status err'; };
+
+  if(name.endsWith('.xlsx') || name.endsWith('.xls')){
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = new Uint8Array(ev.target.result);
+        const wb = XLSX.read(data, {type:'array'});
+        const sheet2 = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet2, {header:1});
+        finish(parseRowsToWords(rows));
+      }catch(err){ fail(err); }
+    };
+    reader.onerror = ()=> fail(new Error('Nu s-a putut citi fișierul.'));
+    reader.readAsArrayBuffer(file);
+  } else {
+    const delimiter = name.endsWith('.tsv') ? '\t' : ',';
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{ finish(parseRowsToWords(parseDelimited(ev.target.result, delimiter))); }
+      catch(err){ fail(err); }
+    };
+    reader.onerror = ()=> fail(new Error('Nu s-a putut citi fișierul.'));
+    reader.readAsText(file, 'UTF-8');
+  }
+}
+
+/* ---------- template & exports ---------- */
+document.getElementById('templateBtn').addEventListener('click', ()=>{
+  const content = 'id,german,romana,artikel,nivel\n'
+    + 'M-001,Tisch,masă,der,A1\n' + 'M-002,gehen,a merge,,A1\n'
+    + 'M-003,Milch,lapte,die,A1\n' + 'M-004,Buch,carte,das,A1\n';
+  downloadBlob(content, 'template-vocabular.csv', 'text/csv;charset=utf-8');
+});
+
+document.getElementById('exportWordsBtn').addEventListener('click', ()=>{
+  const words = activeWords();
+  if(!words.length) return;
+  let content = 'id,german,romana,artikel,nivel\n';
+  words.forEach(w => { content += [w.id, w.de, w.ro, w.artikel, w.level].map(csvEscape).join(',') + '\n'; });
+  downloadBlob(content, 'cuvinte-selectie.csv', 'text/csv;charset=utf-8');
+});
+
+document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
+  const map = allWordsById();
+  const ids = Object.keys(wordStats);
+  if(!ids.length){ alert('Nu există încă statistici — răspunde la câteva întrebări mai întâi.'); return; }
+  let content = 'id,german,romana,incercari,corecte,procent\n';
+  ids.forEach(id=>{
+    const w = map[id]; const s = wordStats[id];
+    const pct = s.attempts ? Math.round((s.correct/s.attempts)*100) : 0;
+    content += [id, w?w.de:'', w?w.ro:'', s.attempts, s.correct, pct+'%'].map(csvEscape).join(',') + '\n';
+  });
+  downloadBlob(content, 'statistici-vocabular.csv', 'text/csv;charset=utf-8');
+});
+
+/* ---------- init ---------- */
+(async function init(){
+  await loadStats();
+  buildRound();
+})();
+
+/* ---------- service worker registration (enables offline + installability) ---------- */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* offline install still works without SW */ });
+  });
+}
+</script>
+
+</body>
+</html>
