@@ -259,6 +259,14 @@
   </div>
 
   <div class="sheet-section">
+    <div class="sheet-label">Voce (pronunție 🔊)</div>
+    <select id="voiceSelect" class="btn-block" style="width:100%; appearance:none;">
+      <option value="">Se caută voci germane...</option>
+    </select>
+    <button class="btn-block" id="testVoiceBtn" style="margin-top:8px;"><span>Testează vocea (spune „Tisch")</span><span>▶</span></button>
+  </div>
+
+  <div class="sheet-section">
     <div class="sheet-label">Legendă gen</div>
     <div class="legend">
       <span><span class="art art-der">der</span> masc.</span>
@@ -295,12 +303,12 @@ let roundNumber = 1;
 /* ---------- storage helpers ---------- */
 async function loadStats(){
   try{
-    const r = await window.storage.get('wordStats', false);
-    wordStats = r && r.value ? JSON.parse(r.value) : {};
+    const raw = localStorage.getItem('wordStats');
+    wordStats = raw ? JSON.parse(raw) : {};
   }catch(e){ wordStats = {}; }
 }
 async function saveStats(){
-  try{ await window.storage.set('wordStats', JSON.stringify(wordStats), false); }catch(e){}
+  try{ localStorage.setItem('wordStats', JSON.stringify(wordStats)); }catch(e){}
 }
 function recordAnswer(id, correct){
   if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0};
@@ -351,7 +359,44 @@ function activeWords(){
   return words;
 }
 
-/* ---------- speech synthesis (pronunție germană) ---------- */
+/* ---------- speech synthesis (pronunție germană, cu alegere de voce) ---------- */
+let availableVoices = [];
+let selectedVoiceURI = '';
+
+async function loadVoicePref(){
+  try{
+    selectedVoiceURI = localStorage.getItem('voiceURI') || '';
+  }catch(e){ selectedVoiceURI = ''; }
+}
+async function saveVoicePref(uri){
+  try{ localStorage.setItem('voiceURI', uri); }catch(e){}
+}
+
+function populateVoiceList(){
+  if(!('speechSynthesis' in window)) return;
+  const all = window.speechSynthesis.getVoices();
+  availableVoices = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('de'));
+  const select = document.getElementById('voiceSelect');
+  if(!select) return;
+  if(availableVoices.length === 0){
+    select.innerHTML = '<option value="">Nicio voce germană găsită pe acest dispozitiv</option>';
+    return;
+  }
+  select.innerHTML = availableVoices.map(v =>
+    `<option value="${v.voiceURI}">${v.name} (${v.lang})${v.localService ? '' : ' · rețea'}</option>`
+  ).join('');
+  // preselecteaza vocea salvata, daca mai exista in lista; altfel prima voce de retea (de obicei mai naturala), altfel prima disponibila
+  const savedExists = availableVoices.some(v => v.voiceURI === selectedVoiceURI);
+  if(savedExists){
+    select.value = selectedVoiceURI;
+  } else {
+    const networkVoice = availableVoices.find(v => !v.localService);
+    selectedVoiceURI = (networkVoice || availableVoices[0]).voiceURI;
+    select.value = selectedVoiceURI;
+    saveVoicePref(selectedVoiceURI);
+  }
+}
+
 function speakGerman(text){
   try{
     if(!('speechSynthesis' in window)) return;
@@ -359,6 +404,8 @@ function speakGerman(text){
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'de-DE';
     utter.rate = 0.9;
+    const chosen = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
+    if(chosen) utter.voice = chosen;
     window.speechSynthesis.speak(utter);
   }catch(e){ /* TTS indisponibil pe acest dispozitiv - esuam silentios */ }
 }
@@ -690,8 +737,27 @@ document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
 /* ---------- init ---------- */
 (async function init(){
   await loadStats();
+  await loadVoicePref();
   buildRound();
 })();
+
+/* ---------- voice picker wiring ---------- */
+if('speechSynthesis' in window){
+  populateVoiceList();
+  // vocile se incarca adesea asincron pe Android/Chrome
+  window.speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+const voiceSelect = document.getElementById('voiceSelect');
+if(voiceSelect){
+  voiceSelect.addEventListener('change', () => {
+    selectedVoiceURI = voiceSelect.value;
+    saveVoicePref(selectedVoiceURI);
+  });
+}
+const testVoiceBtn = document.getElementById('testVoiceBtn');
+if(testVoiceBtn){
+  testVoiceBtn.addEventListener('click', () => speakGerman('Tisch'));
+}
 
 /* ---------- service worker registration (enables offline + installability) ---------- */
 if ('serviceWorker' in navigator) {
