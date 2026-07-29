@@ -1,9 +1,10 @@
-const CACHE_NAME = 'karteikarten-v1';
+const CACHE_NAME = 'karteikarten-v2';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './vocab-data.js'
 ];
 
 self.addEventListener('install', (event) => {
