@@ -54,6 +54,10 @@
     font-size:1.15rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
   .gear-btn:active{ background:var(--paper-dark); }
+  .summary-line{
+    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft);
+    text-align:center; flex-shrink:0;
+  }
 
   /* ---------- main scroll area ---------- */
   .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; }
@@ -67,8 +71,13 @@
     content:""; position:absolute; top:0; left:20px; width:30px; height:12px;
     background:rgba(201,154,46,0.35); border:1px solid rgba(201,154,46,0.5); transform:rotate(-2deg);
   }
-  .tag-row{ display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono', monospace;
-    font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; }
+  .tag-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-family:'IBM Plex Mono', monospace;
+    font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; gap:8px; }
+  .skip-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; background:none; border:1px solid var(--line);
+    color:var(--ink-soft); border-radius:14px; padding:4px 10px; cursor:pointer; margin-left:auto;
+  }
+  .skip-btn:active{ background:var(--paper-dark); }
   .tag{ border:1px solid var(--line); border-radius:20px; padding:3px 10px; }
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
   .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
@@ -80,6 +89,7 @@
   .speak-btn{
     flex-shrink:0; width:38px; height:38px; border-radius:50%; border:1.5px solid var(--ink-soft);
     background:var(--paper); font-size:1rem; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    text-decoration:none; color:inherit;
   }
   .speak-btn:active{ background:var(--paper-dark); }
   .speak-btn.inline{ width:30px; height:30px; font-size:0.85rem; margin-left:8px; }
@@ -197,6 +207,7 @@
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
 </div>
+<div class="summary-line" id="summaryLine"></div>
 
 <div class="main">
   <div class="card" id="card"></div>
@@ -226,9 +237,9 @@
   <div class="sheet-section" id="b2SubSection" style="display:none;">
     <div class="sheet-label">B2 · domeniu</div>
     <div class="chip-row">
-      <span class="chip b2scope-chip active" data-scope="all">Toate (2416)</span>
+      <span class="chip b2scope-chip active" data-scope="all">Toate (2414)</span>
       <span class="chip b2scope-chip" data-scope="essential">Esențial (171)</span>
-      <span class="chip b2scope-chip" data-scope="extended">Extins (2245)</span>
+      <span class="chip b2scope-chip" data-scope="extended">Extins (2243)</span>
     </div>
     <div class="sheet-label" style="margin-top:14px;">B2 · teme (doar pentru Esențial)</div>
     <div class="chip-row" id="b2ThemeRow"></div>
@@ -330,6 +341,73 @@ async function loadStats(){
 }
 async function saveStats(){
   try{ localStorage.setItem('wordStats', JSON.stringify(wordStats)); }catch(e){}
+}
+
+/* ---------- preferences persistence (niveluri, directie, mod, B2 scope/teme) ---------- */
+function savePreferences(){
+  try{
+    const prefs = {
+      levels: Array.from(selectedLevels),
+      direction: selectedDirection,
+      mode: practiceMode,
+      b2Scope: b2Scope,
+      b2Themes: Array.from(b2Themes)
+    };
+    localStorage.setItem('prefs', JSON.stringify(prefs));
+  }catch(e){}
+}
+
+function loadPreferences(){
+  try{
+    const raw = localStorage.getItem('prefs');
+    if(!raw) return;
+    const prefs = JSON.parse(raw);
+    if(Array.isArray(prefs.levels) && prefs.levels.length){
+      selectedLevels = new Set(prefs.levels);
+      document.querySelectorAll('.level-chip').forEach(chip=>{
+        chip.classList.toggle('active', selectedLevels.has(chip.dataset.level));
+      });
+    }
+    if(prefs.direction){
+      selectedDirection = prefs.direction;
+      document.querySelectorAll('.direction-chip').forEach(chip=>{
+        chip.classList.toggle('active', chip.dataset.dir === selectedDirection);
+      });
+    }
+    if(prefs.mode){
+      practiceMode = prefs.mode;
+      document.querySelectorAll('.mode-chip').forEach(chip=>{
+        chip.classList.toggle('active', chip.dataset.mode === practiceMode);
+      });
+    }
+    if(prefs.b2Scope){
+      b2Scope = prefs.b2Scope;
+      document.querySelectorAll('.b2scope-chip').forEach(chip=>{
+        chip.classList.toggle('active', chip.dataset.scope === b2Scope);
+      });
+    }
+    if(Array.isArray(prefs.b2Themes) && prefs.b2Themes.length){
+      b2Themes = new Set(prefs.b2Themes);
+      document.querySelectorAll('.theme-chip').forEach(chip=>{
+        chip.classList.toggle('active', b2Themes.has(chip.dataset.theme));
+      });
+    }
+  }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
+}
+
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2'};
+const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
+const MODE_LABELS = {smart:'inteligent', random:'aleator'};
+function updateSummaryLine(){
+  const el = document.getElementById('summaryLine');
+  if(!el) return;
+  const levelsTxt = Array.from(selectedLevels).map(l => LEVEL_LABELS[l] || l).join('+') || '—';
+  let txt = `${levelsTxt} · ${DIRECTION_LABELS[selectedDirection] || selectedDirection} · ${MODE_LABELS[practiceMode] || practiceMode}`;
+  if(customActive) txt += ' · +Custom';
+  if(selectedLevels.has('B2') && b2Scope !== 'all'){
+    txt += b2Scope === 'essential' ? ' · B2 esențial' : ' · B2 extins';
+  }
+  el.textContent = txt;
 }
 function recordAnswer(id, correct){
   if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0};
@@ -458,6 +536,8 @@ function weightedSample(words, n){
 
 /* ---------- round building ---------- */
 function buildRound(){
+  updateSummaryLine();
+  savePreferences();
   const words = activeWords();
   const card = document.getElementById('card');
   if(words.length < 4){
@@ -497,16 +577,23 @@ function buildRound(){
   renderQuestion();
 }
 
+function dictCcUrl(text){
+  const clean = text.split(',')[0].split('(')[0].split('/')[0].trim();
+  return 'https://dero.dict.cc/?s=' + encodeURIComponent(clean);
+}
+
 function renderQuestion(){
   const q = roundQuestions[currentIndex];
   const letters = ['a','b','c','d'];
   const card = document.getElementById('card');
   const promptSpeaker = q.promptSide === 'de'
-    ? `<button class="speak-btn" id="speakPrompt" aria-label="Ascultă">🔊</button>` : '';
+    ? `<button class="speak-btn" id="speakPrompt" aria-label="Ascultă">🔊</button>
+       <a class="speak-btn" href="${dictCcUrl(q.prompt.value)}" target="_blank" rel="noopener" aria-label="dict.cc">📖</a>` : '';
   card.innerHTML = `
     <div class="tag-row">
       <span class="tag direction-tag">${q.direction}</span>
       <span class="tag">${currentIndex+1}/${roundQuestions.length}</span>
+      <button class="skip-btn" id="skipBtn">Sari →</button>
     </div>
     <div class="prompt-label">Traduce</div>
     <div class="prompt-row">
@@ -521,6 +608,7 @@ function renderQuestion(){
   document.getElementById('progressFill').style.width = ((currentIndex)/roundQuestions.length)*100 + '%';
   document.getElementById('nextBtnBottom').classList.remove('show');
   document.querySelectorAll('.opt').forEach(btn => btn.addEventListener('click', () => handleAnswer(btn, q)));
+  document.getElementById('skipBtn').addEventListener('click', nextQuestion);
   if(q.promptSide === 'de'){
     document.getElementById('speakPrompt').addEventListener('click', () => speakGerman(q.prompt.value));
   }
@@ -533,6 +621,7 @@ function handleAnswer(btn, q){
   document.getElementById('sessionScore').textContent = sessionScore;
   document.getElementById('sessionTotal').textContent = sessionTotal;
   recordAnswer(q.id, isCorrect);
+  document.getElementById('skipBtn').style.display = 'none';
 
   document.querySelectorAll('.opt').forEach(b=>{
     b.disabled = true;
@@ -546,6 +635,15 @@ function handleAnswer(btn, q){
         speakSpan.textContent = '🔊';
         speakSpan.addEventListener('click', (ev) => { ev.stopPropagation(); speakGerman(q.correct.value); });
         b.appendChild(speakSpan);
+
+        const dictLink = document.createElement('a');
+        dictLink.className = 'speak-btn inline';
+        dictLink.href = dictCcUrl(q.correct.value);
+        dictLink.target = '_blank'; dictLink.rel = 'noopener';
+        dictLink.setAttribute('aria-label', 'dict.cc');
+        dictLink.textContent = '📖';
+        dictLink.addEventListener('click', (ev) => ev.stopPropagation());
+        b.appendChild(dictLink);
       }
     }
     if(b === btn && !isCorrect) b.classList.add('wrong');
@@ -806,6 +904,8 @@ document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
 (async function init(){
   await loadStats();
   await loadVoicePref();
+  loadPreferences();
+  updateB2SubSectionVisibility();
   buildRound();
 })();
 
