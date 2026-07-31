@@ -230,19 +230,10 @@
       <span class="chip level-chip" data-level="A2">A2</span>
       <span class="chip level-chip" data-level="B1">B1</span>
       <span class="chip level-chip" data-level="B2">B2</span>
+      <span class="chip level-chip" data-level="EXT">Suplimentar</span>
       <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
     </div>
-  </div>
-
-  <div class="sheet-section" id="b2SubSection" style="display:none;">
-    <div class="sheet-label">B2 · domeniu</div>
-    <div class="chip-row">
-      <span class="chip b2scope-chip active" data-scope="all">Toate (2414)</span>
-      <span class="chip b2scope-chip" data-scope="essential">Esențial (171)</span>
-      <span class="chip b2scope-chip" data-scope="extended">Extins (2243)</span>
-    </div>
-    <div class="sheet-label" style="margin-top:14px;">B2 · teme (doar pentru Esențial)</div>
-    <div class="chip-row" id="b2ThemeRow"></div>
+    <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000</div>
   </div>
 
   <div class="sheet-section">
@@ -307,16 +298,6 @@
 /* Sursa completa e in vocab-data.js (VOCAB_DATA), incarcat separat pentru cache offline curat. */
 const BUILTIN = VOCAB_DATA.map(r => ({id:r[0], de:r[1], ro:r[2], artikel:r[3], level:r[4], category:r[5]||''}));
 
-const B2_THEMES = [
-  "Beruf & Karriere","Bildung & Schule","Gesellschaft & Soziales","Umwelt & Nachhaltigkeit",
-  "Technologie & Digitalisierung","Medien & Kommunikation","Gesundheit & Wohlbefinden","Wohnen & Stadtleben",
-  "Mobilität & Verkehr","Wirtschaft & Finanzen","Familie & Gesellschaftliche Rollen","Reisen & Tourismus",
-  "Kultur & Kunst","Konsum & Verbraucherverhalten","Freizeit & Hobbys","Argumentation & Meinung",
-  "Akademische & Formelle Sprache","Politik & Demokratie","General"
-];
-let b2Scope = 'all'; // 'all' | 'essential' | 'extended'
-let b2Themes = new Set(B2_THEMES); // active theme filter (only applies to essential/categorized words)
-
 let customWords = [];
 let selectedLevels = new Set(["A1"]);
 let customActive = false;
@@ -349,9 +330,7 @@ function savePreferences(){
     const prefs = {
       levels: Array.from(selectedLevels),
       direction: selectedDirection,
-      mode: practiceMode,
-      b2Scope: b2Scope,
-      b2Themes: Array.from(b2Themes)
+      mode: practiceMode
     };
     localStorage.setItem('prefs', JSON.stringify(prefs));
   }catch(e){}
@@ -380,22 +359,10 @@ function loadPreferences(){
         chip.classList.toggle('active', chip.dataset.mode === practiceMode);
       });
     }
-    if(prefs.b2Scope){
-      b2Scope = prefs.b2Scope;
-      document.querySelectorAll('.b2scope-chip').forEach(chip=>{
-        chip.classList.toggle('active', chip.dataset.scope === b2Scope);
-      });
-    }
-    if(Array.isArray(prefs.b2Themes) && prefs.b2Themes.length){
-      b2Themes = new Set(prefs.b2Themes);
-      document.querySelectorAll('.theme-chip').forEach(chip=>{
-        chip.classList.toggle('active', b2Themes.has(chip.dataset.theme));
-      });
-    }
   }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
 }
 
-const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2'};
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
 function updateSummaryLine(){
@@ -404,9 +371,6 @@ function updateSummaryLine(){
   const levelsTxt = Array.from(selectedLevels).map(l => LEVEL_LABELS[l] || l).join('+') || '—';
   let txt = `${levelsTxt} · ${DIRECTION_LABELS[selectedDirection] || selectedDirection} · ${MODE_LABELS[practiceMode] || practiceMode}`;
   if(customActive) txt += ' · +Custom';
-  if(selectedLevels.has('B2') && b2Scope !== 'all'){
-    txt += b2Scope === 'essential' ? ' · B2 esențial' : ' · B2 extins';
-  }
   el.textContent = txt;
 }
 function recordAnswer(id, correct){
@@ -454,16 +418,6 @@ function downloadBlob(content, filename, type){
 /* ---------- active pool ---------- */
 function activeWords(){
   let words = BUILTIN.filter(w => selectedLevels.has(w.level));
-  if(selectedLevels.has('B2')){
-    words = words.filter(w => {
-      if(w.level !== 'B2') return true;
-      const isEssential = w.category !== '';
-      if(b2Scope === 'essential' && !isEssential) return false;
-      if(b2Scope === 'extended' && isEssential) return false;
-      if(isEssential && !b2Themes.has(w.category)) return false;
-      return true;
-    });
-  }
   if(customActive) words = words.concat(customWords);
   return words;
 }
@@ -723,11 +677,6 @@ document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
 sheetOverlay.addEventListener('click', closeSheet);
 
 /* ---------- level chips ---------- */
-const b2SubSection = document.getElementById('b2SubSection');
-function updateB2SubSectionVisibility(){
-  b2SubSection.style.display = selectedLevels.has('B2') ? 'block' : 'none';
-}
-
 document.querySelectorAll('.level-chip').forEach(chip=>{
   chip.addEventListener('click', ()=>{
     const lvl = chip.dataset.level;
@@ -736,38 +685,6 @@ document.querySelectorAll('.level-chip').forEach(chip=>{
       selectedLevels.delete(lvl); chip.classList.remove('active');
     } else {
       selectedLevels.add(lvl); chip.classList.add('active');
-    }
-    updateB2SubSectionVisibility();
-    roundNumber = 1;
-    buildRound();
-  });
-});
-updateB2SubSectionVisibility();
-
-/* ---------- B2 scope chips (Toate / Esențial / Extins) ---------- */
-document.querySelectorAll('.b2scope-chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    document.querySelectorAll('.b2scope-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    b2Scope = chip.dataset.scope;
-    roundNumber = 1;
-    buildRound();
-  });
-});
-
-/* ---------- B2 theme chips (multi-select, generate dynamically) ---------- */
-const b2ThemeRow = document.getElementById('b2ThemeRow');
-b2ThemeRow.innerHTML = B2_THEMES.map(t =>
-  `<span class="chip theme-chip active" data-theme="${t}">${t}</span>`
-).join('');
-document.querySelectorAll('.theme-chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    const theme = chip.dataset.theme;
-    if(b2Themes.has(theme)){
-      if(b2Themes.size === 1) return; // keep at least one theme selected
-      b2Themes.delete(theme); chip.classList.remove('active');
-    } else {
-      b2Themes.add(theme); chip.classList.add('active');
     }
     roundNumber = 1;
     buildRound();
@@ -941,7 +858,6 @@ document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
   await loadStats();
   await loadVoicePref();
   loadPreferences();
-  updateB2SubSectionVisibility();
   buildRound();
 })();
 
