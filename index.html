@@ -535,6 +535,36 @@ function weightedSample(words, n){
 }
 
 /* ---------- round building ---------- */
+/* ---------- clasificare gramaticala (pentru distractori de aceeasi categorie) ---------- */
+const FUNCTION_WORDS = new Set([
+  // prepozitii
+  "aus","bei","mit","nach","seit","von","zu","ab","an","auf","hinter","in","neben","über","unter","vor",
+  "zwischen","durch","für","gegen","ohne","um","bis","entlang","außer","außerhalb","innerhalb","statt",
+  "trotz","während","wegen","laut","gemäß","je","pro",
+  // conjunctii
+  "und","oder","aber","denn","sondern","weil","dass","ob","wenn","als","obwohl","bevor","nachdem",
+  "seitdem","damit","sodass","indem","sowie","sowohl","entweder","weder","jedoch","allerdings",
+  "außerdem","trotzdem","deshalb","daher","also","sonst","zwar","dennoch","folglich","somit","demnach",
+  // pronume / determinanti
+  "ich","du","er","sie","es","wir","ihr","mich","dich","ihn","uns","euch","mir","dir","ihm","ihnen",
+  "mein","dein","sein","unser","euer","dieser","diese","dieses","jener","jeder","jede","jedes",
+  "mancher","welcher","welche","welches","man","jemand","niemand","etwas","nichts","alle","einige",
+  "viele","wenige","kein","keine","beide",
+  // adverbe/particule foarte comune (functionale, nu descriptive)
+  "ja","nein","nicht","auch","schon","noch","sehr","sogar","nur","doch","eben","halt","mal","denn",
+  "hier","dort","da","wo","wohin","woher","wann","warum","wie","was","wer"
+]);
+
+function classifyWord(word){
+  const de = word.de.trim();
+  if(word.artikel) return 'noun';
+  if(de.includes(' ')) return 'phrase'; // expresii/verbe cu particula, locutiuni
+  const lower = de.toLowerCase();
+  if(FUNCTION_WORDS.has(lower)) return 'function';
+  if(/(en|eln|ern)$/.test(lower) && lower.length > 3) return 'verb';
+  return 'other'; // adjective, adverbe, alte cuvinte descriptive
+}
+
 function buildRound(){
   updateSummaryLine();
   savePreferences();
@@ -559,10 +589,16 @@ function buildRound(){
     const prompt = formatSide(word, promptSide);
     const correct = formatSide(word, answerSide);
     const others = shuffle(words.filter(w => w.id !== word.id));
+    const wordCategory = classifyWord(word);
+    const sameCategory = others.filter(o => classifyWord(o) === wordCategory);
+    const candidatePools = [sameCategory, others]; // incercam mai intai aceeasi categorie, apoi relaxam
     const distractors = [];
-    for(const o of others){
-      const val = formatSide(o, answerSide);
-      if(val.value !== correct.value && !distractors.some(d => d.value === val.value)) distractors.push(val);
+    for(const pool2 of candidatePools){
+      for(const o of pool2){
+        const val = formatSide(o, answerSide);
+        if(val.value !== correct.value && !distractors.some(d => d.value === val.value)) distractors.push(val);
+        if(distractors.length === 3) break;
+      }
       if(distractors.length === 3) break;
     }
     const options = shuffle([correct, ...distractors]);
