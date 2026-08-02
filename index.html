@@ -38,6 +38,14 @@
     overflow:hidden;
   }
 
+  .flag-banner{
+    height:4px; flex-shrink:0; width:100%;
+    background: linear-gradient(to right,
+      var(--ink) 0%, var(--ink) 33.333%,
+      var(--red) 33.333%, var(--red) 66.666%,
+      var(--gold) 66.666%, var(--gold) 100%);
+  }
+
   /* ---------- top bar ---------- */
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
@@ -69,7 +77,11 @@
   }
   .card::before{
     content:""; position:absolute; top:0; left:20px; width:30px; height:12px;
-    background:rgba(201,154,46,0.35); border:1px solid rgba(201,154,46,0.5); transform:rotate(-2deg);
+    background: linear-gradient(to right,
+      var(--ink) 0%, var(--ink) 33.333%,
+      var(--red) 33.333%, var(--red) 66.666%,
+      var(--gold) 66.666%, var(--gold) 100%);
+    opacity:0.55; border:1px solid rgba(36,42,49,0.25); transform:rotate(-2deg);
   }
   .tag-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-family:'IBM Plex Mono', monospace;
     font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; gap:8px; }
@@ -200,6 +212,7 @@
 </head>
 <body>
 
+<div class="flag-banner"></div>
 <div class="topbar">
   <div class="brand">Karteikarten<small>DE ⇄ RO · A1–B2</small></div>
   <div class="top-right">
