@@ -244,9 +244,11 @@
       <span class="chip level-chip" data-level="B1">B1</span>
       <span class="chip level-chip" data-level="B2">B2</span>
       <span class="chip level-chip" data-level="EXT">Suplimentar</span>
+      <span class="chip level-chip" data-level="PFLEGE">Îngrijire</span>
+      <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
       <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
     </div>
-    <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000</div>
+    <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
   </div>
 
   <div class="sheet-section">
@@ -375,7 +377,7 @@ function loadPreferences(){
   }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
 }
 
-const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar'};
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
 function updateSummaryLine(){

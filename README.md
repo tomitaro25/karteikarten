@@ -13,7 +13,7 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 ## Funcționalități
 
 - Traducere germană ⇄ română, grilă cu 4 variante de răspuns, cu distractori din aceeași categorie gramaticală (substantiv/verb/expresie/cuvânt funcțional)
-- Niveluri selectabile A1–B2 + Suplimentar, combinabile între ele
+- Niveluri selectabile A1–B2 + Suplimentar + **Îngrijire** (vocabular de specialitate pentru asistenți medicali/îngrijitori în azile de bătrâni), combinabile între ele
 - Selector de direcție: DE→RO, RO→DE, sau ambele amestecat
 - Mod de exersare "inteligent" (repetiție spațiată bazată pe istoricul de răspunsuri) sau complet aleator
 - Pronunție audio a cuvintelor germane (Web Speech API), cu alegere de voce
@@ -38,6 +38,8 @@ Pentru a publica o versiune nouă: încarcă fișierele modificate în acest rep
 - **Selecția și nivelizarea cuvintelor A1–B2** sunt construite **integral și independent** din rangul de frecvență reală de utilizare a limbii germane, pe baza listei [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords) (`content/2018/de/de_50k.txt`, derivată din corpus OpenSubtitles), licență **MIT**. Cuvintele au fost lematizate (formă de bază + tip gramatical) cu spaCy (`de_core_news_sm`), verificate manual pentru a elimina nume proprii, forme flexionate duplicate și zgomot din subtitrări, apoi împărțite pe niveluri A1–B2 exclusiv după poziția lor în clasamentul de frecvență. Nicio parte din selecția A1–B2 nu depinde de curriculumul vreunei instituții de examinare.
 - Etichetele CEFR (A1, A2, B1, B2) sunt un standard public, deschis, al Consiliului Europei — nu proprietatea vreunei organizații.
 - Categoria **"Suplimentar"** conține cuvinte adiționale (multe provenind din compilații publice ale [DWDS](https://www.dwds.de/) și dintr-un glosar public „Deutsch Online B2", © 2021 Goethe-Institut e.V., folosite ca punct de plecare istoric) care nu se încadrează în nivelizarea principală A1–B2 bazată pe frecvență — nu sunt etichetate CEFR și sunt oferite ca material suplimentar opțional.
+- Categoria **"Îngrijire"** (455 termeni) e un vocabular de specialitate, compilat manual, pentru asistenți medicali/îngrijitori în azile de bătrâni — relația cu colegii, cu rezidenții, cu aparținătorii, cu medicii, situații de urgență, programul de lucru, acte/fluturaș de salariu, vocabular de igienă/funcții corporale (clinic și colocvial), expresii din perspectiva rezidentului, roluri de specialitate (`Praxisanleiter`, `Alltagsbegleiter`) și termeni din software-ul de documentare MEDIFOX DAN, folosit frecvent în azilele germane. Nu e legat de frecvența generală a limbii, e curatoriat pe relevanță profesională.
+- Categoria **"Îngrijire — auxiliar"** (55 termeni) conține obiecte și instrumentar folosite în azil/spital (dispozitive de ridicare, scutece, instrumentar medical, mobilier, bucătărie/baie) — utilă și în context spitalicesc general, nu doar azil.
 - Traducerile în limba română sunt muncă originală.
 - Acest proiect e o resursă personală de studiu, nu revendică nicio afiliere cu Goethe-Institut, DWDS, hermitdave, Anthropic sau alte instituții/persoane menționate.
 
