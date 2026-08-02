@@ -40,7 +40,7 @@
 
   .flag-banner{
     height:4px; flex-shrink:0; width:100%;
-    background: linear-gradient(to right,
+    background: linear-gradient(to bottom,
       var(--ink) 0%, var(--ink) 33.333%,
       var(--red) 33.333%, var(--red) 66.666%,
       var(--gold) 66.666%, var(--gold) 100%);
@@ -77,7 +77,7 @@
   }
   .card::before{
     content:""; position:absolute; top:0; left:20px; width:30px; height:12px;
-    background: linear-gradient(to right,
+    background: linear-gradient(to bottom,
       var(--ink) 0%, var(--ink) 33.333%,
       var(--red) 33.333%, var(--red) 66.666%,
       var(--gold) 66.666%, var(--gold) 100%);
@@ -622,6 +622,7 @@ function renderQuestion(){
 function handleAnswer(btn, q){
   const chosen = decodeURIComponent(btn.dataset.value);
   const isCorrect = chosen === q.correct.value;
+  let correctBtnEl = null;
   sessionTotal++; if(isCorrect) sessionScore++;
   document.getElementById('sessionScore').textContent = sessionScore;
   document.getElementById('sessionTotal').textContent = sessionTotal;
@@ -633,6 +634,7 @@ function handleAnswer(btn, q){
     const val = decodeURIComponent(b.dataset.value);
     if(val === q.correct.value){
       b.classList.add('correct');
+      correctBtnEl = b;
       if(q.answerSide === 'de'){
         const speakSpan = document.createElement('button');
         speakSpan.className = 'speak-btn inline';
@@ -655,9 +657,21 @@ function handleAnswer(btn, q){
   });
 
   const stamp = document.getElementById('stamp');
+  const card = document.getElementById('card');
   stamp.textContent = isCorrect ? 'RICHTIG!' : 'GREȘIT';
   stamp.classList.add(isCorrect ? 'ok' : 'no');
-  requestAnimationFrame(()=> stamp.classList.add('show'));
+  // pozitionam stampila exact langa butonul cu raspunsul corect, nu la un procent fix
+  // (un procent fix se decalibreaza cand promptul e scurt/lung si optiunile incep mai sus/jos)
+  requestAnimationFrame(()=>{
+    if(correctBtnEl){
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = correctBtnEl.getBoundingClientRect();
+      const stampHeight = stamp.offsetHeight || 40;
+      const topPx = (btnRect.top - cardRect.top) + (btnRect.height/2) - (stampHeight/2);
+      stamp.style.top = Math.max(4, topPx) + 'px';
+    }
+    stamp.classList.add('show');
+  });
   document.getElementById('nextBtnBottom').classList.add('show');
 }
 
