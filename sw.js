@@ -1,9 +1,11 @@
-const CACHE_NAME = 'karteikarten-v18';
+const CACHE_NAME = 'karteikarten-v19';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
+  './icon-192-maskable.png',
+  './icon-512-maskable.png',
   './vocab-data.js'
 ];
 

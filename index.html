@@ -20,6 +20,7 @@
     --paper:#F2E9D8; --paper-dark:#E7DAC0; --ink:#242A31; --ink-soft:#57606b;
     --red:#B23A2E; --green:#3F7D53; --gold:#C99A2E; --line:#c9bba0;
     --der:#2C5F8A; --die:#B23A6A; --das:#3F7D53;
+    --flag-black:#1a1a1a; --flag-red:#D6362A; --flag-gold:#F5B916;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
@@ -41,9 +42,9 @@
   .flag-banner{
     height:4px; flex-shrink:0; width:100%;
     background: linear-gradient(to bottom,
-      var(--ink) 0%, var(--ink) 33.333%,
-      var(--red) 33.333%, var(--red) 66.666%,
-      var(--gold) 66.666%, var(--gold) 100%);
+      var(--flag-black) 0%, var(--flag-black) 33.333%,
+      var(--flag-red) 33.333%, var(--flag-red) 66.666%,
+      var(--flag-gold) 66.666%, var(--flag-gold) 100%);
   }
 
   /* ---------- top bar ---------- */
@@ -76,12 +77,13 @@
     padding:22px 18px 18px; flex:1; display:flex; flex-direction:column; min-height:0;
   }
   .card::before{
-    content:""; position:absolute; top:0; left:20px; width:30px; height:12px;
+    content:""; position:absolute; top:0; left:20px; width:32px; height:13px;
     background: linear-gradient(to bottom,
-      var(--ink) 0%, var(--ink) 33.333%,
-      var(--red) 33.333%, var(--red) 66.666%,
-      var(--gold) 66.666%, var(--gold) 100%);
-    opacity:0.55; border:1px solid rgba(36,42,49,0.25); transform:rotate(-2deg);
+      var(--flag-black) 0%, var(--flag-black) 33.333%,
+      var(--flag-red) 33.333%, var(--flag-red) 66.666%,
+      var(--flag-gold) 66.666%, var(--flag-gold) 100%);
+    opacity:0.9; border:1px solid rgba(36,42,49,0.35); transform:rotate(-2deg);
+    box-shadow: 0 1px 2px rgba(36,42,49,0.2);
   }
   .tag-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-family:'IBM Plex Mono', monospace;
     font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; gap:8px; }
@@ -94,17 +96,18 @@
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
   .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:8px; }
-  .prompt-word{ font-size:clamp(1.5rem, 7vw, 2rem); font-weight:700; line-height:1.2; margin-bottom:20px; }
+  .prompt-word{ font-size:clamp(1.3rem, 6.5vw, 2rem); font-weight:700; line-height:1.25; margin-bottom:20px;
+    overflow-wrap:break-word; word-break:break-word; hyphens:auto; }
   .art{ font-weight:600; }
   .art-der{color:var(--der);} .art-die{color:var(--die);} .art-das{color:var(--das);}
   .prompt-row{ display:flex; align-items:center; gap:10px; }
   .speak-btn{
-    flex-shrink:0; width:38px; height:38px; border-radius:50%; border:1.5px solid var(--ink-soft);
-    background:var(--paper); font-size:1rem; display:flex; align-items:center; justify-content:center; cursor:pointer;
-    text-decoration:none; color:inherit;
+    flex-shrink:0; width:40px; height:40px; border-radius:50%; border:2px solid var(--ink);
+    background:var(--paper); font-size:1.25rem; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    text-decoration:none; color:inherit; box-shadow:0 1px 3px rgba(36,42,49,0.25);
   }
   .speak-btn:active{ background:var(--paper-dark); }
-  .speak-btn.inline{ width:30px; height:30px; font-size:0.85rem; margin-left:8px; }
+  .speak-btn.inline{ width:32px; height:32px; font-size:1.05rem; margin-left:8px; }
 
   .options{ display:flex; flex-direction:column; gap:10px; margin-top:auto; }
   .opt{
@@ -112,7 +115,9 @@
     border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
     display:flex; gap:10px; align-items:flex-start; min-height:52px;
     transition:background 0.12s ease, transform 0.06s ease;
+    overflow-wrap:break-word; word-break:break-word;
   }
+  .opt > span:not(.letter){ min-width:0; }
   .opt .letter{ font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink-soft); flex-shrink:0; }
   .opt:active:not(:disabled){ background:var(--paper-dark); transform:scale(0.98); }
   .opt:disabled{ cursor:default; }
@@ -622,7 +627,6 @@ function renderQuestion(){
 function handleAnswer(btn, q){
   const chosen = decodeURIComponent(btn.dataset.value);
   const isCorrect = chosen === q.correct.value;
-  let correctBtnEl = null;
   sessionTotal++; if(isCorrect) sessionScore++;
   document.getElementById('sessionScore').textContent = sessionScore;
   document.getElementById('sessionTotal').textContent = sessionTotal;
@@ -634,7 +638,6 @@ function handleAnswer(btn, q){
     const val = decodeURIComponent(b.dataset.value);
     if(val === q.correct.value){
       b.classList.add('correct');
-      correctBtnEl = b;
       if(q.answerSide === 'de'){
         const speakSpan = document.createElement('button');
         speakSpan.className = 'speak-btn inline';
@@ -660,14 +663,16 @@ function handleAnswer(btn, q){
   const card = document.getElementById('card');
   stamp.textContent = isCorrect ? 'RICHTIG!' : 'GREȘIT';
   stamp.classList.add(isCorrect ? 'ok' : 'no');
-  // pozitionam stampila exact langa butonul cu raspunsul corect, nu la un procent fix
-  // (un procent fix se decalibreaza cand promptul e scurt/lung si optiunile incep mai sus/jos)
+  // pozitionam stampila DEASUPRA primei variante de raspuns (niciodata peste ea) -
+  // corectitudinea e oricum aratata clar prin bordura verde/rosie a variantelor
   requestAnimationFrame(()=>{
-    if(correctBtnEl){
+    const firstOpt = document.querySelector('.opt');
+    if(firstOpt){
       const cardRect = card.getBoundingClientRect();
-      const btnRect = correctBtnEl.getBoundingClientRect();
+      const optRect = firstOpt.getBoundingClientRect();
       const stampHeight = stamp.offsetHeight || 40;
-      const topPx = (btnRect.top - cardRect.top) + (btnRect.height/2) - (stampHeight/2);
+      const gap = 10;
+      const topPx = (optRect.top - cardRect.top) - stampHeight - gap;
       stamp.style.top = Math.max(4, topPx) + 'px';
     }
     stamp.classList.add('show');
