@@ -115,6 +115,7 @@
   }
   .skip-btn:active{ background:var(--paper-dark); }
   .stage-star{ font-size:0.68rem; letter-spacing:1px; cursor:help; }
+  .search-result-row:active{ background:var(--paper-dark); }
   .stage-star.gold{ color:var(--gold); }
   .stage-star.wrong{ color:var(--red); }
   .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
@@ -265,6 +266,7 @@
       <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
+    <button class="gear-btn" id="micShortcutBtn" style="display:none;" aria-label="Căutare vocală">🎤</button>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
 </div>
@@ -333,6 +335,13 @@
       <p><b>Backup</b> — salvează tot progresul într-un fișier, ca să nu-l pierzi dacă schimbi telefonul.</p>
       <p>Toate datele (statistici, preferințe) rămân doar pe acest dispozitiv — nimic nu se trimite nicăieri.</p>
     </div>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Căutare vocală 🎤</div>
+      <p>Butonul 🎤 din bara de sus (dacă apare — nu toate browserele îl suportă) deschide căutarea și te lasă să rostești un cuvânt, în română sau germană. Aplicația afișează pe ecran <b>și</b> pronunță rezultatul, dacă îl găsește în listă.</p>
+      <p>Pentru germană, poți spune cuvântul cu sau fără articol (ex. „Tisch" sau „der Tisch") — articolul e recunoscut și eliminat automat înainte de căutare.</p>
+      <p><b>Notă de confidențialitate:</b> spre deosebire de restul aplicației, recunoașterea vocală trimite sunetul către serverele browserului (ex. Google, pentru Chrome) ca să fie transformat în text — nu se întâmplă local, pe telefon. E o limitare a tehnologiei din browser, nu ceva controlat de noi.</p>
+      <p>Funcția nu apare deloc pe iPhone/iPad (Safari) — Apple nu oferă acest API în niciun browser de pe iOS, indiferent ce aplicație folosești. Căutarea scrisă rămâne disponibilă peste tot.</p>
+    </div>
   </details>
 
   <details class="sheet-group" open>
@@ -389,7 +398,7 @@
     </div>
   </details>
 
-  <details class="sheet-group">
+  <details class="sheet-group" id="dataGroup">
     <summary>Date &amp; fișiere</summary>
     <div class="sheet-section">
       <div class="sheet-label">Listă proprie</div>
@@ -409,11 +418,17 @@
       </div>
     </div>
 
-    <div class="sheet-section">
+    <div class="sheet-section" id="searchSection">
       <div class="sheet-label">Caută un cuvânt</div>
       <div class="btn-row">
         <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
       </div>
+      <div class="chip-row" id="voiceLangRow" style="display:none; margin-top:10px;">
+        <span class="chip voice-lang-chip active" data-lang="ro">🎙️ Vorbesc română</span>
+        <span class="chip voice-lang-chip" data-lang="de">🎙️ Ich spreche Deutsch</span>
+      </div>
+      <button class="btn-block" id="voiceRecordBtn" style="display:none; margin-top:8px;"><span>🎤 Apasă și vorbește</span><span>●</span></button>
+      <div class="upload-status" id="voiceSearchStatus"></div>
       <div id="wordSearchResults"></div>
     </div>
 
@@ -1151,23 +1166,166 @@ document.getElementById('backupFileInput').addEventListener('change', (e)=>{
   e.target.value = '';
 });
 
-/* ---------- cautare rapida de cuvant ---------- */
+/* ---------- normalizare diacritice (RO + DE), pt cautare tolerantă ---------- */
+function normalizeDiacritics(text){
+  return String(text).toLowerCase().trim()
+    .replace(/[ăâ]/g,'a').replace(/î/g,'i').replace(/[șş]/g,'s').replace(/[țţ]/g,'t')
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss');
+}
+// a doua incercare, doar pt germana: conventia ae/oe/ue -> vocala simpla (dupa normalizare)
+function normalizeConventionDE(text){
+  return text.replace(/ue/g,'u').replace(/oe/g,'o').replace(/ae/g,'a');
+}
+const GERMAN_ARTICLES = ['der','die','das','den','dem','des','ein','eine','einen','einem','einer','eines'];
+
+/* ---------- cautare rapida de cuvant (scris) ---------- */
 document.getElementById('wordSearchInput').addEventListener('input', (e)=>{
-  const q = e.target.value.trim().toLowerCase();
+  const q = normalizeDiacritics(e.target.value);
   const resultsEl = document.getElementById('wordSearchResults');
   if(q.length < 2){ resultsEl.innerHTML = ''; return; }
   const pool = BUILTIN.concat(customWords);
-  const matches = pool.filter(w => w.de.toLowerCase().includes(q) || w.ro.toLowerCase().includes(q)).slice(0, 25);
+  const matches = pool.filter(w => normalizeDiacritics(w.de).includes(q) || normalizeDiacritics(w.ro).includes(q)).slice(0, 25);
+  renderSearchResults(matches);
+});
+function renderSearchResults(matches){
+  const resultsEl = document.getElementById('wordSearchResults');
   if(!matches.length){
     resultsEl.innerHTML = '<div class="upload-status">Niciun rezultat.</div>';
     return;
   }
   resultsEl.innerHTML = matches.map(w=>{
     const artikelTxt = w.artikel ? `<span class="art art-${w.artikel}">${w.artikel}</span> ` : '';
-    return `<div style="padding:6px 0; border-bottom:1px solid var(--line); font-family:'Literata',serif; font-size:0.88rem;">
+    return `<div class="search-result-row" data-de="${encodeURIComponent(w.de)}" style="padding:6px 0; border-bottom:1px solid var(--line); font-family:'Literata',serif; font-size:0.88rem; cursor:pointer;">
       ${artikelTxt}<b>${w.de}</b> — ${w.ro} <span style="font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--ink-soft);">[${LEVEL_LABELS[w.level]||w.level}]</span>
     </div>`;
   }).join('');
+  resultsEl.querySelectorAll('.search-result-row').forEach(row=>{
+    row.addEventListener('click', ()=> speakGerman(decodeURIComponent(row.dataset.de)));
+  });
+}
+
+/* ---------- cautare vocala ---------- */
+function supportsSpeechRecognition(){
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+let voiceSearchLang = 'ro';
+
+function findWordMatch(transcript, lang){
+  const pool = BUILTIN.concat(customWords);
+  const field = lang === 'ro' ? 'ro' : 'de';
+  const base = normalizeDiacritics(transcript);
+
+  const tryExact = (q) => pool.find(w => normalizeDiacritics(w[field]) === q);
+
+  // 1) potrivire exacta directa (are prioritate - un cuvant din lista, chiar daca seamana cu un articol, se gaseste primul)
+  let match = tryExact(base);
+  if(match) return { word: match };
+  if(lang === 'de'){
+    match = tryExact(normalizeConventionDE(base));
+    if(match) return { word: match };
+  }
+
+  // 2) doar pt germana: daca nu s-a gasit nimic si primul cuvant e un articol/pronume cunoscut, incercam sa-l taiem
+  if(lang === 'de'){
+    const words = base.split(/\s+/);
+    if(GERMAN_ARTICLES.includes(words[0])){
+      if(words.length === 1) return { onlyArticle: true };
+      const rest = words.slice(1).join(' ');
+      match = tryExact(rest) || tryExact(normalizeConventionDE(rest));
+      if(match) return { word: match };
+    }
+  }
+  return { notFound: true };
+}
+
+function showVoiceSearchResult(word, heardText){
+  const statusEl = document.getElementById('voiceSearchStatus');
+  statusEl.innerHTML = `Am înțeles: <b>„${heardText}"</b>`;
+  renderSearchResults([word]);
+  if(word.artikel || /[a-zA-ZäöüÄÖÜß]/.test(word.de)){
+    speakGerman(word.de); // rostim automat rezultatul (forma corecta, cu articol daca e cazul)
+  }
+}
+
+function handleVoiceResult(alternatives){
+  const statusEl = document.getElementById('voiceSearchStatus');
+  for(const alt of alternatives){
+    const result = findWordMatch(alt, voiceSearchLang);
+    if(result.word){
+      showVoiceSearchResult(result.word, alt);
+      return;
+    }
+  }
+  const firstAlt = alternatives[0];
+  const result0 = findWordMatch(firstAlt, voiceSearchLang);
+  document.getElementById('wordSearchResults').innerHTML = '';
+  if(result0.onlyArticle){
+    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — ai spus doar un articol. Spune-l împreună cu un cuvânt, ex. „${firstAlt} Tisch".`;
+  } else {
+    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — nu am găsit acest cuvânt în listă.`;
+  }
+}
+
+let activeRecognizer = null;
+function startVoiceSearch(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return;
+  const statusEl = document.getElementById('voiceSearchStatus');
+  const btn = document.getElementById('voiceRecordBtn');
+  document.getElementById('wordSearchResults').innerHTML = '';
+  statusEl.textContent = 'Ascult...';
+  btn.disabled = true;
+
+  activeRecognizer = new SR();
+  activeRecognizer.lang = voiceSearchLang === 'ro' ? 'ro-RO' : 'de-DE';
+  activeRecognizer.maxAlternatives = 5;
+  activeRecognizer.interimResults = false;
+
+  activeRecognizer.onresult = (e) => {
+    const alternatives = Array.from(e.results[0]).map(r => r.transcript);
+    handleVoiceResult(alternatives);
+  };
+  activeRecognizer.onerror = (e) => {
+    if(e.error === 'not-allowed' || e.error === 'permission-denied'){
+      statusEl.textContent = 'Acces la microfon refuzat — verifică permisiunile browserului pentru acest site.';
+    } else if(e.error === 'no-speech'){
+      statusEl.textContent = 'Nu am detectat nicio voce — încearcă din nou.';
+    } else if(e.error === 'network'){
+      statusEl.textContent = 'Recunoașterea vocală are nevoie de conexiune la internet.';
+    } else {
+      statusEl.textContent = 'A apărut o eroare la recunoașterea vocală. Încearcă din nou.';
+    }
+  };
+  activeRecognizer.onend = () => { btn.disabled = false; };
+  try{
+    activeRecognizer.start();
+  }catch(err){
+    statusEl.textContent = 'Nu s-a putut porni microfonul.';
+    btn.disabled = false;
+  }
+}
+
+if(supportsSpeechRecognition()){
+  document.getElementById('voiceLangRow').style.display = 'flex';
+  document.getElementById('voiceRecordBtn').style.display = 'flex';
+  document.getElementById('micShortcutBtn').style.display = 'flex';
+}
+document.querySelectorAll('.voice-lang-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.voice-lang-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    voiceSearchLang = chip.dataset.lang;
+  });
+});
+document.getElementById('voiceRecordBtn').addEventListener('click', startVoiceSearch);
+document.getElementById('micShortcutBtn').addEventListener('click', ()=>{
+  openSheet();
+  const group = document.getElementById('dataGroup');
+  group.open = true;
+  setTimeout(()=>{
+    document.getElementById('searchSection').scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('wordSearchInput').focus();
+  }, 150);
 });
 
 /* ---------- instalare PWA (Android/desktop nativ + fallback iOS) ---------- */

@@ -26,7 +26,7 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 - **Progres pe niveluri** — procent de cuvinte exersate și rată de răspunsuri corecte, per nivel
 - **Mod „Doar greșeli"** — revizuiește exclusiv cuvintele la care ai greșit recent, cu contor dinamic
 - **Serie de zile (streak)** — afișată în linia de rezumat, calculată din activitatea zilnică
-- **Căutare rapidă de cuvânt** — separată de joc, caută live în germană și română
+- **Căutare vocală** (🎤, unde browserul o suportă) — rostești un cuvânt în română sau germană, aplicația îl caută în listă și afișează + pronunță rezultatul; tolerantă la lipsa diacriticelor și la articolele germane rostite din reflex
 - **Backup complet** — exportă/restaurează tot progresul (statistici, preferințe, greșeli, streak) ca fișier `.json`
 - **Prompt de instalare** — banner automat pe Android/Chrome (instalare cu un tap) și instrucțiuni clare pe iOS Safari (unde Apple nu permite instalare programatică)
 - Panou de setări organizat pe secțiuni pliabile (Vocabular / Exersare / Date & fișiere / Voce)
@@ -57,7 +57,7 @@ Vocabularul de nivel B1/B2 provine parțial dintr-un corpus de subtitrări de fi
 
 ## Confidențialitate
 
-Aplicația nu colectează, nu transmite și nu stochează nicio dată pe niciun server. Tot ce ține de progres (statistici, preferințe) rămâne local, în browser-ul dispozitivului tău. Singurele conexiuni externe sunt: Google Fonts (fonturi), dict.cc (doar dacă apeși linkul respectiv) și motorul de sinteză vocală al telefonului.
+Aplicația nu colectează, nu transmite și nu stochează nicio dată pe niciun server. Tot ce ține de progres (statistici, preferințe) rămâne local, în browser-ul dispozitivului tău. Singurele conexiuni externe sunt: Google Fonts (fonturi), dict.cc (doar dacă apeși linkul respectiv) și motorul de sinteză vocală al telefonului. **Excepție:** funcția de căutare vocală (🎤) trimite sunetul către serverele browserului (ex. Google, pentru Chrome) ca să fie transformat în text — o limitare a tehnologiei din browser, nu ceva controlat de noi. Nu apare deloc pe iOS/Safari (Apple nu oferă acest API acolo).
 
 ## Licență
 
