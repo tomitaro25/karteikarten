@@ -40,7 +40,7 @@
   }
 
   .flag-banner{
-    height:4px; flex-shrink:0; width:100%;
+    height:7px; flex-shrink:0; width:100%;
     background: linear-gradient(to bottom,
       var(--flag-black) 0%, var(--flag-black) 33.333%,
       var(--flag-red) 33.333%, var(--flag-red) 66.666%,
@@ -67,6 +67,18 @@
     padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft);
     text-align:center; flex-shrink:0;
   }
+  .install-banner{
+    display:flex; align-items:center; gap:8px; margin:8px 16px 0; padding:10px 12px;
+    background:var(--paper-dark); border:1.5px solid var(--ink); border-radius:10px; flex-shrink:0;
+  }
+  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:0.82rem; line-height:1.3; }
+  .install-banner-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; font-weight:600; background:var(--ink);
+    color:var(--paper); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; flex-shrink:0;
+  }
+  .install-banner-close{
+    background:none; border:none; font-size:1rem; color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:4px;
+  }
 
   /* ---------- main scroll area ---------- */
   .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; }
@@ -77,7 +89,7 @@
     padding:22px 18px 18px; flex:1; display:flex; flex-direction:column; min-height:0;
   }
   .card::before{
-    content:""; position:absolute; top:0; left:20px; width:32px; height:13px;
+    content:""; position:absolute; top:0; left:20px; width:32px; height:18px;
     background: linear-gradient(to bottom,
       var(--flag-black) 0%, var(--flag-black) 33.333%,
       var(--flag-red) 33.333%, var(--flag-red) 66.666%,
@@ -186,6 +198,16 @@
   .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
   .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
   .sheet-section{ margin-bottom:20px; }
+  .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
+  .sheet-group[open]{ padding-bottom:6px; }
+  .sheet-group summary{
+    font-family:'Special Elite', monospace; font-size:0.92rem; padding:14px 0; cursor:pointer;
+    list-style:none; display:flex; align-items:center; justify-content:space-between; color:var(--ink);
+  }
+  .sheet-group summary::-webkit-details-marker{ display:none; }
+  .sheet-group summary::after{ content:'▾'; font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); transition:transform 0.2s ease; }
+  .sheet-group[open] summary::after{ transform:rotate(180deg); }
+  .sheet-group .sheet-section:last-child{ margin-bottom:12px; }
   .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; letter-spacing:1.5px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:10px; }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
@@ -226,6 +248,11 @@
   </div>
 </div>
 <div class="summary-line" id="summaryLine"></div>
+<div class="install-banner" id="installBanner" style="display:none;">
+  <span id="installBannerText"></span>
+  <button class="install-banner-btn" id="installBannerBtn"></button>
+  <button class="install-banner-close" id="installBannerClose" aria-label="Închide">✕</button>
+</div>
 
 <div class="main">
   <div class="card" id="card"></div>
@@ -241,72 +268,123 @@
   <div class="sheet-handle"></div>
   <div class="sheet-title">Setări listă</div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Niveluri</div>
-    <div class="chip-row">
-      <span class="chip level-chip active" data-level="A1">A1</span>
-      <span class="chip level-chip" data-level="A2">A2</span>
-      <span class="chip level-chip" data-level="B1">B1</span>
-      <span class="chip level-chip" data-level="B2">B2</span>
-      <span class="chip level-chip" data-level="EXT">Suplimentar</span>
-      <span class="chip level-chip" data-level="PFLEGE">Îngrijire</span>
-      <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
-      <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
-    </div>
-    <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
+  <div class="sheet-section" id="installSection" style="display:none;">
+    <div class="sheet-label">Instalare</div>
+    <div id="installContent"></div>
   </div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Direcție</div>
-    <div class="chip-row">
-      <span class="chip direction-chip active" data-dir="mixed">Ambele (mixt)</span>
-      <span class="chip direction-chip" data-dir="de-ro">DE → RO</span>
-      <span class="chip direction-chip" data-dir="ro-de">RO → DE</span>
+  <details class="sheet-group" open>
+    <summary>Vocabular</summary>
+    <div class="sheet-section">
+      <div class="sheet-label">Presetări rapide</div>
+      <div class="chip-row">
+        <span class="chip preset-chip" data-preset="A1">Începător</span>
+        <span class="chip preset-chip" data-preset="A1,A2">Conversație</span>
+        <span class="chip preset-chip" data-preset="B1,B2">Avansat</span>
+        <span class="chip preset-chip" data-preset="PFLEGE,PFLEGEAUX">La job</span>
+      </div>
     </div>
-  </div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Mod de exersare</div>
-    <div class="chip-row">
-      <span class="chip mode-chip active" data-mode="smart">Inteligent (recapitulare)</span>
-      <span class="chip mode-chip" data-mode="random">Complet aleator</span>
+    <div class="sheet-section">
+      <div class="sheet-label">Niveluri</div>
+      <div class="chip-row">
+        <span class="chip level-chip active" data-level="A1">A1</span>
+        <span class="chip level-chip" data-level="A2">A2</span>
+        <span class="chip level-chip" data-level="B1">B1</span>
+        <span class="chip level-chip" data-level="B2">B2</span>
+        <span class="chip level-chip" data-level="EXT">Suplimentar</span>
+        <span class="chip level-chip" data-level="PFLEGE">Îngrijire</span>
+        <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
+        <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
+      </div>
+      <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
     </div>
-  </div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Listă proprie</div>
-    <div class="btn-row">
-      <button class="btn-block" id="uploadBtn"><span>Încarcă fișier (CSV / XLSX)</span><span>›</span></button>
-      <input type="file" id="fileInput" class="file-input" accept=".csv,.tsv,.txt,.xlsx,.xls">
-      <button class="btn-block" id="templateBtn"><span>Descarcă template CSV</span><span>›</span></button>
+    <div class="sheet-section">
+      <div class="sheet-label">Progres pe niveluri</div>
+      <div id="levelProgress"></div>
     </div>
-    <div class="upload-status" id="uploadStatus"></div>
-  </div>
+  </details>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Export</div>
-    <div class="btn-row">
-      <button class="btn-block" id="exportWordsBtn"><span>Exportă cuvintele curente</span><span>›</span></button>
-      <button class="btn-block" id="exportStatsBtn"><span>Exportă statisticile</span><span>›</span></button>
+  <details class="sheet-group">
+    <summary>Exersare</summary>
+    <div class="sheet-section">
+      <div class="sheet-label">Direcție</div>
+      <div class="chip-row">
+        <span class="chip direction-chip active" data-dir="mixed">Ambele (mixt)</span>
+        <span class="chip direction-chip" data-dir="de-ro">DE → RO</span>
+        <span class="chip direction-chip" data-dir="ro-de">RO → DE</span>
+      </div>
     </div>
-  </div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Voce (pronunție 🔊)</div>
-    <select id="voiceSelect" class="btn-block" style="width:100%; appearance:none;">
-      <option value="">Se caută voci germane...</option>
-    </select>
-    <button class="btn-block" id="testVoiceBtn" style="margin-top:8px;"><span>Testează vocea (spune „Tisch")</span><span>▶</span></button>
-  </div>
-
-  <div class="sheet-section">
-    <div class="sheet-label">Legendă gen</div>
-    <div class="legend">
-      <span><span class="art art-der">der</span> masc.</span>
-      <span><span class="art art-die">die</span> fem.</span>
-      <span><span class="art art-das">das</span> neutru</span>
+    <div class="sheet-section">
+      <div class="sheet-label">Mod de exersare</div>
+      <div class="chip-row">
+        <span class="chip mode-chip active" data-mode="smart">Inteligent (recapitulare)</span>
+        <span class="chip mode-chip" data-mode="random">Complet aleator</span>
+        <span class="chip mode-chip" data-mode="mistakes" id="mistakesModeChip">Doar greșeli (0)</span>
+      </div>
     </div>
-  </div>
+  </details>
+
+  <details class="sheet-group">
+    <summary>Date &amp; fișiere</summary>
+    <div class="sheet-section">
+      <div class="sheet-label">Listă proprie</div>
+      <div class="btn-row">
+        <button class="btn-block" id="uploadBtn"><span>Încarcă fișier (CSV / XLSX)</span><span>›</span></button>
+        <input type="file" id="fileInput" class="file-input" accept=".csv,.tsv,.txt,.xlsx,.xls">
+        <button class="btn-block" id="templateBtn"><span>Descarcă template CSV</span><span>›</span></button>
+      </div>
+      <div class="upload-status" id="uploadStatus"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Export</div>
+      <div class="btn-row">
+        <button class="btn-block" id="exportWordsBtn"><span>Exportă cuvintele curente</span><span>›</span></button>
+        <button class="btn-block" id="exportStatsBtn"><span>Exportă statisticile</span><span>›</span></button>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Caută un cuvânt</div>
+      <div class="btn-row">
+        <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
+      </div>
+      <div id="wordSearchResults"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Backup progres (statistici + preferințe)</div>
+      <div class="btn-row">
+        <button class="btn-block" id="backupExportBtn"><span>Salvează backup (.json)</span><span>›</span></button>
+        <button class="btn-block" id="backupImportBtn"><span>Restaurează din backup</span><span>›</span></button>
+        <input type="file" id="backupFileInput" class="file-input" accept=".json">
+      </div>
+      <div class="upload-status" id="backupStatus"></div>
+    </div>
+  </details>
+
+  <details class="sheet-group">
+    <summary>Voce &amp; legendă</summary>
+    <div class="sheet-section">
+      <div class="sheet-label">Voce (pronunție 🔊)</div>
+      <select id="voiceSelect" class="btn-block" style="width:100%; appearance:none;">
+        <option value="">Se caută voci germane...</option>
+      </select>
+      <button class="btn-block" id="testVoiceBtn" style="margin-top:8px;"><span>Testează vocea (spune „Tisch")</span><span>▶</span></button>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Legendă gen</div>
+      <div class="legend">
+        <span><span class="art art-der">der</span> masc.</span>
+        <span><span class="art art-die">die</span> fem.</span>
+        <span><span class="art art-das">das</span> neutru</span>
+      </div>
+    </div>
+  </details>
 
   <button class="sheet-close" id="closeSheetBtn">Închide</button>
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
@@ -391,12 +469,39 @@ function updateSummaryLine(){
   const levelsTxt = Array.from(selectedLevels).map(l => LEVEL_LABELS[l] || l).join('+') || '—';
   let txt = `${levelsTxt} · ${DIRECTION_LABELS[selectedDirection] || selectedDirection} · ${MODE_LABELS[practiceMode] || practiceMode}`;
   if(customActive) txt += ' · +Custom';
+  if(currentStreak && currentStreak.count > 1) txt += ` · 🔥 ${currentStreak.count} zile`;
   el.textContent = txt;
+}
+let mistakeIds = []; // cele mai recente greseli, cele mai noi primele, fara duplicate
+async function loadMistakes(){
+  try{
+    const raw = localStorage.getItem('mistakeIds');
+    mistakeIds = raw ? JSON.parse(raw) : [];
+  }catch(e){ mistakeIds = []; }
+}
+function saveMistakes(){
+  try{ localStorage.setItem('mistakeIds', JSON.stringify(mistakeIds)); }catch(e){}
+}
+function updateMistakesChipLabel(){
+  const chip = document.getElementById('mistakesModeChip');
+  if(chip) chip.textContent = `Doar greșeli (${mistakeIds.length})`;
 }
 function recordAnswer(id, correct){
   if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0};
   wordStats[id].attempts++;
-  if(correct) wordStats[id].correct++;
+  if(correct){
+    wordStats[id].correct++;
+    // daca acum a raspuns corect, scoatem cuvantul din lista de greseli recente
+    const idx = mistakeIds.indexOf(id);
+    if(idx !== -1){ mistakeIds.splice(idx, 1); saveMistakes(); }
+  } else {
+    const idx = mistakeIds.indexOf(id);
+    if(idx !== -1) mistakeIds.splice(idx, 1);
+    mistakeIds.unshift(id);
+    if(mistakeIds.length > 200) mistakeIds.length = 200;
+    saveMistakes();
+  }
+  updateMistakesChipLabel();
   saveStats();
 }
 
@@ -437,6 +542,10 @@ function downloadBlob(content, filename, type){
 
 /* ---------- active pool ---------- */
 function activeWords(){
+  if(practiceMode === 'mistakes'){
+    const map = allWordsById();
+    return mistakeIds.map(id => map[id]).filter(Boolean);
+  }
   let words = BUILTIN.filter(w => selectedLevels.has(w.level));
   if(customActive) words = words.concat(customWords);
   return words;
@@ -704,7 +813,7 @@ function showEndScreen(){
 /* ---------- bottom sheet open/close ---------- */
 const sheet = document.getElementById('settingsSheet');
 const sheetOverlay = document.getElementById('sheetOverlay');
-function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); }
+function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); renderLevelProgress(); }
 function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
 document.getElementById('openSheetBtn').addEventListener('click', openSheet);
 document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
@@ -720,6 +829,19 @@ document.querySelectorAll('.level-chip').forEach(chip=>{
     } else {
       selectedLevels.add(lvl); chip.classList.add('active');
     }
+    roundNumber = 1;
+    buildRound();
+  });
+});
+
+/* ---------- presetari rapide ---------- */
+document.querySelectorAll('.preset-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    const levels = chip.dataset.preset.split(',');
+    selectedLevels = new Set(levels);
+    document.querySelectorAll('.level-chip').forEach(c=>{
+      c.classList.toggle('active', selectedLevels.has(c.dataset.level));
+    });
     roundNumber = 1;
     buildRound();
   });
@@ -887,11 +1009,207 @@ document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
   downloadBlob(content, 'statistici-vocabular.csv', 'text/csv;charset=utf-8');
 });
 
+/* ---------- backup complet (statistici + preferinte + greseli + streak), ca fisier .json ---------- */
+const BACKUP_KEYS = ['wordStats', 'prefs', 'mistakeIds', 'streak', 'voiceURI'];
+document.getElementById('backupExportBtn').addEventListener('click', ()=>{
+  const backup = { _app: 'Karteikarten', _version: 1, _exportedAt: new Date().toISOString(), data: {} };
+  BACKUP_KEYS.forEach(key=>{
+    try{
+      const raw = localStorage.getItem(key);
+      if(raw !== null) backup.data[key] = raw;
+    }catch(e){}
+  });
+  const dateStr = new Date().toISOString().slice(0,10);
+  downloadBlob(JSON.stringify(backup, null, 2), `karteikarten-backup-${dateStr}.json`, 'application/json;charset=utf-8');
+  document.getElementById('backupStatus').textContent = 'Backup salvat.';
+});
+
+document.getElementById('backupImportBtn').addEventListener('click', ()=>{
+  document.getElementById('backupFileInput').click();
+});
+document.getElementById('backupFileInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('backupStatus');
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(!parsed || parsed._app !== 'Karteikarten' || !parsed.data){
+        status.textContent = 'Fișierul nu pare un backup valid Karteikarten.';
+        return;
+      }
+      const confirmMsg = `Restaurezi backup din ${parsed._exportedAt ? parsed._exportedAt.slice(0,10) : 'dată necunoscută'}? Progresul curent va fi suprascris.`;
+      if(!confirm(confirmMsg)) return;
+      BACKUP_KEYS.forEach(key=>{
+        if(parsed.data[key] !== undefined){
+          try{ localStorage.setItem(key, parsed.data[key]); }catch(err){}
+        }
+      });
+      status.textContent = 'Backup restaurat. Se reîncarcă aplicația...';
+      setTimeout(()=> location.reload(), 900);
+    }catch(err){
+      status.textContent = 'Eroare la citirea fișierului — verifică că e un backup valid (.json).';
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ---------- cautare rapida de cuvant ---------- */
+document.getElementById('wordSearchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  const resultsEl = document.getElementById('wordSearchResults');
+  if(q.length < 2){ resultsEl.innerHTML = ''; return; }
+  const pool = BUILTIN.concat(customWords);
+  const matches = pool.filter(w => w.de.toLowerCase().includes(q) || w.ro.toLowerCase().includes(q)).slice(0, 25);
+  if(!matches.length){
+    resultsEl.innerHTML = '<div class="upload-status">Niciun rezultat.</div>';
+    return;
+  }
+  resultsEl.innerHTML = matches.map(w=>{
+    const artikelTxt = w.artikel ? `<span class="art art-${w.artikel}">${w.artikel}</span> ` : '';
+    return `<div style="padding:6px 0; border-bottom:1px solid var(--line); font-family:'Literata',serif; font-size:0.88rem;">
+      ${artikelTxt}<b>${w.de}</b> — ${w.ro} <span style="font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--ink-soft);">[${LEVEL_LABELS[w.level]||w.level}]</span>
+    </div>`;
+  }).join('');
+});
+
+/* ---------- instalare PWA (Android/desktop nativ + fallback iOS) ---------- */
+let deferredInstallPrompt = null;
+const installSection = document.getElementById('installSection');
+const installContent = document.getElementById('installContent');
+const installBanner = document.getElementById('installBanner');
+const installBannerText = document.getElementById('installBannerText');
+const installBannerBtn = document.getElementById('installBannerBtn');
+const installBannerClose = document.getElementById('installBannerClose');
+
+function isStandaloneApp(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function isIOSDevice(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+function installDismissed(){
+  try{ return localStorage.getItem('installBannerDismissed') === '1'; }catch(e){ return false; }
+}
+function dismissInstallBanner(){
+  installBanner.style.display = 'none';
+  try{ localStorage.setItem('installBannerDismissed', '1'); }catch(e){}
+}
+
+function refreshInstallUI(){
+  if(isStandaloneApp()){
+    installSection.style.display = 'none';
+    installBanner.style.display = 'none';
+    return;
+  }
+  if(deferredInstallPrompt){
+    // Chrome/Edge/Samsung Internet/majoritatea browserelor Android - prompt nativ disponibil
+    installSection.style.display = 'block';
+    installContent.innerHTML = `<button class="chip active" id="installBtnSheet" style="width:100%;text-align:center;">📲 Instalează aplicația</button>`;
+    document.getElementById('installBtnSheet').addEventListener('click', triggerNativeInstall);
+
+    if(!installDismissed()){
+      installBannerText.textContent = 'Poți instala Karteikarten pe telefon, ca aplicație.';
+      installBannerBtn.textContent = 'Instalează';
+      installBannerBtn.onclick = triggerNativeInstall;
+      installBanner.style.display = 'flex';
+    }
+  } else if(isIOSDevice()){
+    // Safari iOS nu are prompt programatic - doar instructiuni
+    const msg = 'Pe iPhone/iPad: apasă butonul Distribuie (pătrat cu săgeată în sus) din bara Safari, apoi „Adaugă pe ecranul principal".';
+    installSection.style.display = 'block';
+    installContent.innerHTML = `<div class="upload-status">${msg}</div>`;
+
+    if(!installDismissed()){
+      installBannerText.textContent = 'Poți instala aplicația: Distribuie → Adaugă pe ecranul principal.';
+      installBannerBtn.textContent = 'Am înțeles';
+      installBannerBtn.onclick = dismissInstallBanner;
+      installBanner.style.display = 'flex';
+    }
+  } else {
+    installSection.style.display = 'none';
+    installBanner.style.display = 'none';
+  }
+}
+
+async function triggerNativeInstall(){
+  if(!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  installBanner.style.display = 'none';
+  installSection.style.display = 'none';
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  refreshInstallUI();
+});
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  installBanner.style.display = 'none';
+  installSection.style.display = 'none';
+});
+installBannerClose.addEventListener('click', dismissInstallBanner);
+
+function updateStreak(){
+  try{
+    const today = new Date().toISOString().slice(0,10);
+    const raw = localStorage.getItem('streak');
+    let streak = raw ? JSON.parse(raw) : {count:0, lastDate:null};
+    if(streak.lastDate !== today){
+      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+      streak.count = (streak.lastDate === yesterday) ? streak.count + 1 : 1;
+      streak.lastDate = today;
+      localStorage.setItem('streak', JSON.stringify(streak));
+    }
+    return streak;
+  }catch(e){ return {count:0, lastDate:null}; }
+}
+let currentStreak = {count:0, lastDate:null};
+
+function renderLevelProgress(){
+  const el = document.getElementById('levelProgress');
+  if(!el) return;
+  const byLevel = {};
+  BUILTIN.forEach(w=>{
+    if(!byLevel[w.level]) byLevel[w.level] = {total:0, attempted:0, correctSum:0, attemptSum:0};
+    byLevel[w.level].total++;
+    const s = wordStats[w.id];
+    if(s && s.attempts){
+      byLevel[w.level].attempted++;
+      byLevel[w.level].correctSum += s.correct;
+      byLevel[w.level].attemptSum += s.attempts;
+    }
+  });
+  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX'];
+  let html = '';
+  order.forEach(lvl=>{
+    const d = byLevel[lvl];
+    if(!d || !d.total) return;
+    const pct = d.attemptSum ? Math.round((d.correctSum/d.attemptSum)*100) : null;
+    const coveragePct = Math.round((d.attempted/d.total)*100);
+    html += `<div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:4px 0;border-bottom:1px solid var(--line);">
+      <span>${LEVEL_LABELS[lvl]||lvl}</span>
+      <span>${d.attempted}/${d.total} exersate (${coveragePct}%)${pct!==null ? ' · '+pct+'% corecte' : ''}</span>
+    </div>`;
+  });
+  el.innerHTML = html || '<div class="upload-status">Nu ai exersat încă niciun cuvânt.</div>';
+}
+
 /* ---------- init ---------- */
 (async function init(){
   await loadStats();
+  await loadMistakes();
   await loadVoicePref();
   loadPreferences();
+  currentStreak = updateStreak();
+  updateMistakesChipLabel();
+  renderLevelProgress();
+  refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
   buildRound();
 })();
 

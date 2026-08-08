@@ -22,6 +22,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 - Încărcare de liste proprii de vocabular (CSV, TSV sau XLSX)
 - Export al listei curente și al statisticilor, ca fișiere CSV
 - Preferințele (niveluri, direcție, mod) și statisticile se salvează local, în browser, per dispozitiv
+- **Presetări rapide** (Începător / Conversație / Avansat / La job) — setează nivelurile dintr-un tap
+- **Progres pe niveluri** — procent de cuvinte exersate și rată de răspunsuri corecte, per nivel
+- **Mod „Doar greșeli"** — revizuiește exclusiv cuvintele la care ai greșit recent, cu contor dinamic
+- **Serie de zile (streak)** — afișată în linia de rezumat, calculată din activitatea zilnică
+- **Căutare rapidă de cuvânt** — separată de joc, caută live în germană și română
+- **Backup complet** — exportă/restaurează tot progresul (statistici, preferințe, greșeli, streak) ca fișier `.json`
+- **Prompt de instalare** — banner automat pe Android/Chrome (instalare cu un tap) și instrucțiuni clare pe iOS Safari (unde Apple nu permite instalare programatică)
+- Panou de setări organizat pe secțiuni pliabile (Vocabular / Exersare / Date & fișiere / Voce)
 
 ## Instalare pe telefon
 
