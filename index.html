@@ -57,7 +57,8 @@
   .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.56rem; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
   .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
-  .zoom-controls{ display:flex; gap:3px; }
+  .zoom-controls{ display:flex; gap:3px; align-items:center; }
+  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
     font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:0.78rem;
     width:30px; height:30px; border-radius:8px; border:1.5px solid var(--ink); background:var(--paper);
@@ -258,8 +259,10 @@
   <div class="brand">Karteikarten<small>DE ⇄ RO · A1–B2</small></div>
   <div class="top-right">
     <div class="zoom-controls">
-      <button class="zoom-btn" id="zoomOutBtn" aria-label="Micșorează fontul">A−</button>
-      <button class="zoom-btn" id="zoomInBtn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
@@ -291,12 +294,22 @@
     <div id="installContent"></div>
   </div>
 
+  <div class="sheet-section">
+    <div class="sheet-label">Mărime font</div>
+    <div class="zoom-controls" style="justify-content:flex-start; gap:8px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="chip zoom-reset-btn" style="min-height:30px; padding:6px 14px;">Resetează la 100%</button>
+    </div>
+  </div>
+
   <details class="sheet-group">
     <summary>❓ Ajutor</summary>
     <div class="sheet-section help-text">
       <div class="sheet-label">Cum funcționează aplicația</div>
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
-      <p>Butoanele <b>A− / A+</b> din bara de sus măresc sau micșorează fontul din toată aplicația (util fără ochelari) — alegerea rămâne salvată data viitoare.</p>
+      <p>Butoanele <b>A− / A+</b> din bara de sus (sau din secțiunea „Mărime font" de aici, din setări) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺ / Resetează</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Ce înseamnă stelele ⭐ de pe card</div>
@@ -1283,26 +1296,37 @@ function renderLevelProgress(){
 }
 
 /* ---------- zoom / marire font (accesibilitate) ---------- */
-const ZOOM_MIN = 0.85, ZOOM_MAX = 1.7, ZOOM_STEP = 0.1;
+const ZOOM_MIN = 0.85, ZOOM_MAX = 1.7, ZOOM_STEP = 0.1, ZOOM_DEFAULT = 1;
 let fontZoom = 1;
 function loadZoom(){
   try{
     const raw = localStorage.getItem('fontZoom');
-    fontZoom = raw ? parseFloat(raw) : 1;
-    if(!fontZoom || isNaN(fontZoom)) fontZoom = 1;
-  }catch(e){ fontZoom = 1; }
+    fontZoom = raw ? parseFloat(raw) : ZOOM_DEFAULT;
+    if(!fontZoom || isNaN(fontZoom)) fontZoom = ZOOM_DEFAULT;
+  }catch(e){ fontZoom = ZOOM_DEFAULT; }
 }
 function applyZoom(){
   document.documentElement.style.fontSize = (16 * fontZoom) + 'px';
   try{ localStorage.setItem('fontZoom', String(fontZoom)); }catch(e){}
+  document.querySelectorAll('.zoom-percent').forEach(el => el.textContent = Math.round(fontZoom * 100) + '%');
 }
-document.getElementById('zoomInBtn').addEventListener('click', ()=>{
-  fontZoom = Math.min(ZOOM_MAX, Math.round((fontZoom + ZOOM_STEP) * 100) / 100);
-  applyZoom();
+document.querySelectorAll('.zoom-in-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    fontZoom = Math.min(ZOOM_MAX, Math.round((fontZoom + ZOOM_STEP) * 100) / 100);
+    applyZoom();
+  });
 });
-document.getElementById('zoomOutBtn').addEventListener('click', ()=>{
-  fontZoom = Math.max(ZOOM_MIN, Math.round((fontZoom - ZOOM_STEP) * 100) / 100);
-  applyZoom();
+document.querySelectorAll('.zoom-out-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    fontZoom = Math.max(ZOOM_MIN, Math.round((fontZoom - ZOOM_STEP) * 100) / 100);
+    applyZoom();
+  });
+});
+document.querySelectorAll('.zoom-reset-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    fontZoom = ZOOM_DEFAULT;
+    applyZoom();
+  });
 });
 
 /* ---------- init ---------- */
