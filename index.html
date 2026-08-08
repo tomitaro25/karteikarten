@@ -25,6 +25,7 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{ font-size:16px; }
   html, body{ height:100%; overscroll-behavior-y:contain; }
   body{
     margin:0;
@@ -55,7 +56,14 @@
   .brand{ font-family:'Special Elite', monospace; font-size:1.15rem; line-height:1.1; }
   .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.56rem; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
-  .top-right{ display:flex; align-items:center; gap:10px; }
+  .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .zoom-controls{ display:flex; gap:3px; }
+  .zoom-btn{
+    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:0.78rem;
+    width:30px; height:30px; border-radius:8px; border:1.5px solid var(--ink); background:var(--paper);
+    cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink);
+  }
+  .zoom-btn:active{ background:var(--paper-dark); }
   .stats{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
   .stats b{ color:var(--ink); font-size:0.85rem; }
   .gear-btn{
@@ -87,6 +95,7 @@
     position:relative; background:#fbf7ee; border:1px solid var(--line); border-radius:14px;
     box-shadow: 0 14px 30px rgba(36,42,49,0.16), 0 2px 6px rgba(36,42,49,0.1);
     padding:22px 18px 18px; flex:1; display:flex; flex-direction:column; min-height:0;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   .card::before{
     content:""; position:absolute; top:0; left:20px; width:32px; height:18px;
@@ -104,6 +113,11 @@
     color:var(--ink-soft); border-radius:14px; padding:4px 10px; cursor:pointer; margin-left:auto;
   }
   .skip-btn:active{ background:var(--paper-dark); }
+  .stage-star{ font-size:0.68rem; letter-spacing:1px; cursor:help; }
+  .stage-star.gold{ color:var(--gold); }
+  .stage-star.wrong{ color:var(--red); }
+  .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
+  .help-text p:last-child{ margin-bottom:0; }
   .tag{ border:1px solid var(--line); border-radius:20px; padding:3px 10px; }
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
   .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
@@ -243,6 +257,10 @@
 <div class="topbar">
   <div class="brand">Karteikarten<small>DE ⇄ RO · A1–B2</small></div>
   <div class="top-right">
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="zoomOutBtn" aria-label="Micșorează fontul">A−</button>
+      <button class="zoom-btn" id="zoomInBtn" aria-label="Mărește fontul">A+</button>
+    </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
@@ -272,6 +290,37 @@
     <div class="sheet-label">Instalare</div>
     <div id="installContent"></div>
   </div>
+
+  <details class="sheet-group">
+    <summary>❓ Ajutor</summary>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Cum funcționează aplicația</div>
+      <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
+      <p>Butoanele <b>A− / A+</b> din bara de sus măresc sau micșorează fontul din toată aplicația (util fără ochelari) — alegerea rămâne salvată data viitoare.</p>
+    </div>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Ce înseamnă stelele ⭐ de pe card</div>
+      <p>Fiecare cuvânt are un „stadiu de învățare", arătat discret lângă numărul întrebării:</p>
+      <p><span class="stage-star gold">★</span> <b>o stea galbenă</b> — cuvânt nou, nu l-ai văzut încă.</p>
+      <p><span class="stage-star gold">★★</span> <b>două stele galbene</b> — l-ai răspuns corect de curând, dar e încă în curs de stabilizare (apare des, ca să se fixeze).</p>
+      <p><span class="stage-star gold">★★★</span> <b>trei stele galbene</b> — cuvânt învățat; va apărea tot mai rar, dar niciodată complet dispărut (revine periodic, la intervale din ce în ce mai mari, ca să nu-l uiți).</p>
+      <p><span class="stage-star wrong">★</span> <b>o stea roșie</b> — ultima dată l-ai răspuns greșit; are prioritate maximă acum, îl vei revedea curând.</p>
+    </div>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Modul „Inteligent" vs. „Complet aleator"</div>
+      <p><b>Inteligent</b> (recomandat): aplicația alege ce cuvinte să-ți arate pe baza a ce știi deja — cuvintele greșite și cele noi apar mai des, cele bine învățate tot mai rar (dar revin din când în când, la intervale crescânde, ca o recapitulare programată).</p>
+      <p><b>Complet aleator</b>: fiecare cuvânt are șanse egale să apară, indiferent de istoricul tău — util dacă vrei o trecere „la întâmplare" prin listă.</p>
+      <p><b>Doar greșeli</b>: exersează exclusiv cuvintele la care ai greșit recent.</p>
+    </div>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Alte funcții utile</div>
+      <p><b>Presetări rapide</b> — setează dintr-un tap o combinație de niveluri potrivită unui scop (începător, conversație, la job etc.).</p>
+      <p><b>Progres pe niveluri</b> — vezi ce procent din fiecare nivel ai exersat și cât de bine.</p>
+      <p><b>Listă proprie</b> — poți încărca propriile cuvinte dintr-un fișier CSV/XLSX, cu formatul din template-ul descărcabil.</p>
+      <p><b>Backup</b> — salvează tot progresul într-un fișier, ca să nu-l pierzi dacă schimbi telefonul.</p>
+      <p>Toate datele (statistici, preferințe) rămân doar pe acest dispozitiv — nimic nu se trimite nicăieri.</p>
+    </div>
+  </details>
 
   <details class="sheet-group" open>
     <summary>Vocabular</summary>
@@ -487,14 +536,17 @@ function updateMistakesChipLabel(){
   if(chip) chip.textContent = `Doar greșeli (${mistakeIds.length})`;
 }
 function recordAnswer(id, correct){
-  if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0};
+  if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0, streak:0};
+  if(wordStats[id].streak === undefined) wordStats[id].streak = 0; // migrare date vechi, fara camp streak
   wordStats[id].attempts++;
+  wordStats[id].lastSeenAt = Date.now();
   if(correct){
     wordStats[id].correct++;
-    // daca acum a raspuns corect, scoatem cuvantul din lista de greseli recente
+    wordStats[id].streak++; // raspunsuri corecte CONSECUTIVE - reseteaza la orice greseala
     const idx = mistakeIds.indexOf(id);
     if(idx !== -1){ mistakeIds.splice(idx, 1); saveMistakes(); }
   } else {
+    wordStats[id].streak = 0;
     const idx = mistakeIds.indexOf(id);
     if(idx !== -1) mistakeIds.splice(idx, 1);
     mistakeIds.unshift(id);
@@ -603,12 +655,26 @@ function speakGerman(text){
 }
 
 /* ---------- repetitie spatiata: scor de prioritate per cuvant ---------- */
+// niveluri de prioritate:
+//   1) gresit la ultima incercare -> prioritate MAXIMA (5.0)
+//   2) cuvant nou (niciodata incercat) -> prioritate mare (3.0)
+//   3) primele 1-2 raspunsuri corecte consecutive -> aproape de frecventa unui cuvant nou (2.8)
+//   4) stabilizat (3+ corecte consecutive) -> prioritate mica, DAR revine periodic la recapitulare,
+//      dupa un program progresiv (1/2/4/7/14/30/60 zile) - ca sa nu fie uitat pe termen lung
+function reviewIntervalDays(streak){
+  const schedule = {3:1, 4:2, 5:4, 6:7, 7:14, 8:30};
+  return schedule[streak] !== undefined ? schedule[streak] : 60; // plafon 60 zile pt streak foarte mare
+}
 function priorityWeight(word){
   const s = wordStats[word.id];
-  if(!s || s.attempts === 0) return 2.2; // cuvinte nevazute inca: prioritate moderata
-  const accuracy = s.correct / s.attempts;
-  // cu cat acuratetea e mai mica, cu atat greutatea creste (mai des in rotatie)
-  return 0.4 + (1 - accuracy) * 4.2;
+  if(!s || s.attempts === 0) return 3.0; // cuvant nou, niciodata incercat
+  const streak = s.streak || 0;
+  if(streak === 0) return 5.0;   // ultima incercare a fost gresita - prioritate maxima
+  if(streak <= 2) return 2.8;    // primele 1-2 raspunsuri corecte - aproape de frecventa unui cuvant nou
+  // stabilizat: verificam daca a trecut timpul de recapitulare programat
+  const daysSince = s.lastSeenAt ? (Date.now() - s.lastSeenAt) / 86400000 : Infinity;
+  if(daysSince >= reviewIntervalDays(streak)) return 2.5; // scadent pt recapitulare - readus aproape de prioritate mare
+  return Math.max(0.3, 2.2 - (streak - 2) * 0.25); // inca in perioada de asteptare - prioritate mica
 }
 // selectie ponderata fara repetitie (Efraimidis-Spirakis weighted sampling)
 function weightedSample(words, n){
@@ -701,6 +767,21 @@ function dictCcUrl(text){
   return 'https://dero.dict.cc/?s=' + encodeURIComponent(clean);
 }
 
+function wordStageStars(id){
+  const s = wordStats[id];
+  if(s && s.attempts > 0 && (s.streak || 0) === 0){
+    return '<span class="stage-star wrong" title="Greșit ultima dată">★</span>';
+  }
+  if(!s || s.attempts === 0){
+    return '<span class="stage-star gold" title="Cuvânt nou">★</span>';
+  }
+  const streak = s.streak || 0;
+  if(streak <= 2){
+    return '<span class="stage-star gold" title="În curs de stabilizare">★★</span>';
+  }
+  return '<span class="stage-star gold" title="Învățat">★★★</span>';
+}
+
 function renderQuestion(){
   const q = roundQuestions[currentIndex];
   const letters = ['a','b','c','d'];
@@ -712,6 +793,7 @@ function renderQuestion(){
     <div class="tag-row">
       <span class="tag direction-tag">${q.direction}</span>
       <span class="tag">${currentIndex+1}/${roundQuestions.length}</span>
+      ${wordStageStars(q.id)}
       <button class="skip-btn" id="skipBtn">Sari →</button>
     </div>
     <div class="prompt-label">Traduce</div>
@@ -1200,8 +1282,33 @@ function renderLevelProgress(){
   el.innerHTML = html || '<div class="upload-status">Nu ai exersat încă niciun cuvânt.</div>';
 }
 
+/* ---------- zoom / marire font (accesibilitate) ---------- */
+const ZOOM_MIN = 0.85, ZOOM_MAX = 1.7, ZOOM_STEP = 0.1;
+let fontZoom = 1;
+function loadZoom(){
+  try{
+    const raw = localStorage.getItem('fontZoom');
+    fontZoom = raw ? parseFloat(raw) : 1;
+    if(!fontZoom || isNaN(fontZoom)) fontZoom = 1;
+  }catch(e){ fontZoom = 1; }
+}
+function applyZoom(){
+  document.documentElement.style.fontSize = (16 * fontZoom) + 'px';
+  try{ localStorage.setItem('fontZoom', String(fontZoom)); }catch(e){}
+}
+document.getElementById('zoomInBtn').addEventListener('click', ()=>{
+  fontZoom = Math.min(ZOOM_MAX, Math.round((fontZoom + ZOOM_STEP) * 100) / 100);
+  applyZoom();
+});
+document.getElementById('zoomOutBtn').addEventListener('click', ()=>{
+  fontZoom = Math.max(ZOOM_MIN, Math.round((fontZoom - ZOOM_STEP) * 100) / 100);
+  applyZoom();
+});
+
 /* ---------- init ---------- */
 (async function init(){
+  loadZoom();
+  applyZoom();
   await loadStats();
   await loadMistakes();
   await loadVoicePref();
