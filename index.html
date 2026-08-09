@@ -124,6 +124,7 @@
     0%, 100%{ box-shadow:0 0 0 0 rgba(201,154,46,0.55); }
     50%{ box-shadow:0 0 0 8px rgba(201,154,46,0); }
   }
+  .pasted-value{ color:#1a2b6d !important; font-weight:700 !important; }
   .stage-star.gold{ color:var(--gold); }
   .stage-star.wrong{ color:var(--red); }
   .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
@@ -355,7 +356,7 @@
       <p>Dacă o <b>căutare scrisă</b> nu găsește nimic, aplicația îți oferă să-l adaugi manual, la nivelul „Cuvintele mele". Toggle-ul RO/DE de deasupra câmpului de căutare decide ce parte a cuvântului o știi deja (cea în care ai căutat).</p>
       <p>Verifici traducerea pe dict.cc (linkul apare automat), selectezi <b>doar</b> coloana relevantă, o copiezi, revii, apeși butonul auriu <b>„Lipește din clipboard"</b> — câmpul se completează automat, dar rămâne editabil. Poți repeta lipirea oricând, se resetează curat de fiecare dată.</p>
       <p>Cuvintele adăugate rămân salvate permanent pe acest dispozitiv, apar ca nivel separat de exersat, și pot fi exportate oricând ca fișier CSV, din „Date &amp; fișiere".</p>
-      <p><i>Notă:</i> căutarea vocală găsește doar cuvinte deja existente în listă — nu oferă și adăugare manuală.</p>
+      <p><i>Notă:</i> căutarea vocală funcționează la fel — dacă cuvântul recunoscut nu e în listă, ți se oferă și acolo să-l adaugi manual.</p>
     </div>
   </details>
 
@@ -1297,6 +1298,7 @@ function renderAddWordPrompt(searchedText, lang){
     const statusEl = document.getElementById('addWordStatus');
     const targetInput = deKnown ? document.getElementById('addWordRo') : document.getElementById('addWordDe');
     targetInput.value = ''; // resetam intotdeauna inainte de lipire, cerut explicit
+    targetInput.classList.remove('pasted-value');
     if(!navigator.clipboard || !navigator.clipboard.readText){
       statusEl.textContent = 'Browser-ul nu suportă lipire automată — ține apăsat pe câmp și alege „Lipește" manual.';
       return;
@@ -1307,11 +1309,16 @@ function renderAddWordPrompt(searchedText, lang){
       // daca pare copiat tot randul din tabelul dict.cc (coloane separate prin spatii multiple), pastram doar ultima "coloana"
       const parts = cleaned.split(/\s{2,}/).map(p=>p.trim()).filter(Boolean);
       targetInput.value = parts.length > 1 ? parts[parts.length - 1] : cleaned;
+      targetInput.classList.add('pasted-value'); // evidentiere vizuala: chiar a fost lipit
       statusEl.textContent = '';
       targetInput.focus();
     }catch(err){
       statusEl.textContent = 'Nu am putut citi clipboard-ul — ține apăsat pe câmp și alege „Lipește" manual.';
     }
+  });
+
+  ['addWordDe','addWordRo'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', (e)=> e.target.classList.remove('pasted-value'));
   });
 
   document.getElementById('submitAddWordBtn').addEventListener('click', ()=>{
@@ -1390,11 +1397,12 @@ function handleVoiceResult(alternatives){
   }
   const firstAlt = alternatives[0];
   const result0 = findWordMatch(firstAlt, voiceSearchLang);
-  document.getElementById('wordSearchResults').innerHTML = '';
   if(result0.onlyArticle){
+    document.getElementById('wordSearchResults').innerHTML = '';
     statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — ai spus doar un articol. Spune-l împreună cu un cuvânt, ex. „${firstAlt} Tisch".`;
   } else {
-    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — nu am găsit acest cuvânt în listă. Poți încerca să-l cauți scris, ca să-l adaugi manual.`;
+    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b>`;
+    renderAddWordPrompt(firstAlt, voiceSearchLang);
   }
 }
 
