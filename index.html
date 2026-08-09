@@ -343,6 +343,12 @@
       <p>Pe cardurile din acest nivel, toate cele 4 variante primesc buton de ascultare 🔊 și link dict.cc 📖 <b>după ce alegi un răspuns</b> (când apare ștampila) — nu înainte, ca să nu influențeze alegerea.</p>
     </div>
     <div class="sheet-section help-text">
+      <div class="sheet-label">Nivelul „Conjugare verbe"</div>
+      <p>Vezi infinitivul unui verb și persoana cerută (ich, du, er/sie/es, wir, ihr, sie/Sie) — alegi forma corect conjugată, la <b>Präsens</b> (prezent) sau <b>Perfekt</b> (trecut compus).</p>
+      <p>La Perfekt, răspunsul corect include și auxiliarul potrivit (<i>haben</i> sau <i>sein</i>) — unele verbe (mai ales cele de mișcare, ca „gehen" sau „kommen") folosesc <i>sein</i>, nu <i>haben</i>.</p>
+      <p>Distractorii sunt mereu alte forme ale <b>aceluiași verb</b> — testează exact terminația corectă, nu doar dacă recunoști verbul.</p>
+    </div>
+    <div class="sheet-section help-text">
       <div class="sheet-label">Alte funcții utile</div>
       <p><b>Presetări rapide</b> — setează dintr-un tap o combinație de niveluri potrivită unui scop (începător, conversație, la job etc.).</p>
       <p><b>Progres pe niveluri</b> — vezi ce procent din fiecare nivel ai exersat și cât de bine.</p>
@@ -390,6 +396,7 @@
         <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
         <span class="chip level-chip" data-level="MYWORDS" id="myWordsChip">Cuvintele mele (0)</span>
         <span class="chip level-chip" data-level="ANTSYN">Antonime &amp; Sinonime</span>
+        <span class="chip level-chip" data-level="VERBS">Conjugare verbe</span>
         <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
       </div>
       <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
@@ -562,7 +569,7 @@ function loadPreferences(){
   }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
 }
 
-const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele', ANTSYN:'Antonime & Sinonime'};
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele', ANTSYN:'Antonime & Sinonime', VERBS:'Conjugare verbe'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
 function updateSummaryLine(){
@@ -669,7 +676,7 @@ function activeWords(){
     const map = allWordsById();
     return mistakeIds.map(id => map[id]).filter(Boolean);
   }
-  let words = BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).filter(w => selectedLevels.has(w.level));
+  let words = BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).concat(VERB_ENTRIES).filter(w => selectedLevels.has(w.level));
   if(customActive) words = words.concat(customWords);
   return words;
 }
@@ -897,6 +904,94 @@ function buildAntSynQuestion(entry){
   };
 }
 
+/* ---------- modul Conjugare verbe (Prasens + Perfekt, nivel nou "VERBS") ---------- */
+// lot 1: cele mai comune 25 verbe (extrase din lista de frecventa + modalele esentiale,
+// care de obicei nu apar in filtrul automat de verbe). Fiecare intrare: [infinitiv, [6 forme Prasens: ich,du,er,wir,ihr,sie/Sie], auxiliar Perfekt, participiu]
+const PERSONS = ['ich','du','er/sie/es','wir','ihr','sie/Sie'];
+const VERB_DATA = [
+  ["sein", ["bin","bist","ist","sind","seid","sind"], "sein", "gewesen"],
+  ["haben", ["habe","hast","hat","haben","habt","haben"], "haben", "gehabt"],
+  ["werden", ["werde","wirst","wird","werden","werdet","werden"], "sein", "geworden"],
+  ["können", ["kann","kannst","kann","können","könnt","können"], "haben", "gekonnt"],
+  ["müssen", ["muss","musst","muss","müssen","müsst","müssen"], "haben", "gemusst"],
+  ["wollen", ["will","willst","will","wollen","wollt","wollen"], "haben", "gewollt"],
+  ["sollen", ["soll","sollst","soll","sollen","sollt","sollen"], "haben", "gesollt"],
+  ["dürfen", ["darf","darfst","darf","dürfen","dürft","dürfen"], "haben", "gedurft"],
+  ["mögen", ["mag","magst","mag","mögen","mögt","mögen"], "haben", "gemocht"],
+  ["wissen", ["weiß","weißt","weiß","wissen","wisst","wissen"], "haben", "gewusst"],
+  ["gehen", ["gehe","gehst","geht","gehen","geht","gehen"], "sein", "gegangen"],
+  ["sagen", ["sage","sagst","sagt","sagen","sagt","sagen"], "haben", "gesagt"],
+  ["machen", ["mache","machst","macht","machen","macht","machen"], "haben", "gemacht"],
+  ["tun", ["tue","tust","tut","tun","tut","tun"], "haben", "getan"],
+  ["sehen", ["sehe","siehst","sieht","sehen","seht","sehen"], "haben", "gesehen"],
+  ["geben", ["gebe","gibst","gibt","geben","gebt","geben"], "haben", "gegeben"],
+  ["kommen", ["komme","kommst","kommt","kommen","kommt","kommen"], "sein", "gekommen"],
+  ["lassen", ["lasse","lässt","lässt","lassen","lasst","lassen"], "haben", "gelassen"],
+  ["leben", ["lebe","lebst","lebt","leben","lebt","leben"], "haben", "gelebt"],
+  ["meinen", ["meine","meinst","meint","meinen","meint","meinen"], "haben", "gemeint"],
+  ["glauben", ["glaube","glaubst","glaubt","glauben","glaubt","glauben"], "haben", "geglaubt"],
+  ["reden", ["rede","redest","redet","reden","redet","reden"], "haben", "geredet"],
+  ["denken", ["denke","denkst","denkt","denken","denkt","denken"], "haben", "gedacht"],
+  ["finden", ["finde","findest","findet","finden","findet","finden"], "haben", "gefunden"],
+  ["helfen", ["helfe","hilfst","hilft","helfen","helft","helfen"], "haben", "geholfen"]
+];
+const AUX_FORMS = {
+  haben: ["habe","hast","hat","haben","habt","haben"],
+  sein: ["bin","bist","ist","sind","seid","sind"]
+};
+
+function buildVerbEntries(){
+  const entries = [];
+  VERB_DATA.forEach(([inf, pr, aux, pp], vi)=>{
+    for(let p=0; p<6; p++){
+      entries.push({id:`VERB-PR-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'praesens', person:p});
+      entries.push({id:`VERB-PF-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'perfekt', person:p});
+    }
+  });
+  return entries;
+}
+const VERB_ENTRIES = buildVerbEntries();
+
+function buildVerbQuestion(entry){
+  const [inf, pr, aux, pp] = VERB_DATA[entry.verbIdx];
+  const personLabel = PERSONS[entry.person];
+  let correctVal, allFormsThisTense;
+  if(entry.tense === 'praesens'){
+    correctVal = pr[entry.person];
+    allFormsThisTense = pr;
+  } else {
+    const auxForms = AUX_FORMS[aux];
+    allFormsThisTense = auxForms.map(a => `${a} ${pp}`);
+    correctVal = allFormsThisTense[entry.person];
+  }
+  // distractori: celelalte 5 persoane ale ACELUIASI verb, in ACELASI timp -
+  // testeaza exact terminatia corecta, nu doar recunoasterea verbului
+  const otherForms = allFormsThisTense.filter((f,i) => i !== entry.person && f !== correctVal);
+  let distractorPool = shuffle([...new Set(otherForms)]);
+  // pt Perfekt, adaugam si un distractor cu auxiliarul GRESIT (testeaza haben/sein), la persoana corecta
+  if(entry.tense === 'perfekt'){
+    const wrongAux = aux === 'haben' ? 'sein' : 'haben';
+    const wrongAuxForm = `${AUX_FORMS[wrongAux][entry.person]} ${pp}`;
+    if(wrongAuxForm !== correctVal) distractorPool.unshift(wrongAuxForm);
+  }
+  const distractors = [];
+  for(const f of distractorPool){
+    if(distractors.length === 3) break;
+    if(!distractors.includes(f)) distractors.push(f);
+  }
+  const correct = {value: correctVal, html: escapeHtml(correctVal)};
+  const options = shuffle([correct, ...distractors.map(f=>({value:f, html:escapeHtml(f)}))]);
+  const tenseLabel = entry.tense === 'praesens' ? 'Präsens' : 'Perfekt';
+  return {
+    id: entry.id,
+    prompt: {value: inf, html: escapeHtml(inf)},
+    correct, options,
+    promptSide: 'de', answerSide: 'de',
+    direction: tenseLabel,
+    questionLabel: `${tenseLabel}: ${personLabel}`
+  };
+}
+
 function buildRound(){
   updateSummaryLine();
   savePreferences();
@@ -912,6 +1007,7 @@ function buildRound(){
 
   roundQuestions = pool.map(word => {
     if(word.level === 'ANTSYN') return buildAntSynQuestion(word);
+    if(word.level === 'VERBS') return buildVerbQuestion(word);
 
     let deToRo;
     if(selectedDirection === 'de-ro') deToRo = true;
@@ -1708,7 +1804,7 @@ function renderLevelProgress(){
   const el = document.getElementById('levelProgress');
   if(!el) return;
   const byLevel = {};
-  BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).forEach(w=>{
+  BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).concat(VERB_ENTRIES).forEach(w=>{
     if(!byLevel[w.level]) byLevel[w.level] = {total:0, attempted:0, correctSum:0, attemptSum:0};
     byLevel[w.level].total++;
     const s = wordStats[w.id];
@@ -1718,7 +1814,7 @@ function renderLevelProgress(){
       byLevel[w.level].attemptSum += s.attempts;
     }
   });
-  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX','MYWORDS','ANTSYN'];
+  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX','MYWORDS','ANTSYN','VERBS'];
   let html = '';
   order.forEach(lvl=>{
     const d = byLevel[lvl];
