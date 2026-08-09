@@ -337,6 +337,12 @@
       <p><b>Doar greșeli</b>: exersează exclusiv cuvintele la care ai greșit recent.</p>
     </div>
     <div class="sheet-section help-text">
+      <div class="sheet-label">Nivelul „Antonime &amp; Sinonime"</div>
+      <p>Diferit de restul: întrebarea și toate cele 4 variante sunt <b>exclusiv în germană</b> — direcția DE→RO/RO→DE nu se aplică aici. Vezi un cuvânt german, alegi opusul (antonim) sau apropiatul ca sens (sinonim), tot în germană.</p>
+      <p>Se poate combina cu orice alt nivel selectat — apar amestecate în aceeași rundă, fiecare card arătând clar ce i se cere.</p>
+      <p>Pe cardurile din acest nivel, toate cele 4 variante primesc buton de ascultare 🔊 și link dict.cc 📖 <b>după ce alegi un răspuns</b> (când apare ștampila) — nu înainte, ca să nu influențeze alegerea.</p>
+    </div>
+    <div class="sheet-section help-text">
       <div class="sheet-label">Alte funcții utile</div>
       <p><b>Presetări rapide</b> — setează dintr-un tap o combinație de niveluri potrivită unui scop (începător, conversație, la job etc.).</p>
       <p><b>Progres pe niveluri</b> — vezi ce procent din fiecare nivel ai exersat și cât de bine.</p>
@@ -383,6 +389,7 @@
         <span class="chip level-chip" data-level="PFLEGE">Îngrijire</span>
         <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
         <span class="chip level-chip" data-level="MYWORDS" id="myWordsChip">Cuvintele mele (0)</span>
+        <span class="chip level-chip" data-level="ANTSYN">Antonime &amp; Sinonime</span>
         <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
       </div>
       <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
@@ -555,7 +562,7 @@ function loadPreferences(){
   }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
 }
 
-const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele'};
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele', ANTSYN:'Antonime & Sinonime'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
 function updateSummaryLine(){
@@ -662,7 +669,7 @@ function activeWords(){
     const map = allWordsById();
     return mistakeIds.map(id => map[id]).filter(Boolean);
   }
-  let words = BUILTIN.concat(myWords).filter(w => selectedLevels.has(w.level));
+  let words = BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).filter(w => selectedLevels.has(w.level));
   if(customActive) words = words.concat(customWords);
   return words;
 }
@@ -778,6 +785,118 @@ function classifyWord(word){
   return 'other'; // adjective, adverbe, alte cuvinte descriptive
 }
 
+/* ---------- modul Antonime & Sinonime (exclusiv in germana, nivel nou "ANTSYN") ---------- */
+// lot 1: perechi verificate manual, comune, fara ambiguitate de sens intre variante apropiate
+const ANTONYM_PAIRS = [
+  ["groß","klein"],["lang","kurz"],["alt","neu"],["alt","jung"],["gut","schlecht"],
+  ["schön","hässlich"],["schnell","langsam"],["hoch","niedrig"],["breit","schmal"],["dick","dünn"],
+  ["stark","schwach"],["warm","kalt"],["heiß","kalt"],["hell","dunkel"],["laut","leise"],
+  ["teuer","billig"],["voll","leer"],["sauber","schmutzig"],["leicht","schwer"],["früh","spät"],
+  ["nah","weit"],["reich","arm"],["glücklich","traurig"],["freundlich","unfreundlich"],["wach","müde"],
+  ["gesund","krank"],["richtig","falsch"],["trocken","nass"],["weich","hart"],["süß","sauer"],
+  ["scharf","mild"],["interessant","langweilig"],["einfach","schwierig"],["offen","geschlossen"],
+  ["kommen","gehen"],["öffnen","schließen"],["kaufen","verkaufen"],["beginnen","beenden"],
+  ["lieben","hassen"],["gewinnen","verlieren"],["lachen","weinen"],["geben","nehmen"],
+  ["fragen","antworten"],["steigen","fallen"],["bauen","zerstören"],["erinnern","vergessen"],
+  ["zunehmen","abnehmen"],["aufwachen","einschlafen"],["ankommen","abfahren"],["akzeptieren","ablehnen"],
+  // lot 2
+  ["viel","wenig"],["oben","unten"],["vorne","hinten"],["links","rechts"],["innen","außen"],
+  ["schwarz","weiß"],["ruhig","laut"],["freundlich","böse"],["ehrlich","unehrlich"],["geduldig","ungeduldig"],
+  ["höflich","unhöflich"],["bekannt","unbekannt"],["möglich","unmöglich"],["wichtig","unwichtig"],["sicher","unsicher"],
+  ["schuldig","unschuldig"],["ernst","lustig"],["ordentlich","unordentlich"],["mutig","feige"],["hungrig","satt"],
+  ["lebendig","tot"],["sitzen","stehen"],["stehen","liegen"],["sprechen","schweigen"],["mieten","vermieten"],
+  ["verstecken","finden"],["beginnen","aufhören"],["gewinnen","scheitern"],["arbeiten","ausruhen"],
+  // lot 3
+  ["rund","eckig"],["gerade","krumm"],["flach","steil"],["fett","mager"],["frisch","verdorben"],
+  ["hart","sanft"],["neugierig","gleichgültig"],["großzügig","geizig"],["fleißig","faul"],["optimistisch","pessimistisch"],
+  ["aktiv","passiv"],["positiv","negativ"],["modern","altmodisch"],["vollständig","unvollständig"],["gefährlich","sicher"],
+  ["stark","zart"],["aufstehen","hinlegen"],["anziehen","ausziehen"],["einsteigen","aussteigen"],
+  ["loben","kritisieren"],["erlauben","verbieten"],["reparieren","kaputtmachen"],
+  // lot 4
+  ["klein","riesig"],["blass","gebräunt"],["klar","unklar"],["bequem","unbequem"],["stabil","instabil"],
+  ["normal","ungewöhnlich"],["typisch","untypisch"],["erfolgreich","erfolglos"],["freiwillig","verpflichtend"],
+  ["tapfer","ängstlich"],["verlassen","bleiben"],["retten","gefährden"],["heiraten","scheiden"],
+  ["drücken","ziehen"],["werfen","fangen"],["binden","lösen"],["erhöhen","senken"],["vermehren","vermindern"],
+  ["loslassen","festhalten"],["einschalten","ausschalten"],["starten","stoppen"],
+  // lot 5
+  ["wütend","ruhig"],["neidisch","zufrieden"],["stolz","bescheiden"],["schüchtern","selbstbewusst"],
+  ["vorsichtig","leichtsinnig"],["sparsam","verschwenderisch"],["gehorsam","ungehorsam"],["klug","dumm"],
+  ["geschickt","ungeschickt"],["pünktlich","unpünktlich"],["lächeln","weinen"],["weggehen","bleiben"],
+  ["leihen","zurückgeben"],["einladen","ausladen"],["putzen","verschmutzen"],["sich verlieben","sich trennen"],
+  // lot 6
+  ["rau","glatt"],["fest","locker"],["tief","seicht"],["hoch","tief"],["hübsch","hässlich"],["groß","winzig"],
+  ["ernten","säen"],["heilen","verletzen"],["schützen","angreifen"],["wachsen","schrumpfen"],["bunt","einfarbig"]
+];
+const SYNONYM_PAIRS = [
+  ["schön","hübsch"],["schnell","rasch"],["klug","intelligent"],["froh","glücklich"],
+  ["anfangen","beginnen"],["aufhören","enden"],["sprechen","reden"],["schauen","gucken"],
+  ["kaufen","einkaufen"],["helfen","unterstützen"],["verstehen","begreifen"],["bekommen","erhalten"],
+  ["traurig","unglücklich"],["müde","erschöpft"],["klug","schlau"],["nett","freundlich"],
+  ["wichtig","bedeutend"],["einfach","leicht"],["schnell","flott"],["reich","wohlhabend"],
+  ["probieren","versuchen"],["schaffen","erledigen"],["meinen","denken"],["brauchen","benötigen"],
+  // lot 2
+  ["fröhlich","glücklich"],["hübsch","attraktiv"],["schnell","zügig"],["winzig","klein"],["kaputt","defekt"],
+  ["schwierig","kompliziert"],["einfach","simpel"],["klug","gescheit"],
+  // lot 3
+  ["nett","lieb"],["verstehen","kapieren"],["gehen","laufen"],["froh","erfreut"],["bekommen","kriegen"],
+  ["geben","schenken"],["müde","schläfrig"],["antworten","erwidern"],["sagen","äußern"],["dumm","blöd"],
+  ["riesig","gigantisch"],["stark","kräftig"],
+  // lot 4
+  ["schauen","blicken"],["anfangen","starten"],["lustig","witzig"],["hässlich","unschön"],["genau","exakt"],
+  ["stark","mächtig"],["denken","überlegen"],["wollen","möchten"],["vorsichtig","behutsam"],["ruhig","gelassen"],
+  ["beenden","abschließen"],
+  // lot 5
+  ["weinen","heulen"],["vielleicht","eventuell"],["oft","häufig"],["manchmal","gelegentlich"],
+  ["immer","stets"],["selten","kaum"],["gut","klasse"],
+  // lot 6
+  ["kaputt","zerbrochen"],["schlecht","mies"]
+];
+function buildAntSynEntries(){
+  const entries = [];
+  ANTONYM_PAIRS.forEach(([a,b], i)=>{
+    entries.push({id:`ANTSYN-ANT-${i}-A`, level:'ANTSYN', qtype:'ant', word:a, answer:b});
+    entries.push({id:`ANTSYN-ANT-${i}-B`, level:'ANTSYN', qtype:'ant', word:b, answer:a});
+  });
+  SYNONYM_PAIRS.forEach(([a,b], i)=>{
+    entries.push({id:`ANTSYN-SYN-${i}-A`, level:'ANTSYN', qtype:'syn', word:a, answer:b});
+    entries.push({id:`ANTSYN-SYN-${i}-B`, level:'ANTSYN', qtype:'syn', word:b, answer:a});
+  });
+  return entries;
+}
+const ANTSYN_ENTRIES = buildAntSynEntries();
+
+function buildAntSynQuestion(entry){
+  const category = classifyWord({de: entry.word, artikel:''});
+  const basePool = BUILTIN.filter(w => ['A1','A2','B1','B2'].includes(w.level));
+  const sameCategoryWords = basePool.filter(w => classifyWord(w) === category && w.de !== entry.answer && w.de !== entry.word).map(w=>w.de);
+  const antsynAlternates = ANTSYN_ENTRIES.filter(e => e.id !== entry.id && e.answer !== entry.answer && e.answer !== entry.word
+      && classifyWord({de:e.answer, artikel:''}) === category).map(e=>e.answer);
+
+  let candidateWords = shuffle([...new Set(sameCategoryWords.concat(antsynAlternates))]);
+  const distractors = [];
+  for(const w of candidateWords){
+    if(distractors.length === 3) break;
+    distractors.push({value:w, html:escapeHtml(w)});
+  }
+  if(distractors.length < 3){ // plasa de siguranta, foarte improbabil sa fie nevoie
+    const fallback = shuffle(basePool.filter(w=>w.de!==entry.answer && w.de!==entry.word)).map(w=>w.de);
+    for(const w of fallback){
+      if(distractors.length === 3) break;
+      if(!distractors.some(d=>d.value===w)) distractors.push({value:w, html:escapeHtml(w)});
+    }
+  }
+  const correct = {value: entry.answer, html: escapeHtml(entry.answer)};
+  const options = shuffle([correct, ...distractors]);
+  return {
+    id: entry.id,
+    prompt: {value: entry.word, html: escapeHtml(entry.word)},
+    correct, options,
+    promptSide: 'de', answerSide: 'de',
+    direction: entry.qtype === 'ant' ? 'Antonim' : 'Sinonim',
+    questionLabel: entry.qtype === 'ant' ? 'Care este ANTONIMUL?' : 'Care este SINONIMUL?'
+  };
+}
+
 function buildRound(){
   updateSummaryLine();
   savePreferences();
@@ -792,6 +911,8 @@ function buildRound(){
   pool = practiceMode === 'smart' ? weightedSample(words, size) : shuffle(words).slice(0, size);
 
   roundQuestions = pool.map(word => {
+    if(word.level === 'ANTSYN') return buildAntSynQuestion(word);
+
     let deToRo;
     if(selectedDirection === 'de-ro') deToRo = true;
     else if(selectedDirection === 'ro-de') deToRo = false;
@@ -846,6 +967,27 @@ function wordStageStars(id){
   return '<span class="stage-star gold" title="Învățat">★★★</span>';
 }
 
+function inlineGermanIcons(value){
+  const speakSpan = document.createElement('button');
+  speakSpan.className = 'speak-btn inline';
+  speakSpan.setAttribute('aria-label', 'Ascultă');
+  speakSpan.textContent = '🔊';
+  speakSpan.addEventListener('click', (ev) => { ev.stopPropagation(); speakGerman(value); });
+
+  const dictLink = document.createElement('a');
+  dictLink.className = 'speak-btn inline';
+  dictLink.href = dictCcUrl(value);
+  dictLink.target = '_blank'; dictLink.rel = 'noopener';
+  dictLink.setAttribute('aria-label', 'dict.cc');
+  dictLink.textContent = '📖';
+  dictLink.addEventListener('click', (ev) => ev.stopPropagation());
+
+  const wrap = document.createDocumentFragment();
+  wrap.appendChild(speakSpan);
+  wrap.appendChild(dictLink);
+  return wrap;
+}
+
 function renderQuestion(){
   const q = roundQuestions[currentIndex];
   const letters = ['a','b','c','d'];
@@ -853,6 +995,7 @@ function renderQuestion(){
   const promptSpeaker = q.promptSide === 'de'
     ? `<button class="speak-btn" id="speakPrompt" aria-label="Ascultă">🔊</button>
        <a class="speak-btn" href="${dictCcUrl(q.prompt.value)}" target="_blank" rel="noopener" aria-label="dict.cc">📖</a>` : '';
+  const promptLabel = q.questionLabel || 'Traduce';
   card.innerHTML = `
     <div class="tag-row">
       <span class="tag direction-tag">${q.direction}</span>
@@ -860,7 +1003,7 @@ function renderQuestion(){
       ${wordStageStars(q.id)}
       <button class="skip-btn" id="skipBtn">Sari →</button>
     </div>
-    <div class="prompt-label">Traduce</div>
+    <div class="prompt-label">${promptLabel}</div>
     <div class="prompt-row">
       <div class="prompt-word">${q.prompt.html}</div>
       ${promptSpeaker}
@@ -891,28 +1034,16 @@ function handleAnswer(btn, q){
   document.querySelectorAll('.opt').forEach(b=>{
     b.disabled = true;
     const val = decodeURIComponent(b.dataset.value);
-    if(val === q.correct.value){
-      b.classList.add('correct');
-      if(q.answerSide === 'de'){
-        const speakSpan = document.createElement('button');
-        speakSpan.className = 'speak-btn inline';
-        speakSpan.setAttribute('aria-label', 'Ascultă');
-        speakSpan.textContent = '🔊';
-        speakSpan.addEventListener('click', (ev) => { ev.stopPropagation(); speakGerman(q.correct.value); });
-        b.appendChild(speakSpan);
-
-        const dictLink = document.createElement('a');
-        dictLink.className = 'speak-btn inline';
-        dictLink.href = dictCcUrl(q.correct.value);
-        dictLink.target = '_blank'; dictLink.rel = 'noopener';
-        dictLink.setAttribute('aria-label', 'dict.cc');
-        dictLink.textContent = '📖';
-        dictLink.addEventListener('click', (ev) => ev.stopPropagation());
-        b.appendChild(dictLink);
-      }
-    }
+    if(val === q.correct.value) b.classList.add('correct');
     if(b === btn && !isCorrect) b.classList.add('wrong');
   });
+  // iconitele de ascultare/dictionar apar abia ACUM, dupa alegere - pe toate variantele germane,
+  // nu doar cea corecta - ca sa nu influenteze/distraga alegerea utilizatorului inainte de raspuns
+  if(q.answerSide === 'de'){
+    document.querySelectorAll('.opt').forEach((b,i)=>{
+      b.appendChild(inlineGermanIcons(q.options[i].value));
+    });
+  }
 
   const stamp = document.getElementById('stamp');
   const card = document.getElementById('card');
@@ -1577,7 +1708,7 @@ function renderLevelProgress(){
   const el = document.getElementById('levelProgress');
   if(!el) return;
   const byLevel = {};
-  BUILTIN.concat(myWords).forEach(w=>{
+  BUILTIN.concat(myWords).concat(ANTSYN_ENTRIES).forEach(w=>{
     if(!byLevel[w.level]) byLevel[w.level] = {total:0, attempted:0, correctSum:0, attemptSum:0};
     byLevel[w.level].total++;
     const s = wordStats[w.id];
@@ -1587,7 +1718,7 @@ function renderLevelProgress(){
       byLevel[w.level].attemptSum += s.attempts;
     }
   });
-  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX','MYWORDS'];
+  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX','MYWORDS','ANTSYN'];
   let html = '';
   order.forEach(lvl=>{
     const d = byLevel[lvl];

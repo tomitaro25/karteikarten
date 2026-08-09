@@ -28,6 +28,7 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 - **Serie de zile (streak)** — afișată în linia de rezumat, calculată din activitatea zilnică
 - **Căutare vocală** (🎤, unde browserul o suportă) — rostești un cuvânt în română sau germană, aplicația îl caută în listă și afișează + pronunță rezultatul; tolerantă la lipsa diacriticelor și la articolele germane rostite din reflex
 - **Adaugă cuvinte care lipsesc din listă** — dacă o căutare scrisă nu găsește nimic, poți verifica traducerea pe dict.cc și adăuga cuvântul manual, cu ajutor de lipire din clipboard; rămâne salvat permanent, ca nivel separat ("Cuvintele mele"), exportabil CSV
+- **Antonime & Sinonime** — nivel nou, exclusiv în germană (213 perechi, 426 de întrebări, generate automat în ambele sensuri): vezi un cuvânt, alegi opusul sau apropiatul ca sens, din 4 variante tot germane, cu ascultare și dict.cc disponibile pe fiecare după ce răspunzi
 - **Backup complet** — exportă/restaurează tot progresul (statistici, preferințe, greșeli, streak) ca fișier `.json`
 - **Prompt de instalare** — banner automat pe Android/Chrome (instalare cu un tap) și instrucțiuni clare pe iOS Safari (unde Apple nu permite instalare programatică)
 - Panou de setări organizat pe secțiuni pliabile (Vocabular / Exersare / Date & fișiere / Voce)
