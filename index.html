@@ -573,11 +573,19 @@ function loadPreferences(){
 const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele', ANTSYN:'Antonime & Sinonime', VERBS:'Conjugare verbe'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
+const DIRECTION_AGNOSTIC_LEVELS = new Set(['ANTSYN', 'VERBS']);
 function updateSummaryLine(){
   const el = document.getElementById('summaryLine');
   if(!el) return;
   const levelsTxt = Array.from(selectedLevels).map(l => LEVEL_LABELS[l] || l).join('+') || '—';
-  let txt = `${levelsTxt} · ${DIRECTION_LABELS[selectedDirection] || selectedDirection} · ${MODE_LABELS[practiceMode] || practiceMode}`;
+  // directia DE<->RO nu are sens pt niveluri exclusiv germane (Antonime/Sinonime, Conjugare verbe) -
+  // o aratam doar daca cel putin un nivel selectat chiar foloseste directie, si doar in afara modului "greseli" (pool mixt)
+  const showDirection = practiceMode !== 'mistakes' &&
+    Array.from(selectedLevels).some(l => !DIRECTION_AGNOSTIC_LEVELS.has(l));
+  const parts = [levelsTxt];
+  if(showDirection) parts.push(DIRECTION_LABELS[selectedDirection] || selectedDirection);
+  parts.push(MODE_LABELS[practiceMode] || practiceMode);
+  let txt = parts.join(' · ');
   if(customActive) txt += ' · +Custom';
   if(currentStreak && currentStreak.count > 1) txt += ` · 🔥 ${currentStreak.count} zile`;
   el.textContent = txt;
@@ -908,7 +916,7 @@ function buildAntSynQuestion(entry){
 /* ---------- modul Conjugare verbe (Prasens + Perfekt, nivel nou "VERBS") ---------- */
 // lot 1: cele mai comune 25 verbe (extrase din lista de frecventa + modalele esentiale,
 // care de obicei nu apar in filtrul automat de verbe). Fiecare intrare: [infinitiv, [6 forme Prasens: ich,du,er,wir,ihr,sie/Sie], auxiliar Perfekt, participiu]
-const PERSONS = ['ich','du','er/sie/es','wir','ihr','sie/Sie'];
+const PERSONS = ['Ich','Du','Er/sie/es','Wir','Ihr','Sie/Sie'];
 const VERB_DATA = [
   ["sein", ["bin","bist","ist","sind","seid","sind"], "sein", "gewesen"],
   ["haben", ["habe","hast","hat","haben","habt","haben"], "haben", "gehabt"],
