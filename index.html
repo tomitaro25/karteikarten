@@ -1330,9 +1330,18 @@ function renderAddWordPrompt(searchedText, lang){
       statusEl.textContent = 'Completează ambele câmpuri înainte de a adăuga.';
       return;
     }
-    const exists = myWords.some(w => w.de.toLowerCase() === de.toLowerCase());
-    if(exists){
-      statusEl.textContent = `„${de}" e deja în lista ta.`;
+    const existingIdx = myWords.findIndex(w => w.de.toLowerCase() === de.toLowerCase());
+    if(existingIdx !== -1){
+      const existing = myWords[existingIdx];
+      const ok = confirm(`„${de}" există deja în lista ta, cu traducerea „${existing.ro}".\n\nVrei să-l suprascrii cu noua traducere „${ro}"?`);
+      if(!ok){
+        statusEl.textContent = 'Nu am modificat nimic.';
+        return;
+      }
+      myWords[existingIdx] = { ...existing, ro, artikel };
+      saveMyWords();
+      statusEl.textContent = `✓ Suprascris: ${artikel ? artikel+' ' : ''}${de} = ${ro}`;
+      document.getElementById('wordSearchInput').value = '';
       return;
     }
     myWords.push({ id: `MYWORDS-${Date.now()}`, de, ro, artikel, level: 'MYWORDS', category: '' });
