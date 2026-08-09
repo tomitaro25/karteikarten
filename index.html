@@ -133,6 +133,7 @@
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
   .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:8px; }
+  .verb-person{ font-size:1.05rem; font-weight:700; letter-spacing:0; text-transform:none; color:var(--ink); font-family:'Literata', serif; }
   .prompt-word{ font-size:clamp(1.3rem, 6.5vw, 2rem); font-weight:700; line-height:1.25; margin-bottom:20px;
     overflow-wrap:break-word; word-break:break-word; hyphens:auto; }
   .art{ font-weight:600; }
@@ -933,7 +934,83 @@ const VERB_DATA = [
   ["reden", ["rede","redest","redet","reden","redet","reden"], "haben", "geredet"],
   ["denken", ["denke","denkst","denkt","denken","denkt","denken"], "haben", "gedacht"],
   ["finden", ["finde","findest","findet","finden","findet","finden"], "haben", "gefunden"],
-  ["helfen", ["helfe","hilfst","hilft","helfen","helft","helfen"], "haben", "geholfen"]
+  ["helfen", ["helfe","hilfst","hilft","helfen","helft","helfen"], "haben", "geholfen"],
+  // lot 2-4: restul de 75 verbe (verificate manual: regulate/neregulate, prefix separabil unde e cazul, auxiliar corect)
+  ["passieren", ["passiere","passierst","passiert","passieren","passiert","passieren"], "sein", "passiert"],
+  ["gehören", ["gehöre","gehörst","gehört","gehören","gehört","gehören"], "haben", "gehört"],
+  ["hören", ["höre","hörst","hört","hören","hört","hören"], "haben", "gehört"],
+  ["warten", ["warte","wartest","wartet","warten","wartet","warten"], "haben", "gewartet"],
+  ["essen", ["esse","isst","isst","essen","esst","essen"], "haben", "gegessen"],
+  ["bleiben", ["bleibe","bleibst","bleibt","bleiben","bleibt","bleiben"], "sein", "geblieben"],
+  ["stimmen", ["stimme","stimmst","stimmt","stimmen","stimmt","stimmen"], "haben", "gestimmt"],
+  ["nehmen", ["nehme","nimmst","nimmt","nehmen","nehmt","nehmen"], "haben", "genommen"],
+  ["bringen", ["bringe","bringst","bringt","bringen","bringt","bringen"], "haben", "gebracht"],
+  ["brauchen", ["brauche","brauchst","braucht","brauchen","braucht","brauchen"], "haben", "gebraucht"],
+  ["stehen", ["stehe","stehst","steht","stehen","steht","stehen"], "haben", "gestanden"],
+  ["fragen", ["frage","fragst","fragt","fragen","fragt","fragen"], "haben", "gefragt"],
+  ["heißen", ["heiße","heißt","heißt","heißen","heißt","heißen"], "haben", "geheißen"],
+  ["sprechen", ["spreche","sprichst","spricht","sprechen","sprecht","sprechen"], "haben", "gesprochen"],
+  ["halten", ["halte","hältst","hält","halten","haltet","halten"], "haben", "gehalten"],
+  ["verstehen", ["verstehe","verstehst","versteht","verstehen","versteht","verstehen"], "haben", "verstanden"],
+  ["kennen", ["kenne","kennst","kennt","kennen","kennt","kennen"], "haben", "gekannt"],
+  ["vergessen", ["vergesse","vergisst","vergisst","vergessen","vergesst","vergessen"], "haben", "vergessen"],
+  ["fahren", ["fahre","fährst","fährt","fahren","fahrt","fahren"], "sein", "gefahren"],
+  ["bekommen", ["bekomme","bekommst","bekommt","bekommen","bekommt","bekommen"], "haben", "bekommen"],
+  ["sterben", ["sterbe","stirbst","stirbt","sterben","sterbt","sterben"], "sein", "gestorben"],
+  ["treffen", ["treffe","triffst","trifft","treffen","trefft","treffen"], "haben", "getroffen"],
+  ["arbeiten", ["arbeite","arbeitest","arbeitet","arbeiten","arbeitet","arbeiten"], "haben", "gearbeitet"],
+  ["sorgen", ["sorge","sorgst","sorgt","sorgen","sorgt","sorgen"], "haben", "gesorgt"],
+  ["liegen", ["liege","liegst","liegt","liegen","liegt","liegen"], "haben", "gelegen"],
+  ["suchen", ["suche","suchst","sucht","suchen","sucht","suchen"], "haben", "gesucht"],
+  ["spielen", ["spiele","spielst","spielt","spielen","spielt","spielen"], "haben", "gespielt"],
+  ["verlieren", ["verliere","verlierst","verliert","verlieren","verliert","verlieren"], "haben", "verloren"],
+  ["hoffen", ["hoffe","hoffst","hofft","hoffen","hofft","hoffen"], "haben", "gehofft"],
+  ["versuchen", ["versuche","versuchst","versucht","versuchen","versucht","versuchen"], "haben", "versucht"],
+  ["erzählen", ["erzähle","erzählst","erzählt","erzählen","erzählt","erzählen"], "haben", "erzählt"],
+  ["laufen", ["laufe","läufst","läuft","laufen","lauft","laufen"], "sein", "gelaufen"],
+  ["holen", ["hole","holst","holt","holen","holt","holen"], "haben", "geholt"],
+  ["bedeuten", ["bedeute","bedeutest","bedeutet","bedeuten","bedeutet","bedeuten"], "haben", "bedeutet"],
+  ["bestimmen", ["bestimme","bestimmst","bestimmt","bestimmen","bestimmt","bestimmen"], "haben", "bestimmt"],
+  ["wagen", ["wage","wagst","wagt","wagen","wagt","wagen"], "haben", "gewagt"],
+  ["fallen", ["falle","fällst","fällt","fallen","fallt","fallen"], "sein", "gefallen"],
+  ["verlassen", ["verlasse","verlässt","verlässt","verlassen","verlasst","verlassen"], "haben", "verlassen"],
+  ["zeigen", ["zeige","zeigst","zeigt","zeigen","zeigt","zeigen"], "haben", "gezeigt"],
+  ["fällen", ["fälle","fällst","fällt","fällen","fällt","fällen"], "haben", "gefällt"],
+  ["entschuldigen", ["entschuldige","entschuldigst","entschuldigt","entschuldigen","entschuldigt","entschuldigen"], "haben", "entschuldigt"],
+  ["schlafen", ["schlafe","schläfst","schläft","schlafen","schlaft","schlafen"], "haben", "geschlafen"],
+  ["stellen", ["stelle","stellst","stellt","stellen","stellt","stellen"], "haben", "gestellt"],
+  ["trinken", ["trinke","trinkst","trinkt","trinken","trinkt","trinken"], "haben", "getrunken"],
+  ["kriegen", ["kriege","kriegst","kriegt","kriegen","kriegt","kriegen"], "haben", "gekriegt"],
+  ["scheinen", ["scheine","scheinst","scheint","scheinen","scheint","scheinen"], "haben", "geschienen"],
+  ["reichen", ["reiche","reichst","reicht","reichen","reicht","reichen"], "haben", "gereicht"],
+  ["klingen", ["klinge","klingst","klingt","klingen","klingt","klingen"], "haben", "geklungen"],
+  ["setzen", ["setze","setzt","setzt","setzen","setzt","setzen"], "haben", "gesetzt"],
+  ["retten", ["rette","rettest","rettet","retten","rettet","retten"], "haben", "gerettet"],
+  ["lieben", ["liebe","liebst","liebt","lieben","liebt","lieben"], "haben", "geliebt"],
+  ["schaffen", ["schaffe","schaffst","schafft","schaffen","schafft","schaffen"], "haben", "geschafft"],
+  ["funktionieren", ["funktioniere","funktionierst","funktioniert","funktionieren","funktioniert","funktionieren"], "haben", "funktioniert"],
+  ["lernen", ["lerne","lernst","lernt","lernen","lernt","lernen"], "haben", "gelernt"],
+  ["nennen", ["nenne","nennst","nennt","nennen","nennt","nennen"], "haben", "genannt"],
+  ["erinnern", ["erinnere","erinnerst","erinnert","erinnern","erinnert","erinnern"], "haben", "erinnert"],
+  ["ziehen", ["ziehe","ziehst","zieht","ziehen","zieht","ziehen"], "haben", "gezogen"],
+  ["verschwinden", ["verschwinde","verschwindest","verschwindet","verschwinden","verschwindet","verschwinden"], "sein", "verschwunden"],
+  ["aufhören", ["höre auf","hörst auf","hört auf","hören auf","hört auf","hören auf"], "haben", "aufgehört"],
+  ["fühlen", ["fühle","fühlst","fühlt","fühlen","fühlt","fühlen"], "haben", "gefühlt"],
+  ["rufen", ["rufe","rufst","ruft","rufen","ruft","rufen"], "haben", "gerufen"],
+  ["heiraten", ["heirate","heiratest","heiratet","heiraten","heiratet","heiraten"], "haben", "geheiratet"],
+  ["erklären", ["erkläre","erklärst","erklärt","erklären","erklärt","erklären"], "haben", "erklärt"],
+  ["vertrauen", ["vertraue","vertraust","vertraut","vertrauen","vertraut","vertrauen"], "haben", "vertraut"],
+  ["kaufen", ["kaufe","kaufst","kauft","kaufen","kauft","kaufen"], "haben", "gekauft"],
+  ["kümmern", ["kümmere","kümmerst","kümmert","kümmern","kümmert","kümmern"], "haben", "gekümmert"],
+  ["anrufen", ["rufe an","rufst an","ruft an","rufen an","ruft an","rufen an"], "haben", "angerufen"],
+  ["sitzen", ["sitze","sitzt","sitzt","sitzen","sitzt","sitzen"], "haben", "gesessen"],
+  ["schreiben", ["schreibe","schreibst","schreibt","schreiben","schreibt","schreiben"], "haben", "geschrieben"],
+  ["vorstellen", ["stelle vor","stellst vor","stellt vor","stellen vor","stellt vor","stellen vor"], "haben", "vorgestellt"],
+  ["benutzen", ["benutze","benutzt","benutzt","benutzen","benutzt","benutzen"], "haben", "benutzt"],
+  ["bemerken", ["bemerke","bemerkst","bemerkt","bemerken","bemerkt","bemerken"], "haben", "bemerkt"],
+  ["gefallen", ["gefalle","gefällst","gefällt","gefallen","gefallt","gefallen"], "haben", "gefallen"],
+  ["aussehen", ["sehe aus","siehst aus","sieht aus","sehen aus","seht aus","sehen aus"], "haben", "ausgesehen"],
+  ["verbringen", ["verbringe","verbringst","verbringt","verbringen","verbringt","verbringen"], "haben", "verbracht"]
 ];
 const AUX_FORMS = {
   haben: ["habe","hast","hat","haben","habt","haben"],
@@ -979,6 +1056,19 @@ function buildVerbQuestion(entry){
     if(distractors.length === 3) break;
     if(!distractors.includes(f)) distractors.push(f);
   }
+  // plasa de siguranta: cateva verbe (heissen, setzen, sitzen, benutzen etc.) au radacina
+  // terminata in s/ss/z/tz, unde "du" si "er/sie/es" coincid la Prasens - raman doar 3 forme
+  // unice din 6, insuficient pt 3 distractori. Completam cu forme de la ALTE verbe, la aceeasi
+  // persoana/timp - tot testeaza corect daca stii forma potrivita pt verbul intrebat.
+  if(distractors.length < 3){
+    const otherVerbIdxs = shuffle(VERB_DATA.map((_,i)=>i).filter(i=>i!==entry.verbIdx));
+    for(const vi2 of otherVerbIdxs){
+      if(distractors.length === 3) break;
+      const [,pr2,aux2,pp2] = VERB_DATA[vi2];
+      const f = entry.tense === 'praesens' ? pr2[entry.person] : `${AUX_FORMS[aux2][entry.person]} ${pp2}`;
+      if(f !== correctVal && !distractors.includes(f)) distractors.push(f);
+    }
+  }
   const correct = {value: correctVal, html: escapeHtml(correctVal)};
   const options = shuffle([correct, ...distractors.map(f=>({value:f, html:escapeHtml(f)}))]);
   const tenseLabel = entry.tense === 'praesens' ? 'Präsens' : 'Perfekt';
@@ -988,7 +1078,7 @@ function buildVerbQuestion(entry){
     correct, options,
     promptSide: 'de', answerSide: 'de',
     direction: tenseLabel,
-    questionLabel: `${tenseLabel}: ${personLabel}`
+    questionLabel: `<span class="verb-person">${personLabel}</span>`
   };
 }
 
