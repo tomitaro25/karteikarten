@@ -116,6 +116,14 @@
   .skip-btn:active{ background:var(--paper-dark); }
   .stage-star{ font-size:0.68rem; letter-spacing:1px; cursor:help; }
   .search-result-row:active{ background:var(--paper-dark); }
+  .paste-highlight{
+    background:var(--gold) !important; border-color:var(--ink) !important; font-weight:600;
+    animation: paste-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes paste-pulse{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(201,154,46,0.55); }
+    50%{ box-shadow:0 0 0 8px rgba(201,154,46,0); }
+  }
   .stage-star.gold{ color:var(--gold); }
   .stage-star.wrong{ color:var(--red); }
   .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
@@ -342,6 +350,13 @@
       <p><b>Notă de confidențialitate:</b> spre deosebire de restul aplicației, recunoașterea vocală trimite sunetul către serverele browserului (ex. Google, pentru Chrome) ca să fie transformat în text — nu se întâmplă local, pe telefon. E o limitare a tehnologiei din browser, nu ceva controlat de noi.</p>
       <p>Funcția nu apare deloc pe iPhone/iPad (Safari) — Apple nu oferă acest API în niciun browser de pe iOS, indiferent ce aplicație folosești. Căutarea scrisă rămâne disponibilă peste tot.</p>
     </div>
+    <div class="sheet-section help-text">
+      <div class="sheet-label">Adaugă cuvinte care lipsesc din listă</div>
+      <p>Dacă o <b>căutare scrisă</b> nu găsește nimic, aplicația îți oferă să-l adaugi manual, la nivelul „Cuvintele mele". Toggle-ul RO/DE de deasupra câmpului de căutare decide ce parte a cuvântului o știi deja (cea în care ai căutat).</p>
+      <p>Verifici traducerea pe dict.cc (linkul apare automat), selectezi <b>doar</b> coloana relevantă, o copiezi, revii, apeși butonul auriu <b>„Lipește din clipboard"</b> — câmpul se completează automat, dar rămâne editabil. Poți repeta lipirea oricând, se resetează curat de fiecare dată.</p>
+      <p>Cuvintele adăugate rămân salvate permanent pe acest dispozitiv, apar ca nivel separat de exersat, și pot fi exportate oricând ca fișier CSV, din „Date &amp; fișiere".</p>
+      <p><i>Notă:</i> căutarea vocală găsește doar cuvinte deja existente în listă — nu oferă și adăugare manuală.</p>
+    </div>
   </details>
 
   <details class="sheet-group" open>
@@ -366,6 +381,7 @@
         <span class="chip level-chip" data-level="EXT">Suplimentar</span>
         <span class="chip level-chip" data-level="PFLEGE">Îngrijire</span>
         <span class="chip level-chip" data-level="PFLEGEAUX">Îngrijire — auxiliar</span>
+        <span class="chip level-chip" data-level="MYWORDS" id="myWordsChip">Cuvintele mele (0)</span>
         <span class="chip" id="customChip" data-level="Custom" style="opacity:0.4;">Custom (0)</span>
       </div>
       <div class="upload-status" style="margin-top:8px;">Niveluri A1–B2 pe bază de frecvență reală (nu curriculum Goethe) · „Suplimentar" = cuvinte în afara topului celor mai frecvente 50.000 · „Îngrijire" = termeni de specialitate (asistent/îngrijitor) · „Îngrijire — auxiliar" = obiecte/instrumentar din azil/spital</div>
@@ -415,17 +431,18 @@
       <div class="btn-row">
         <button class="btn-block" id="exportWordsBtn"><span>Exportă cuvintele curente</span><span>›</span></button>
         <button class="btn-block" id="exportStatsBtn"><span>Exportă statisticile</span><span>›</span></button>
+        <button class="btn-block" id="exportMyWordsBtn"><span>Exportă „Cuvintele mele"</span><span>›</span></button>
       </div>
     </div>
 
     <div class="sheet-section" id="searchSection">
       <div class="sheet-label">Caută un cuvânt</div>
+      <div class="chip-row" id="voiceLangRow" style="margin-bottom:8px;">
+        <span class="chip voice-lang-chip active" data-lang="ro">🇷🇴 caut din română</span>
+        <span class="chip voice-lang-chip" data-lang="de">🇩🇪 caut din germană</span>
+      </div>
       <div class="btn-row">
         <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
-      </div>
-      <div class="chip-row" id="voiceLangRow" style="display:none; margin-top:10px;">
-        <span class="chip voice-lang-chip active" data-lang="ro">🎙️ Vorbesc română</span>
-        <span class="chip voice-lang-chip" data-lang="de">🎙️ Ich spreche Deutsch</span>
       </div>
       <button class="btn-block" id="voiceRecordBtn" style="display:none; margin-top:8px;"><span>🎤 Apasă și vorbește</span><span>●</span></button>
       <div class="upload-status" id="voiceSearchStatus"></div>
@@ -537,7 +554,7 @@ function loadPreferences(){
   }catch(e){ /* preferinte corupte sau inexistente - pastram valorile implicite */ }
 }
 
-const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar'};
+const LEVEL_LABELS = {A1:'A1', A2:'A2', B1:'B1', B2:'B2', EXT:'Suplimentar', PFLEGE:'Îngrijire', PFLEGEAUX:'Îngrijire-auxiliar', MYWORDS:'Cuvintele mele'};
 const DIRECTION_LABELS = {mixed:'ambele direcții', 'de-ro':'DE→RO', 'ro-de':'RO→DE'};
 const MODE_LABELS = {smart:'inteligent', random:'aleator'};
 function updateSummaryLine(){
@@ -559,6 +576,23 @@ async function loadMistakes(){
 function saveMistakes(){
   try{ localStorage.setItem('mistakeIds', JSON.stringify(mistakeIds)); }catch(e){}
 }
+
+/* ---------- "Cuvintele mele" - lista personala, construita manual, persistenta ---------- */
+let myWords = [];
+async function loadMyWords(){
+  try{
+    const raw = localStorage.getItem('myWords');
+    myWords = raw ? JSON.parse(raw) : [];
+  }catch(e){ myWords = []; }
+}
+function saveMyWords(){
+  try{ localStorage.setItem('myWords', JSON.stringify(myWords)); }catch(e){}
+}
+function updateMyWordsChipLabel(){
+  const chip = document.getElementById('myWordsChip');
+  if(chip) chip.textContent = `Cuvintele mele (${myWords.length})`;
+}
+
 function updateMistakesChipLabel(){
   const chip = document.getElementById('mistakesModeChip');
   if(chip) chip.textContent = `Doar greșeli (${mistakeIds.length})`;
@@ -605,6 +639,7 @@ function allWordsById(){
   const map = {};
   BUILTIN.forEach(w => map[w.id] = w);
   customWords.forEach(w => map[w.id] = w);
+  myWords.forEach(w => map[w.id] = w);
   return map;
 }
 function csvEscape(v){
@@ -626,7 +661,7 @@ function activeWords(){
     const map = allWordsById();
     return mistakeIds.map(id => map[id]).filter(Boolean);
   }
-  let words = BUILTIN.filter(w => selectedLevels.has(w.level));
+  let words = BUILTIN.concat(myWords).filter(w => selectedLevels.has(w.level));
   if(customActive) words = words.concat(customWords);
   return words;
 }
@@ -1119,8 +1154,17 @@ document.getElementById('exportStatsBtn').addEventListener('click', ()=>{
   downloadBlob(content, 'statistici-vocabular.csv', 'text/csv;charset=utf-8');
 });
 
+document.getElementById('exportMyWordsBtn').addEventListener('click', ()=>{
+  if(!myWords.length){ alert('Lista „Cuvintele mele" e goală deocamdată — adaugă un cuvânt din secțiunea de căutare.'); return; }
+  let content = 'id,german,romana,artikel,nivel\n';
+  myWords.forEach(w=>{
+    content += [w.id, w.de, w.ro, w.artikel||'', w.level].map(csvEscape).join(',') + '\n';
+  });
+  downloadBlob(content, 'cuvintele-mele.csv', 'text/csv;charset=utf-8');
+});
+
 /* ---------- backup complet (statistici + preferinte + greseli + streak), ca fisier .json ---------- */
-const BACKUP_KEYS = ['wordStats', 'prefs', 'mistakeIds', 'streak', 'voiceURI'];
+const BACKUP_KEYS = ['wordStats', 'prefs', 'mistakeIds', 'streak', 'voiceURI', 'myWords'];
 document.getElementById('backupExportBtn').addEventListener('click', ()=>{
   const backup = { _app: 'Karteikarten', _version: 1, _exportedAt: new Date().toISOString(), data: {} };
   BACKUP_KEYS.forEach(key=>{
@@ -1179,13 +1223,25 @@ function normalizeConventionDE(text){
 const GERMAN_ARTICLES = ['der','die','das','den','dem','des','ein','eine','einen','einem','einer','eines'];
 
 /* ---------- cautare rapida de cuvant (scris) ---------- */
+let searchMissTimer = null;
 document.getElementById('wordSearchInput').addEventListener('input', (e)=>{
-  const q = normalizeDiacritics(e.target.value);
+  const rawQuery = e.target.value.trim();
+  const q = normalizeDiacritics(rawQuery);
   const resultsEl = document.getElementById('wordSearchResults');
+  document.getElementById('voiceSearchStatus').textContent = '';
+  clearTimeout(searchMissTimer);
   if(q.length < 2){ resultsEl.innerHTML = ''; return; }
-  const pool = BUILTIN.concat(customWords);
+  const pool = BUILTIN.concat(customWords).concat(myWords);
   const matches = pool.filter(w => normalizeDiacritics(w.de).includes(q) || normalizeDiacritics(w.ro).includes(q)).slice(0, 25);
-  renderSearchResults(matches);
+  if(matches.length){
+    renderSearchResults(matches);
+  } else {
+    resultsEl.innerHTML = '<div class="upload-status">Caut...</div>';
+    // asteptam putin, ca sa nu aratam "adauga manual" la fiecare litera tastata, inainte sa termini cuvantul
+    searchMissTimer = setTimeout(()=>{
+      renderAddWordPrompt(rawQuery, voiceSearchLang);
+    }, 700);
+  }
 });
 function renderSearchResults(matches){
   const resultsEl = document.getElementById('wordSearchResults');
@@ -1204,14 +1260,90 @@ function renderSearchResults(matches){
   });
 }
 
-/* ---------- cautare vocala ---------- */
+/* ---------- adauga manual un cuvant negasit (doar din cautare scrisa) ---------- */
+function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function renderAddWordPrompt(searchedText, lang){
+  const resultsEl = document.getElementById('wordSearchResults');
+  const deKnown = (lang === 'de'); // daca am cautat pornind de la germana, stim deja campul german
+  const deValue = deKnown ? searchedText : '';
+  const roValue = deKnown ? '' : searchedText;
+  const colLabel = deKnown ? 'română' : 'germană';
+
+  resultsEl.innerHTML = `
+    <div class="upload-status">Nu am găsit „${searchedText}" în listă.</div>
+    <a class="btn-block" href="${dictCcUrl(searchedText)}" target="_blank" rel="noopener" style="margin-top:8px;"><span>Verifică pe dict.cc ↗</span><span>›</span></a>
+    <div class="upload-status" style="margin-top:6px;">Pe pagina dict.cc, selectează doar coloana <b>${colLabel}</b> — nu tot rândul — apoi copiază (meniul nativ al telefonului).</div>
+    <div style="margin-top:12px;">
+      <div class="sheet-label">Cuvânt german</div>
+      <div style="display:flex; gap:6px;">
+        <select id="addWordArtikel" class="btn-block" style="width:76px; flex:none;">
+          <option value="">–</option>
+          <option value="der">der</option>
+          <option value="die">die</option>
+          <option value="das">das</option>
+        </select>
+        <input type="text" id="addWordDe" class="btn-block" style="flex:1;" value="${escapeAttr(deValue)}" placeholder="cuvânt german">
+      </div>
+      <div class="sheet-label" style="margin-top:10px;">Traducere română</div>
+      <input type="text" id="addWordRo" class="btn-block" style="width:100%;" value="${escapeAttr(roValue)}" placeholder="traducere română">
+      <button class="btn-block paste-highlight" id="pasteClipboardBtn" style="width:100%; margin-top:10px;"><span>📋 Lipește din clipboard</span><span>›</span></button>
+      <button class="chip active" id="submitAddWordBtn" style="width:100%; margin-top:10px; text-align:center; min-height:40px;">Adaugă în lista mea</button>
+      <div class="upload-status" id="addWordStatus"></div>
+    </div>
+  `;
+
+  document.getElementById('pasteClipboardBtn').addEventListener('click', async ()=>{
+    const statusEl = document.getElementById('addWordStatus');
+    const targetInput = deKnown ? document.getElementById('addWordRo') : document.getElementById('addWordDe');
+    targetInput.value = ''; // resetam intotdeauna inainte de lipire, cerut explicit
+    if(!navigator.clipboard || !navigator.clipboard.readText){
+      statusEl.textContent = 'Browser-ul nu suportă lipire automată — ține apăsat pe câmp și alege „Lipește" manual.';
+      return;
+    }
+    try{
+      const text = await navigator.clipboard.readText();
+      let cleaned = text.replace(/[\t\r\n]+/g, '  ').trim();
+      // daca pare copiat tot randul din tabelul dict.cc (coloane separate prin spatii multiple), pastram doar ultima "coloana"
+      const parts = cleaned.split(/\s{2,}/).map(p=>p.trim()).filter(Boolean);
+      targetInput.value = parts.length > 1 ? parts[parts.length - 1] : cleaned;
+      statusEl.textContent = '';
+      targetInput.focus();
+    }catch(err){
+      statusEl.textContent = 'Nu am putut citi clipboard-ul — ține apăsat pe câmp și alege „Lipește" manual.';
+    }
+  });
+
+  document.getElementById('submitAddWordBtn').addEventListener('click', ()=>{
+    const de = document.getElementById('addWordDe').value.trim();
+    const ro = document.getElementById('addWordRo').value.trim();
+    const artikel = document.getElementById('addWordArtikel').value;
+    const statusEl = document.getElementById('addWordStatus');
+    if(!de || !ro){
+      statusEl.textContent = 'Completează ambele câmpuri înainte de a adăuga.';
+      return;
+    }
+    const exists = myWords.some(w => w.de.toLowerCase() === de.toLowerCase());
+    if(exists){
+      statusEl.textContent = `„${de}" e deja în lista ta.`;
+      return;
+    }
+    myWords.push({ id: `MYWORDS-${Date.now()}`, de, ro, artikel, level: 'MYWORDS', category: '' });
+    saveMyWords();
+    updateMyWordsChipLabel();
+    statusEl.textContent = `✓ Adăugat: ${artikel ? artikel+' ' : ''}${de} = ${ro}`;
+    document.getElementById('wordSearchInput').value = '';
+  });
+}
+
+/* ---------- cautare vocala (doar gaseste cuvinte existente, nu ofera adaugare) ---------- */
 function supportsSpeechRecognition(){
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
 let voiceSearchLang = 'ro';
 
 function findWordMatch(transcript, lang){
-  const pool = BUILTIN.concat(customWords);
+  const pool = BUILTIN.concat(customWords).concat(myWords);
   const field = lang === 'ro' ? 'ro' : 'de';
   const base = normalizeDiacritics(transcript);
 
@@ -1262,13 +1394,14 @@ function handleVoiceResult(alternatives){
   if(result0.onlyArticle){
     statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — ai spus doar un articol. Spune-l împreună cu un cuvânt, ex. „${firstAlt} Tisch".`;
   } else {
-    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — nu am găsit acest cuvânt în listă.`;
+    statusEl.innerHTML = `Am înțeles: <b>„${firstAlt}"</b> — nu am găsit acest cuvânt în listă. Poți încerca să-l cauți scris, ca să-l adaugi manual.`;
   }
 }
 
 let activeRecognizer = null;
 function startVoiceSearch(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
   if(!SR) return;
   const statusEl = document.getElementById('voiceSearchStatus');
   const btn = document.getElementById('voiceRecordBtn');
@@ -1306,7 +1439,6 @@ function startVoiceSearch(){
 }
 
 if(supportsSpeechRecognition()){
-  document.getElementById('voiceLangRow').style.display = 'flex';
   document.getElementById('voiceRecordBtn').style.display = 'flex';
   document.getElementById('micShortcutBtn').style.display = 'flex';
 }
@@ -1428,7 +1560,7 @@ function renderLevelProgress(){
   const el = document.getElementById('levelProgress');
   if(!el) return;
   const byLevel = {};
-  BUILTIN.forEach(w=>{
+  BUILTIN.concat(myWords).forEach(w=>{
     if(!byLevel[w.level]) byLevel[w.level] = {total:0, attempted:0, correctSum:0, attemptSum:0};
     byLevel[w.level].total++;
     const s = wordStats[w.id];
@@ -1438,7 +1570,7 @@ function renderLevelProgress(){
       byLevel[w.level].attemptSum += s.attempts;
     }
   });
-  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX'];
+  const order = ['A1','A2','B1','B2','EXT','PFLEGE','PFLEGEAUX','MYWORDS'];
   let html = '';
   order.forEach(lvl=>{
     const d = byLevel[lvl];
@@ -1493,10 +1625,12 @@ document.querySelectorAll('.zoom-reset-btn').forEach(btn=>{
   applyZoom();
   await loadStats();
   await loadMistakes();
+  await loadMyWords();
   await loadVoicePref();
   loadPreferences();
   currentStreak = updateStreak();
   updateMistakesChipLabel();
+  updateMyWordsChipLabel();
   renderLevelProgress();
   refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
   buildRound();
