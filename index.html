@@ -126,6 +126,7 @@
   }
   .pasted-value{ color:#1a2b6d !important; font-weight:700 !important; }
   .stage-star.gold{ color:var(--gold); }
+  .stage-star.green{ color:var(--green); }
   .stage-star.wrong{ color:var(--red); }
   .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
   .help-text p:last-child{ margin-bottom:0; }
@@ -325,11 +326,13 @@
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Ce înseamnă stelele ⭐ de pe card</div>
-      <p>Fiecare cuvânt are un „stadiu de învățare", arătat discret lângă numărul întrebării:</p>
-      <p><span class="stage-star gold">★</span> <b>o stea galbenă</b> — cuvânt nou, nu l-ai văzut încă.</p>
-      <p><span class="stage-star gold">★★</span> <b>două stele galbene</b> — l-ai răspuns corect de curând, dar e încă în curs de stabilizare (apare des, ca să se fixeze).</p>
-      <p><span class="stage-star gold">★★★</span> <b>trei stele galbene</b> — cuvânt învățat; va apărea tot mai rar, dar niciodată complet dispărut (revine periodic, la intervale din ce în ce mai mari, ca să nu-l uiți).</p>
-      <p><span class="stage-star wrong">★</span> <b>o stea roșie</b> — ultima dată l-ai răspuns greșit; are prioritate maximă acum, îl vei revedea curând.</p>
+      <p>Numărul de stele arată <b>a câta oară apare cuvântul</b>, discret lângă numărul întrebării:</p>
+      <p><span class="stage-star gold">★</span> / <span class="stage-star gold">★★</span> / <span class="stage-star gold">★★★</span> — aurii, pentru primele 3 apariții (dacă toate au fost răspunsuri corecte).</p>
+      <p><span class="stage-star green">★★★★</span> — de la a 4-a apariție încolo, stelele devin verzi — cuvântul e considerat „bine învățat" și apare tot mai rar.</p>
+      <p><span class="stage-star wrong">★</span> <b>o stea roșie</b> — ai greșit ultima dată; cuvântul primește din nou prioritate maximă și stelele o iau de la capăt. Pe măsură ce răspunzi corect din nou, lângă steaua roșie apar stele aurii (<span class="stage-star wrong">★</span><span class="stage-star gold">★</span>, <span class="stage-star wrong">★</span><span class="stage-star gold">★★</span>...) — după 3 răspunsuri corecte la rând, steaua roșie dispare complet, cuvântul fiind tratat din nou ca „bine învățat".</p>
+      <p>Orice card afișat are cel puțin 1 stea — chiar și la prima apariție a unui cuvânt.</p>
+      <p><b>Prioritatea de apariție</b> ține de aceleași praguri: maximă pentru cuvinte noi/greșite/cu un singur răspuns corect, medie în faza de stabilizare (2-3 răspunsuri corecte), minimă după 4+ răspunsuri corecte — dar niciodată zero, revin din când în când.</p>
+      <p>La nivelurile A1–B2, cuvintele noi apar <b>în ordinea frecvenței reale de utilizare</b> (cele mai comune primele) — nu complet aleator. O „bandă" de 200 de cuvinte se deschide complet abia după ce ai încercat toate cuvintele din banda anterioară măcar o dată.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Modul „Inteligent" vs. „Complet aleator"</div>
@@ -622,17 +625,24 @@ function updateMistakesChipLabel(){
   if(chip) chip.textContent = `Doar greșeli (${mistakeIds.length})`;
 }
 function recordAnswer(id, correct){
-  if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0, streak:0};
+  if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0, streak:0, mistakeFlag:false};
   if(wordStats[id].streak === undefined) wordStats[id].streak = 0; // migrare date vechi, fara camp streak
+  if(wordStats[id].mistakeFlag === undefined) wordStats[id].mistakeFlag = false; // migrare, fara camp mistakeFlag
   wordStats[id].attempts++;
   wordStats[id].lastSeenAt = Date.now();
   if(correct){
     wordStats[id].correct++;
     wordStats[id].streak++; // raspunsuri corecte CONSECUTIVE - reseteaza la orice greseala
+    // "iertare": dupa 3 raspunsuri corecte de la ultima greseala, stergem urma rosie -
+    // de aici incolo cuvantul se comporta si arata identic cu unul care n-a gresit niciodata
+    if(wordStats[id].mistakeFlag && wordStats[id].streak >= 3){
+      wordStats[id].mistakeFlag = false;
+    }
     const idx = mistakeIds.indexOf(id);
     if(idx !== -1){ mistakeIds.splice(idx, 1); saveMistakes(); }
   } else {
     wordStats[id].streak = 0;
+    wordStats[id].mistakeFlag = true;
     const idx = mistakeIds.indexOf(id);
     if(idx !== -1) mistakeIds.splice(idx, 1);
     mistakeIds.unshift(id);
@@ -741,27 +751,64 @@ function speakGerman(text){
   }catch(e){ /* TTS indisponibil pe acest dispozitiv - esuam silentios */ }
 }
 
-/* ---------- repetitie spatiata: scor de prioritate per cuvant ---------- */
-// niveluri de prioritate:
-//   1) gresit la ultima incercare -> prioritate MAXIMA (5.0)
-//   2) cuvant nou (niciodata incercat) -> prioritate mare (3.0)
-//   3) primele 1-2 raspunsuri corecte consecutive -> aproape de frecventa unui cuvant nou (2.8)
-//   4) stabilizat (3+ corecte consecutive) -> prioritate mica, DAR revine periodic la recapitulare,
-//      dupa un program progresiv (1/2/4/7/14/30/60 zile) - ca sa nu fie uitat pe termen lung
-function reviewIntervalDays(streak){
-  const schedule = {3:1, 4:2, 5:4, 6:7, 7:14, 8:30};
-  return schedule[streak] !== undefined ? schedule[streak] : 60; // plafon 60 zile pt streak foarte mare
+/* ---------- benzi de frecventa (doar A1/A2/B1/B2, in ordinea REALA de frecventa) ---------- */
+// scopul: cuvintele noi apar in ordinea frecventei (cele mai comune primele), nu complet aleator -
+// o banda de 200 cuvinte se "deblocheaza" complet abia dupa ce TOATE cuvintele din banda anterioara
+// au fost incercate macar o data.
+const FREQ_LEVEL_ORDER = {A1:0, A2:1, B1:2, B2:3};
+const FREQ_BAND_SIZE = 200;
+let freqOrderedWords = [];
+let freqBandIndex = {}; // id cuvant -> index banda (0-based)
+function initFreqBands(){
+  freqOrderedWords = BUILTIN
+    .filter(w => FREQ_LEVEL_ORDER.hasOwnProperty(w.level))
+    .slice()
+    .sort((a,b)=>{
+      const la = FREQ_LEVEL_ORDER[a.level], lb = FREQ_LEVEL_ORDER[b.level];
+      if(la !== lb) return la - lb;
+      return parseInt(a.id.split('-')[1],10) - parseInt(b.id.split('-')[1],10);
+    });
+  freqBandIndex = {};
+  freqOrderedWords.forEach((w,i)=>{ freqBandIndex[w.id] = Math.floor(i / FREQ_BAND_SIZE); });
 }
+let unlockedBandCount = 1;
+function refreshUnlockedBands(){
+  const totalBands = Math.ceil(freqOrderedWords.length / FREQ_BAND_SIZE);
+  let band = 0;
+  while(band < totalBands){
+    const start = band * FREQ_BAND_SIZE, end = start + FREQ_BAND_SIZE;
+    const bandWords = freqOrderedWords.slice(start, end);
+    const allAttempted = bandWords.every(w => wordStats[w.id] && wordStats[w.id].attempts > 0);
+    if(!allAttempted) break;
+    band++;
+  }
+  unlockedBandCount = band + 1; // +1: banda curenta (partial incercata) e tot "activa"
+}
+
+/* ---------- scor de prioritate per cuvant (formula unica, valabila pt toate nivelurile) ---------- */
+//   streak 0 sau 1 (gresit, sau doar 1 raspuns corect) -> prioritate 5 (maxima)
+//   streak 2 sau 3 (faza de stabilizare)                -> prioritate 3
+//   streak 4                                             -> prioritate 0.5
+//   streak 5+ ("bine invatat")                           -> prioritate 0.3
+//   o greseala reseteaza streak-ul la 0 -> inapoi la prioritate maxima
+// Singura diferenta intre niveluri: la A1/A2/B1/B2, cuvintele NOI (niciodata incercate) respecta
+// benzile de frecventa de mai sus (apar in ordinea reala de frecventa, nu complet aleator).
 function priorityWeight(word){
   const s = wordStats[word.id];
-  if(!s || s.attempts === 0) return 3.0; // cuvant nou, niciodata incercat
+  const isFreqLeveled = FREQ_LEVEL_ORDER.hasOwnProperty(word.level);
+
+  if(!s || s.attempts === 0){
+    if(isFreqLeveled){
+      const band = freqBandIndex[word.id];
+      if(band === undefined || band >= unlockedBandCount) return 0.01; // banda inca neactivata - suprimat
+    }
+    return 5.0; // cuvant nou (in banda activa, daca e cazul) - prioritate maxima
+  }
   const streak = s.streak || 0;
-  if(streak === 0) return 5.0;   // ultima incercare a fost gresita - prioritate maxima
-  if(streak <= 2) return 2.8;    // primele 1-2 raspunsuri corecte - aproape de frecventa unui cuvant nou
-  // stabilizat: verificam daca a trecut timpul de recapitulare programat
-  const daysSince = s.lastSeenAt ? (Date.now() - s.lastSeenAt) / 86400000 : Infinity;
-  if(daysSince >= reviewIntervalDays(streak)) return 2.5; // scadent pt recapitulare - readus aproape de prioritate mare
-  return Math.max(0.3, 2.2 - (streak - 2) * 0.25); // inca in perioada de asteptare - prioritate mica
+  if(streak <= 1) return 5.0;
+  if(streak <= 3) return 3.0;
+  if(streak === 4) return 0.5;
+  return 0.3; // streak >= 5
 }
 // selectie ponderata fara repetitie (Efraimidis-Spirakis weighted sampling)
 function weightedSample(words, n){
@@ -1093,6 +1140,7 @@ function buildVerbQuestion(entry){
 function buildRound(){
   updateSummaryLine();
   savePreferences();
+  refreshUnlockedBands();
   const words = activeWords();
   const card = document.getElementById('card');
   if(words.length < 4){
@@ -1148,17 +1196,25 @@ function dictCcUrl(text){
 
 function wordStageStars(id){
   const s = wordStats[id];
-  if(s && s.attempts > 0 && (s.streak || 0) === 0){
-    return '<span class="stage-star wrong" title="Greșit ultima dată">★</span>';
-  }
   if(!s || s.attempts === 0){
-    return '<span class="stage-star gold" title="Cuvânt nou">★</span>';
+    return '<span class="stage-star gold" title="Apariția nr. 1">★</span>'; // prima aparitie
   }
   const streak = s.streak || 0;
-  if(streak <= 2){
-    return '<span class="stage-star gold" title="În curs de stabilizare">★★</span>';
+  if(s.mistakeFlag){
+    // steluta rosie fixa (marcheaza greseala recenta) + cate o galbena pt fiecare raspuns corect
+    // de atunci incoace (streak e garantat 0, 1 sau 2 aici - la 3 se sterge mistakeFlag = "iertare")
+    const redStar = `<span class="stage-star wrong" title="Greșit recent — se reface treptat">★</span>`;
+    const goldPart = streak > 0
+      ? `<span class="stage-star gold" title="${streak} corecte de la ultima greșeală">${'★'.repeat(streak)}</span>`
+      : '';
+    return redStar + goldPart;
   }
-  return '<span class="stage-star gold" title="Învățat">★★★</span>';
+  // fara greseala recenta: stelute = a cata oara apare cuvantul (streak+1); 1-3 aurii, 4+ verzi
+  const count = streak + 1;
+  const visualCount = Math.min(count, 8); // plafon vizual, ca sa nu umple cardul la cuvinte f. exersate
+  const stars = '★'.repeat(visualCount) + (count > 8 ? '+' : '');
+  const cls = count >= 4 ? 'green' : 'gold';
+  return `<span class="stage-star ${cls}" title="Apariția nr. ${count}${count>=4 ? ' — bine învățat' : ''}">${stars}</span>`;
 }
 
 function inlineGermanIcons(value){
@@ -1973,6 +2029,7 @@ document.querySelectorAll('.zoom-reset-btn').forEach(btn=>{
   currentStreak = updateStreak();
   updateMistakesChipLabel();
   updateMyWordsChipLabel();
+  initFreqBands();
   renderLevelProgress();
   refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
   buildRound();
