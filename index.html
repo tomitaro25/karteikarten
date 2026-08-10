@@ -378,7 +378,8 @@
       5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
       6. În aplicație, mergi în ⚙ → „AI (Claude)" → lipește cheia → „Testează conexiunea"</p>
       <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): o traducere scurtă costă sub un cent — cu 5$ ajungi la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
-      <p><b>Ce face automat:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una; poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
+      <p><b>Ce face automat:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
+      <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -565,12 +566,16 @@
 
     <div style="margin-top:10px;">
       <input type="file" id="aiImageInput" accept="image/*" style="display:none;">
-      <button class="btn-block" id="aiImageBtn" style="width:100%;"><span>📷 Adaugă imagine cu text</span><span>+</span></button>
+      <div style="display:flex; gap:6px;">
+        <button class="btn-block" id="aiImageBtn" style="flex:1;"><span>📷 Din galerie</span><span>+</span></button>
+        <button class="btn-block" id="aiImagePasteBtn" style="flex:1;"><span>📋 Lipește</span><span>+</span></button>
+      </div>
+      <div class="upload-status" id="aiImagePasteStatus"></div>
       <div id="aiImagePreviewBox" style="display:none; margin-top:8px; position:relative;">
         <img id="aiImagePreview" style="max-width:100%; max-height:200px; border-radius:10px; border:1px solid var(--line); display:block;">
         <button class="chip" id="aiImageRemoveBtn" style="margin-top:6px;">✕ Elimină imaginea</button>
       </div>
-      <div class="upload-status">Notă: o imagine consumă mult mai mulți tokeni (deci mai mult din credit) decât text simplu.</div>
+      <div class="upload-status">Notă: pe majoritatea telefoanelor Android, un screenshot nu ajunge automat în clipboard — deschide-l din galerie, apasă Distribuie → Copiază, apoi revino aici și apasă „Lipește". O imagine consumă mult mai mulți tokeni (deci mai mult din credit) decât text simplu.</div>
     </div>
 
     <button class="btn-block paste-highlight" id="aiTranslateBtn" style="width:100%; margin-top:10px;"><span>Tradu</span><span>→</span></button>
@@ -2295,6 +2300,38 @@ document.getElementById('aiImageRemoveBtn').addEventListener('click', ()=>{
   aiImageBase64 = null; aiImageMediaType = null;
   document.getElementById('aiImageInput').value = '';
   document.getElementById('aiImagePreviewBox').style.display = 'none';
+});
+
+document.getElementById('aiImagePasteBtn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('aiImagePasteStatus');
+  if(!navigator.clipboard || !navigator.clipboard.read){
+    statusEl.textContent = 'Browser-ul nu suportă lipire de imagini — folosește „Din galerie".';
+    return;
+  }
+  statusEl.textContent = 'Se citește clipboard-ul...';
+  try{
+    const items = await navigator.clipboard.read();
+    let imageBlob = null, imageType = null;
+    for(const item of items){
+      const type = item.types.find(t => t.startsWith('image/'));
+      if(type){ imageBlob = await item.getType(type); imageType = type; break; }
+    }
+    if(!imageBlob){
+      statusEl.textContent = 'Nu am găsit nicio imagine în clipboard — copiaz-o întâi (vezi nota de mai jos).';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      aiImageMediaType = imageType;
+      aiImageBase64 = reader.result.split(',')[1];
+      document.getElementById('aiImagePreview').src = reader.result;
+      document.getElementById('aiImagePreviewBox').style.display = 'block';
+      statusEl.textContent = '';
+    };
+    reader.readAsDataURL(imageBlob);
+  }catch(err){
+    statusEl.textContent = 'Nu am putut citi clipboard-ul — verifică permisiunile browserului, sau folosește „Din galerie".';
+  }
 });
 
 /* ---------- AI: parsare etichete [DE]/[RO] din raspuns ---------- */
