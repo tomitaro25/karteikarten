@@ -278,6 +278,7 @@
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
     <button class="gear-btn" id="micShortcutBtn" style="display:none;" aria-label="Căutare vocală">🎤</button>
+    <button class="gear-btn" id="aiShortcutBtn" style="display:none;" aria-label="Exersează cu AI">🤖</button>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
 </div>
@@ -514,6 +515,33 @@
 
   <button class="sheet-close" id="closeSheetBtn">Închide</button>
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
+</div>
+
+<div class="sheet" id="aiSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">🤖 Exersează cu AI</div>
+
+  <div class="sheet-section">
+    <div class="chip-row">
+      <span class="chip ai-dir-chip active" data-dir="ro-de">RO → DE</span>
+      <span class="chip ai-dir-chip" data-dir="de-ro">DE → RO</span>
+    </div>
+  </div>
+
+  <div class="sheet-section">
+    <div class="sheet-label">Textul tău (o propoziție sau mai multe)</div>
+    <textarea id="aiInputText" class="btn-block" style="width:100%; min-height:110px; font-family:'Literata',serif; resize:vertical;" placeholder="Scrie aici ce vrei să traduci..."></textarea>
+    <button class="btn-block paste-highlight" id="aiTranslateBtn" style="width:100%; margin-top:10px;"><span>Tradu</span><span>→</span></button>
+    <div class="upload-status" id="aiStatus"></div>
+  </div>
+
+  <div class="sheet-section" id="aiResultSection" style="display:none;">
+    <div class="sheet-label">Rezultat</div>
+    <div id="aiResultBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+    <button class="btn-block" id="aiDownloadBtn" style="width:100%; margin-top:10px;"><span>Descarcă (.txt)</span><span>⬇</span></button>
+  </div>
+
+  <button class="sheet-close" id="closeAiSheetBtn">Închide</button>
 </div>
 
 <script src="vocab-data.js"></script>
@@ -1353,11 +1381,16 @@ function showEndScreen(){
 /* ---------- bottom sheet open/close ---------- */
 const sheet = document.getElementById('settingsSheet');
 const sheetOverlay = document.getElementById('sheetOverlay');
+const aiSheet = document.getElementById('aiSheet');
 function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); renderLevelProgress(); }
 function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
+function openAiSheet(){ aiSheet.classList.add('show'); sheetOverlay.classList.add('show'); }
+function closeAiSheet(){ aiSheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
 document.getElementById('openSheetBtn').addEventListener('click', openSheet);
 document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
-sheetOverlay.addEventListener('click', closeSheet);
+document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
+document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
+sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); });
 
 /* ---------- level chips ---------- */
 document.querySelectorAll('.level-chip').forEach(chip=>{
@@ -2069,6 +2102,7 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
       const data = await res.json();
       const text = data?.content?.[0]?.text || '';
       statusEl.textContent = `✓ Conectat! Claude a răspuns: „${text.trim()}"`;
+      document.getElementById('aiShortcutBtn').style.display = 'flex';
     } else {
       const errData = await res.json().catch(()=>({}));
       const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;
@@ -2087,6 +2121,89 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
   }
 });
 
+/* ---------- AI - traducere (Faza 1+2) ---------- */
+let aiDirection = 'ro-de';
+document.querySelectorAll('.ai-dir-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.ai-dir-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    aiDirection = chip.dataset.dir;
+  });
+});
+
+function buildAiSystemPrompt(direction){
+  const dirTxt = direction === 'ro-de' ? 'din română în germană' : 'din germană în română';
+  return `Ești un asistent de traducere integrat într-o aplicație de învățat limba germană, pentru un vorbitor de română de nivel A1-B2.
+Reguli stricte, obligatorii:
+1. Traduci STRICT textul primit ${dirTxt}. Nimic altceva.
+2. Dacă textul are mai multe propoziții, tradu FIECARE propoziție separat, în ordine, afișând clar perechi "original -> traducere", câte una pe rând (fără numerotare, fără introducere, fără concluzie).
+3. Dacă textul primit NU e ceva de tradus (e o întrebare generală, o cerere neconformă, conversație liberă, orice altceva decât text de tradus), NU răspunde la cerere — răspunde POLITICOS, FOARTE SCURT, STRICT ÎN GERMANĂ, redirecționând spre exercițiu de traducere. Exemplu: "Ich bin nur für Deutschübersetzungen da. Bitte gib mir einen Satz zum Übersetzen."
+4. Nu folosești nicio altă limbă în afară de română și germană.
+5. Fără introduceri, fără explicații suplimentare nesolicitate, fără formule de politețe — doar traducerea.`;
+}
+
+async function callClaude(systemPrompt, userText, maxTokens){
+  const key = loadClaudeKey();
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: maxTokens,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userText }]
+    })
+  });
+  if(!res.ok){
+    const errData = await res.json().catch(()=>({}));
+    const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  const data = await res.json();
+  return data?.content?.[0]?.text || '';
+}
+
+let lastAiOriginal = '', lastAiResult = '';
+document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('aiStatus');
+  const inputText = document.getElementById('aiInputText').value.trim();
+  const resultSection = document.getElementById('aiResultSection');
+  const resultBox = document.getElementById('aiResultBox');
+  if(!inputText){
+    statusEl.textContent = 'Scrie mai întâi un text de tradus.';
+    return;
+  }
+  const key = loadClaudeKey();
+  if(!key || !key.startsWith('sk-ant-')){
+    statusEl.textContent = 'Nu ai o cheie Claude salvată — mergi în ⚙ → „AI (Claude)" și adaug-o mai întâi.';
+    return;
+  }
+  statusEl.textContent = 'Se traduce...';
+  resultSection.style.display = 'none';
+  try{
+    const systemPrompt = buildAiSystemPrompt(aiDirection);
+    const result = await callClaude(systemPrompt, inputText, 1024);
+    lastAiOriginal = inputText;
+    lastAiResult = result;
+    resultBox.textContent = result;
+    resultSection.style.display = 'block';
+    statusEl.textContent = '';
+  }catch(err){
+    statusEl.textContent = `✗ ${err.message}`;
+  }
+});
+
+document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
+  const content = `TEXT ORIGINAL:\n${lastAiOriginal}\n\nTRADUCERE:\n${lastAiResult}\n`;
+  const dateStr = new Date().toISOString().slice(0,10);
+  downloadBlob(content, `traducere-ai-${dateStr}.txt`, 'text/plain;charset=utf-8');
+});
+
 /* ---------- init ---------- */
 (async function init(){
   loadZoom();
@@ -2102,6 +2219,7 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
   initFreqBands();
   renderLevelProgress();
   refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
+  if(loadClaudeKey().startsWith('sk-ant-')) document.getElementById('aiShortcutBtn').style.display = 'flex';
   buildRound();
 })();
 
