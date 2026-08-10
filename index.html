@@ -487,8 +487,10 @@
     </div>
     <div class="sheet-section">
       <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
-      <input type="password" id="claudeApiKeyInput" class="btn-block" style="width:100%; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-...">
-      <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
+      <div style="display:flex; gap:6px;">
+        <input type="password" id="claudeApiKeyInput" class="btn-block" style="flex:1; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+        <button class="zoom-btn" id="toggleKeyVisibilityBtn" type="button" style="width:44px;" aria-label="Arată/ascunde cheia">👁</button>
+      </div>      <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
       <div class="upload-status" id="claudeTestStatus"></div>
     </div>
   </details>
@@ -2073,6 +2075,9 @@ function saveClaudeKey(key){
 const claudeKeyInput = document.getElementById('claudeApiKeyInput');
 claudeKeyInput.value = loadClaudeKey();
 claudeKeyInput.addEventListener('change', ()=> saveClaudeKey(claudeKeyInput.value.trim()));
+document.getElementById('toggleKeyVisibilityBtn').addEventListener('click', ()=>{
+  claudeKeyInput.type = claudeKeyInput.type === 'password' ? 'text' : 'password';
+});
 
 document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
   const statusEl = document.getElementById('claudeTestStatus');
@@ -2107,7 +2112,8 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
       const errData = await res.json().catch(()=>({}));
       const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;
       if(res.status === 401){
-        statusEl.textContent = '✗ Cheie invalidă sau expirată. Verifică cheia din Anthropic Console.';
+        const preview = key.length > 12 ? `${key.slice(0,8)}...${key.slice(-4)} (${key.length} caractere)` : `(doar ${key.length} caractere — pare prea scurtă!)`;
+        statusEl.textContent = `✗ Cheie invalidă sau expirată. Cheia trimisă: ${preview}. Verifică din nou (apasă 👁 și compară cu Anthropic Console).`;
       } else if(res.status === 403 && /cors/i.test(msg)){
         statusEl.textContent = '✗ Organizația ta Anthropic blochează accesul direct din browser. Contactează suportul Anthropic sau folosește un cont personal.';
       } else if(res.status === 400 && /credit|billing/i.test(msg)){
