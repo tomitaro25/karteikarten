@@ -52,7 +52,8 @@ Pentru a publica o versiune nouă: încarcă fișierele modificate în acest rep
 - Categoria **"Îngrijire"** (455 termeni) e un vocabular de specialitate, compilat manual, pentru asistenți medicali/îngrijitori în azile de bătrâni — relația cu colegii, cu rezidenții, cu aparținătorii, cu medicii, situații de urgență, programul de lucru, acte/fluturaș de salariu, vocabular de igienă/funcții corporale (clinic și colocvial), expresii din perspectiva rezidentului, roluri de specialitate (`Praxisanleiter`, `Alltagsbegleiter`) și termeni din software-ul de documentare MEDIFOX DAN, folosit frecvent în azilele germane. Nu e legat de frecvența generală a limbii, e curatoriat pe relevanță profesională.
 - Categoria **"Îngrijire — auxiliar"** (55 termeni) conține obiecte și instrumentar folosite în azil/spital (dispozitive de ridicare, scutece, instrumentar medical, mobilier, bucătărie/baie) — utilă și în context spitalicesc general, nu doar azil.
 - Traducerile în limba română sunt muncă originală.
-- Acest proiect e o resursă personală de studiu, nu revendică nicio afiliere cu Goethe-Institut, DWDS, hermitdave, Anthropic sau alte instituții/persoane menționate.
+- Câteva perechi de cuvinte germane des confundate cu cuvinte românești similare la scris (ex. `kalt`/"cald", `tot`/"tot") au fost identificate cu ajutorul [Wiktionary — Appendix: False friends between German and Romanian](https://en.wiktionary.org/wiki/Appendix:False_friends_between_German_and_Romanian) (licență CC BY-SA). Am preluat doar faptul lingvistic obiectiv (care cuvinte se aseamănă), nu text sau exprimare de-a lor — notele de atenție din aplicație sunt scrise integral de la zero.
+- Acest proiect e o resursă personală de studiu, nu revendică nicio afiliere cu Goethe-Institut, DWDS, hermitdave, Wiktionary, Anthropic sau alte instituții/persoane menționate.
 
 ## Notă despre conținut
 

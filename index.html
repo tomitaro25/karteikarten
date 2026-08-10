@@ -480,6 +480,19 @@
   </details>
 
   <details class="sheet-group">
+    <summary>🤖 AI (Claude) — experimental</summary>
+    <div class="sheet-section help-text">
+      <p>Funcție opțională: folosește propria ta cheie API de la Anthropic pentru traduceri libere, corectură și conversație, direct în aplicație. Costul e al tău, plătit direct către Anthropic — cheia rămâne salvată doar pe acest dispozitiv, nu trece niciodată prin noi.</p>
+    </div>
+    <div class="sheet-section">
+      <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
+      <input type="password" id="claudeApiKeyInput" class="btn-block" style="width:100%; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-...">
+      <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
+      <div class="upload-status" id="claudeTestStatus"></div>
+    </div>
+  </details>
+
+  <details class="sheet-group">
     <summary>Voce &amp; legendă</summary>
     <div class="sheet-section">
       <div class="sheet-label">Voce (pronunție 🔊)</div>
@@ -2015,6 +2028,63 @@ document.querySelectorAll('.zoom-reset-btn').forEach(btn=>{
     fontZoom = ZOOM_DEFAULT;
     applyZoom();
   });
+});
+
+/* ---------- AI (Claude) - Faza 0: doar cheie + test de conexiune ---------- */
+function loadClaudeKey(){
+  try{ return localStorage.getItem('claudeApiKey') || ''; }catch(e){ return ''; }
+}
+function saveClaudeKey(key){
+  try{ localStorage.setItem('claudeApiKey', key); }catch(e){}
+}
+const claudeKeyInput = document.getElementById('claudeApiKeyInput');
+claudeKeyInput.value = loadClaudeKey();
+claudeKeyInput.addEventListener('change', ()=> saveClaudeKey(claudeKeyInput.value.trim()));
+
+document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('claudeTestStatus');
+  const key = claudeKeyInput.value.trim();
+  saveClaudeKey(key);
+  if(!key || !key.startsWith('sk-ant-')){
+    statusEl.textContent = 'Cheia lipsește sau nu pare validă (ar trebui să înceapă cu „sk-ant-").';
+    return;
+  }
+  statusEl.textContent = 'Se testează...';
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 20,
+        messages: [{ role: 'user', content: 'Răspunde doar cu cuvântul: Verbunden' }]
+      })
+    });
+    if(res.ok){
+      const data = await res.json();
+      const text = data?.content?.[0]?.text || '';
+      statusEl.textContent = `✓ Conectat! Claude a răspuns: „${text.trim()}"`;
+    } else {
+      const errData = await res.json().catch(()=>({}));
+      const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;
+      if(res.status === 401){
+        statusEl.textContent = '✗ Cheie invalidă sau expirată. Verifică cheia din Anthropic Console.';
+      } else if(res.status === 403 && /cors/i.test(msg)){
+        statusEl.textContent = '✗ Organizația ta Anthropic blochează accesul direct din browser. Contactează suportul Anthropic sau folosește un cont personal.';
+      } else if(res.status === 400 && /credit|billing/i.test(msg)){
+        statusEl.textContent = '✗ Nu ai credit disponibil pe cont. Adaugă credit în Anthropic Console.';
+      } else {
+        statusEl.textContent = `✗ ${msg}`;
+      }
+    }
+  }catch(err){
+    statusEl.textContent = '✗ Eroare de rețea — verifică conexiunea la internet și încearcă din nou.';
+  }
 });
 
 /* ---------- init ---------- */
