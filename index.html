@@ -2542,17 +2542,18 @@ function renderAiHistList(){
     updateAiHistSelectedCount();
     return;
   }
+  const AI_SRC_TAGS = { text:'[txt]', voice:'[rec]', image:'[img]' };
   listEl.innerHTML = hist.map(e=>{
     const d = new Date(e.id);
     const dateStr = d.toLocaleDateString('ro-RO', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
     const preview = escapeHtml(e.originalText.slice(0, 60)) + (e.originalText.length > 60 ? '…' : '');
-    const srcIcon = e.source === 'voice' ? '🎤' : (e.source === 'image' ? '📷' : '✍️');
+    const srcTag = AI_SRC_TAGS[e.source] || AI_SRC_TAGS.text;
     const checked = aiHistSelected.has(e.id) ? 'checked' : '';
     return `<div class="btn-block ai-hist-row" data-id="${e.id}" style="width:100%; margin-bottom:6px; cursor:pointer;">
       ${aiHistSelectMode ? `<input type="checkbox" class="ai-hist-checkbox" data-id="${e.id}" ${checked} style="margin-right:8px; width:18px; height:18px; flex-shrink:0;">` : ''}
       <span style="flex:1; overflow:hidden;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); display:block;">${srcIcon} ${dateStr}</span>
-        <span style="font-family:'Literata',serif; font-size:0.85rem;">${preview}</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); display:block;">${dateStr}</span>
+        <span style="font-family:'Literata',serif; font-size:0.85rem;"><span style="font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--der); font-weight:600;">${srcTag}</span> ${preview}</span>
       </span>
       ${!aiHistSelectMode ? '<span>›</span>' : ''}
     </div>`;
@@ -2774,7 +2775,11 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
     resultBox.innerHTML = parsed.html;
     resultSection.style.display = 'block';
     statusEl.textContent = '';
-    saveAiHistoryEntry(lastAiOriginal, result, aiImageBase64 ? 'image' : (aiInputWasVoice ? 'voice' : 'text'));
+    // pt istoric: daca sursa a fost o imagine (fara text tastat), folosim un fragment real din
+    // rezultat ca previzualizare, nu placeholder-ul generic "(imagine)" - mult mai util la rasfoire
+    const extractedFragment = parsed.cleanText.split('\n')[0] || '';
+    const historyPreviewText = inputText || extractedFragment || 'fără text';
+    saveAiHistoryEntry(historyPreviewText, result, aiImageBase64 ? 'image' : (aiInputWasVoice ? 'voice' : 'text'));
     aiInputWasVoice = false;
   }catch(err){
     statusEl.textContent = `✗ ${err.message}`;
