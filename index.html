@@ -53,40 +53,40 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
   }
-  .brand{ font-family:'Special Elite', monospace; font-size:1.15rem; line-height:1.1; }
-  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.56rem; letter-spacing:1.5px;
+  .brand{ font-family:'Special Elite', monospace; font-size:18.4px; line-height:1.1; }
+  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
   .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
-  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft); min-width:32px; text-align:center; }
+  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
-    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:0.78rem;
+    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:12.5px;
     width:30px; height:30px; border-radius:8px; border:1.5px solid var(--ink); background:var(--paper);
     cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink);
   }
   .zoom-btn:active{ background:var(--paper-dark); }
-  .stats{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
-  .stats b{ color:var(--ink); font-size:0.85rem; }
+  .stats{ font-family:'IBM Plex Mono', monospace; font-size:11px; text-align:right; color:var(--ink-soft); line-height:1.4; }
+  .stats b{ color:var(--ink); font-size:13.6px; }
   .gear-btn{
     width:40px; height:40px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper);
-    font-size:1.15rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    font-size:18.4px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
   .gear-btn:active{ background:var(--paper-dark); }
   .summary-line{
-    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft);
+    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft);
     text-align:center; flex-shrink:0;
   }
   .install-banner{
     display:flex; align-items:center; gap:8px; margin:8px 16px 0; padding:10px 12px;
     background:var(--paper-dark); border:1.5px solid var(--ink); border-radius:10px; flex-shrink:0;
   }
-  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:0.82rem; line-height:1.3; }
+  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:13.1px; line-height:1.3; }
   .install-banner-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; font-weight:600; background:var(--ink);
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; font-weight:600; background:var(--ink);
     color:var(--paper); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; flex-shrink:0;
   }
   .install-banner-close{
-    background:none; border:none; font-size:1rem; color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:4px;
+    background:none; border:none; font-size:16px; color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:4px;
   }
 
   /* ---------- main scroll area ---------- */
@@ -292,7 +292,7 @@
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
     <button class="gear-btn" id="micShortcutBtn" style="display:none;" aria-label="Căutare vocală">🎤</button>
-    <button class="gear-btn" id="aiShortcutBtn" style="display:none;" aria-label="Exersează cu AI">🤖</button>
+    <button class="gear-btn" id="aiShortcutBtn" aria-label="AI (Claude)">🤖</button>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
 </div>
@@ -368,29 +368,13 @@
       <p>Distractorii sunt mereu alte forme ale <b>aceluiași verb</b> — testează exact terminația corectă, nu doar dacă recunoști verbul.</p>
     </div>
     <div class="sheet-section help-text">
-      <div class="sheet-label">🤖 AI (Claude) — traducere liberă, experimental</div>
-      <p>O funcție separată de restul aplicației, cu propria ta cheie API de la Anthropic (Claude) — traducerea nu se limitează la cele ~7000 de cuvinte din listă, ci acceptă orice text, dictat sau scris, plus imagini cu text (poze, screenshot-uri).</p>
-      <p><b>Cum obții o cheie API</b> (gratuită de generat, plata se face separat, per folosire — nu-i legată de un eventual abonament Claude Pro de pe claude.ai, sunt produse diferite):</p>
-      <p>1. Mergi pe <b>console.anthropic.com</b> (sau <b>platform.claude.com</b> — e același loc)<br>
-      2. Creează cont / autentifică-te (poți folosi același email ca la claude.ai, dar e un cont separat)<br>
-      3. Din meniu, „Billing" → adaugă o metodă de plată și cumpără un credit inițial (5$ ajunge pentru mii de traduceri text, sau câteva sute cu imagini — vezi calculul mai jos)<br>
-      4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
-      5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
-      6. În aplicație, mergi în ⚙ → „AI (Claude)" → lipește cheia → „Testează conexiunea"</p>
-      <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): o traducere scurtă costă sub un cent — cu 5$ ajungi la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
-      <p><b>Ce face automat:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
-      <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna.</p>
-      <p><b>Dictare și cratime:</b> textul brut din dictare vocală <b>nu va avea niciodată cratime</b> (ex. „mi ar placea" în loc de „mi-ar plăcea") — e o limitare a recunoașterii vocale în sine, nu un defect al aplicației, cratima nu are corespondent fonetic. Traducerea afișată însă reconstruiește cratimele corecte automat, în ambele limbi.</p>
-      <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
-      <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
-    </div>
-    <div class="sheet-section help-text">
       <div class="sheet-label">Alte funcții utile</div>
       <p><b>Presetări rapide</b> — setează dintr-un tap o combinație de niveluri potrivită unui scop (începător, conversație, la job etc.).</p>
       <p><b>Progres pe niveluri</b> — vezi ce procent din fiecare nivel ai exersat și cât de bine.</p>
       <p><b>Listă proprie</b> — poți încărca propriile cuvinte dintr-un fișier CSV/XLSX, cu formatul din template-ul descărcabil.</p>
       <p><b>Backup</b> — salvează tot progresul într-un fișier, ca să nu-l pierzi dacă schimbi telefonul.</p>
       <p>Toate datele (statistici, preferințe) rămân doar pe acest dispozitiv — nimic nu se trimite nicăieri.</p>
+      <p><b>🤖 AI (Claude)</b> — funcție separată, cu propriul ajutor dedicat; apasă butonul 🤖 din bara de sus.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Căutare vocală 🎤</div>
@@ -512,21 +496,6 @@
   </details>
 
   <details class="sheet-group">
-    <summary>🤖 AI (Claude) — experimental</summary>
-    <div class="sheet-section help-text">
-      <p>Funcție opțională: folosește propria ta cheie API de la Anthropic pentru traduceri libere, corectură și conversație, direct în aplicație. Costul e al tău, plătit direct către Anthropic — cheia rămâne salvată doar pe acest dispozitiv, nu trece niciodată prin noi.</p>
-    </div>
-    <div class="sheet-section">
-      <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
-      <div style="display:flex; gap:6px;">
-        <input type="password" id="claudeApiKeyInput" class="btn-block" style="flex:1; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
-        <button class="zoom-btn" id="toggleKeyVisibilityBtn" type="button" style="width:44px;" aria-label="Arată/ascunde cheia">👁</button>
-      </div>      <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
-      <div class="upload-status" id="claudeTestStatus"></div>
-    </div>
-  </details>
-
-  <details class="sheet-group">
     <summary>Voce &amp; legendă</summary>
     <div class="sheet-section">
       <div class="sheet-label">Voce (pronunție 🔊)</div>
@@ -552,7 +521,53 @@
 
 <div class="sheet" id="aiSheet">
   <div class="sheet-handle"></div>
-  <div class="sheet-title">🤖 Exersează cu AI</div>
+  <div class="sheet-title">🤖 AI (Claude)</div>
+
+  <details class="sheet-group">
+    <summary>❓ Ajutor — AI</summary>
+    <div class="sheet-section help-text">
+      <p>O funcție separată de restul aplicației, cu propria ta cheie API de la Anthropic (Claude) — traducerea nu se limitează la cele ~7000 de cuvinte din listă, ci acceptă orice text, dictat sau scris, plus imagini cu text (poze, screenshot-uri).</p>
+      <p><b>Cum obții o cheie API</b> (gratuită de generat, plata se face separat, per folosire — nu-i legată de un eventual abonament Claude Pro de pe claude.ai, sunt produse diferite):</p>
+      <p>1. Mergi pe <b>console.anthropic.com</b> (sau <b>platform.claude.com</b> — e același loc)<br>
+      2. Creează cont / autentifică-te (poți folosi același email ca la claude.ai, dar e un cont separat)<br>
+      3. Din meniu, „Billing" → adaugă o metodă de plată și cumpără un credit inițial (5$ ajunge pentru mii de traduceri text, sau câteva sute cu imagini — vezi calculul mai jos)<br>
+      4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
+      5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
+      6. Revino aici, lipește cheia → „Testează conexiunea"</p>
+      <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): o traducere scurtă costă sub un cent — cu 5$ ajungi la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
+      <p><b>Ce face automat traducerea:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici, inclusiv cratime lipsă din dictare vocală) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
+      <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna. Pe calculator, funcționează direct — orice copiezi poate fi lipit imediat.</p>
+      <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
+      <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
+    </div>
+  </details>
+
+  <div id="aiKeySetupView">
+    <div class="sheet-section">
+      <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
+      <div style="display:flex; gap:6px;">
+        <input type="password" id="claudeApiKeyInput" class="btn-block" style="flex:1; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+        <button class="zoom-btn" id="toggleKeyVisibilityBtn" type="button" style="width:44px;" aria-label="Arată/ascunde cheia">👁</button>
+      </div>
+      <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
+      <div class="upload-status" id="claudeTestStatus"></div>
+      <button class="chip" id="aiKeySetupBackBtn" style="display:none; margin-top:10px;">← Înapoi</button>
+    </div>
+  </div>
+
+  <div id="aiHubView" style="display:none;">
+    <div class="sheet-section">
+      <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
+    </div>
+    <div class="sheet-section">
+      <button class="chip" id="aiHubKeySettingsBtn">🔑 Gestionează cheia</button>
+    </div>
+  </div>
+
+  <div id="aiTranslateView" style="display:none;">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <button class="chip" id="aiBackToHubBtn">← Înapoi</button>
+    </div>
 
   <div class="sheet-section">
     <div class="sheet-label">Textul tău (o propoziție sau mai multe)</div>
@@ -576,7 +591,7 @@
         <img id="aiImagePreview" style="max-width:100%; max-height:200px; border-radius:10px; border:1px solid var(--line); display:block;">
         <button class="chip" id="aiImageRemoveBtn" style="margin-top:6px;">✕ Elimină imaginea</button>
       </div>
-      <div class="upload-status">Notă: pe majoritatea telefoanelor Android, un screenshot nu ajunge automat în clipboard — deschide-l din galerie, apasă Distribuie → Copiază, apoi revino aici și apasă „Lipește". O imagine consumă mult mai mulți tokeni (deci mai mult din credit) decât text simplu.</div>
+      <div class="upload-status">Notă: o imagine consumă mult mai mulți tokeni (deci mai mult din credit) decât text simplu — vezi Ajutor pentru detalii.</div>
     </div>
 
     <button class="btn-block paste-highlight" id="aiTranslateBtn" style="width:100%; margin-top:10px;"><span>Tradu</span><span>→</span></button>
@@ -594,6 +609,7 @@
       </select>
       <button class="btn-block" id="aiDownloadBtn" style="flex:1;"><span>Descarcă</span><span>⬇</span></button>
     </div>
+  </div>
   </div>
 
   <button class="sheet-close" id="closeAiSheetBtn">Închide</button>
@@ -1441,12 +1457,29 @@ const sheetOverlay = document.getElementById('sheetOverlay');
 const aiSheet = document.getElementById('aiSheet');
 function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); renderLevelProgress(); }
 function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
-function openAiSheet(){ aiSheet.classList.add('show'); sheetOverlay.classList.add('show'); }
+function showAiView(view){
+  document.getElementById('aiKeySetupView').style.display = view === 'keysetup' ? 'block' : 'none';
+  document.getElementById('aiHubView').style.display = view === 'hub' ? 'block' : 'none';
+  document.getElementById('aiTranslateView').style.display = view === 'translate' ? 'block' : 'none';
+}
+function openAiSheet(){
+  aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
+  const hasKey = loadClaudeKey().startsWith('sk-ant-');
+  showAiView(hasKey ? 'hub' : 'keysetup');
+  document.getElementById('aiKeySetupBackBtn').style.display = hasKey ? 'inline-flex' : 'none';
+}
 function closeAiSheet(){ aiSheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
 document.getElementById('openSheetBtn').addEventListener('click', openSheet);
 document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
 document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
 document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
+document.getElementById('aiHubTranslateBtn').addEventListener('click', ()=> showAiView('translate'));
+document.getElementById('aiBackToHubBtn').addEventListener('click', ()=> showAiView('hub'));
+document.getElementById('aiHubKeySettingsBtn').addEventListener('click', ()=>{
+  showAiView('keysetup');
+  document.getElementById('aiKeySetupBackBtn').style.display = 'inline-flex';
+});
+document.getElementById('aiKeySetupBackBtn').addEventListener('click', ()=> showAiView('hub'));
 sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); });
 
 /* ---------- level chips ---------- */
@@ -2161,8 +2194,9 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
     if(res.ok){
       const data = await res.json();
       const text = data?.content?.[0]?.text || '';
-      statusEl.textContent = `✓ Conectat! Claude a răspuns: „${text.trim()}"`;
-      document.getElementById('aiShortcutBtn').style.display = 'flex';
+      statusEl.innerHTML = `✓ Conectat! Claude a răspuns: „${text.trim()}"<br><button class="chip active" id="aiContinueToHubBtn" style="margin-top:8px;">Continuă →</button>`;
+      const contBtn = document.getElementById('aiContinueToHubBtn');
+      if(contBtn) contBtn.addEventListener('click', ()=> showAiView('hub'));
     } else {
       const errData = await res.json().catch(()=>({}));
       const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;
@@ -2372,7 +2406,7 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
   }
   const key = loadClaudeKey();
   if(!key || !key.startsWith('sk-ant-')){
-    statusEl.textContent = 'Nu ai o cheie Claude salvată — mergi în ⚙ → „AI (Claude)" și adaug-o mai întâi.';
+    statusEl.textContent = 'Nu ai o cheie Claude salvată — închide și redeschide panoul AI ca s-o adaugi.';
     return;
   }
   statusEl.textContent = aiImageBase64 ? 'Se citește imaginea și se traduce...' : 'Se traduce...';
@@ -2437,7 +2471,6 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
   initFreqBands();
   renderLevelProgress();
   refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
-  if(loadClaudeKey().startsWith('sk-ant-')) document.getElementById('aiShortcutBtn').style.display = 'flex';
   buildRound();
 })();
 
