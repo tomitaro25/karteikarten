@@ -223,39 +223,39 @@
   }
   .sheet.show{ transform:translateY(0); }
   .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
-  .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
+  .sheet-title{ font-family:'Special Elite', monospace; font-size:16px; margin-bottom:14px; }
   .sheet-section{ margin-bottom:20px; }
   .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
   .sheet-group[open]{ padding-bottom:6px; }
   .sheet-group summary{
-    font-family:'Special Elite', monospace; font-size:0.92rem; padding:14px 0; cursor:pointer;
+    font-family:'Special Elite', monospace; font-size:14.7px; padding:14px 0; cursor:pointer;
     list-style:none; display:flex; align-items:center; justify-content:space-between; color:var(--ink);
   }
   .sheet-group summary::-webkit-details-marker{ display:none; }
   .sheet-group summary::after{ content:'▾'; font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); transition:transform 0.2s ease; }
   .sheet-group[open] summary::after{ transform:rotate(180deg); }
   .sheet-group .sheet-section:last-child{ margin-bottom:12px; }
-  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; letter-spacing:1.5px; text-transform:uppercase;
+  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:10px; }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
   .chip{
-    font-family:'IBM Plex Mono', monospace; font-size:0.82rem; border:1.5px solid var(--ink); border-radius:20px;
+    font-family:'IBM Plex Mono', monospace; font-size:13.1px; border:1.5px solid var(--ink); border-radius:20px;
     padding:9px 16px; background:var(--paper); user-select:none; min-height:40px; display:flex; align-items:center;
   }
   .chip.active{ background:var(--ink); color:var(--paper); }
   .chip.disabled{ opacity:0.4; }
   .btn-row{ display:flex; flex-direction:column; gap:8px; }
   .btn-block{
-    font-family:'IBM Plex Mono', monospace; font-size:0.8rem; background:var(--paper); text-align:left;
+    font-family:'IBM Plex Mono', monospace; font-size:12.8px; background:var(--paper); text-align:left;
     border:1.5px solid var(--ink-soft); color:var(--ink); border-radius:10px; padding:13px 14px; min-height:48px;
     display:flex; align-items:center; justify-content:space-between;
   }
   .btn-block:active{ background:var(--paper-dark); }
   .btn-block:disabled{ opacity:0.4; }
   .file-input{ display:none; }
-  .legend{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
+  .legend{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
   .legend span.art{ font-weight:600; margin-right:3px; }
-  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft); margin-top:8px; }
+  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:11.2px; color:var(--ink-soft); margin-top:8px; }
   .upload-status.ok{ color:var(--green); }
   .upload-status.err{ color:var(--red); }
   .sheet-close{
@@ -523,7 +523,7 @@
   <div class="sheet-handle"></div>
   <div class="sheet-title">🤖 AI (Claude)</div>
 
-  <details class="sheet-group">
+  <details class="sheet-group" id="aiHelpDetails">
     <summary>❓ Ajutor — AI</summary>
     <div class="sheet-section help-text">
       <p>O funcție separată de restul aplicației, cu propria ta cheie API de la Anthropic (Claude) — traducerea nu se limitează la cele ~7000 de cuvinte din listă, ci acceptă orice text, dictat sau scris, plus imagini cu text (poze, screenshot-uri).</p>
@@ -533,16 +533,13 @@
       3. Din meniu, „Billing" → adaugă o metodă de plată și cumpără un credit inițial (5$ ajunge pentru mii de traduceri text, sau câteva sute cu imagini — vezi calculul mai jos)<br>
       4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
       5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
-      6. Revino aici, lipește cheia → „Testează conexiunea"</p>
+      6. Lipește cheia mai jos → „Testează conexiunea"</p>
       <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): o traducere scurtă costă sub un cent — cu 5$ ajungi la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
       <p><b>Ce face automat traducerea:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici, inclusiv cratime lipsă din dictare vocală) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
       <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna. Pe calculator, funcționează direct — orice copiezi poate fi lipit imediat.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
-  </details>
-
-  <div id="aiKeySetupView">
     <div class="sheet-section">
       <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
       <div style="display:flex; gap:6px;">
@@ -551,16 +548,15 @@
       </div>
       <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
       <div class="upload-status" id="claudeTestStatus"></div>
-      <button class="chip" id="aiKeySetupBackBtn" style="display:none; margin-top:10px;">← Înapoi</button>
     </div>
-  </div>
+  </details>
 
-  <div id="aiHubView" style="display:none;">
+  <div id="aiHubView">
+    <div class="sheet-section" id="aiNoKeyNotice" style="display:none;">
+      <div class="upload-status">Nu ai încă o cheie salvată — deschide „❓ Ajutor — AI" mai sus ca s-o adaugi.</div>
+    </div>
     <div class="sheet-section">
       <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
-    </div>
-    <div class="sheet-section">
-      <button class="chip" id="aiHubKeySettingsBtn">🔑 Gestionează cheia</button>
     </div>
   </div>
 
@@ -1458,15 +1454,22 @@ const aiSheet = document.getElementById('aiSheet');
 function openSheet(){ sheet.classList.add('show'); sheetOverlay.classList.add('show'); renderLevelProgress(); }
 function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
 function showAiView(view){
-  document.getElementById('aiKeySetupView').style.display = view === 'keysetup' ? 'block' : 'none';
   document.getElementById('aiHubView').style.display = view === 'hub' ? 'block' : 'none';
   document.getElementById('aiTranslateView').style.display = view === 'translate' ? 'block' : 'none';
 }
+// activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
+// centralizat intr-o functie, ca sa poata fi rechemata oricand starea cheii se schimba (nu doar la deschidere)
+function refreshAiHubButtons(){
+  const hasKey = loadClaudeKey().startsWith('sk-ant-');
+  document.getElementById('aiHubTranslateBtn').disabled = !hasKey;
+  document.getElementById('aiNoKeyNotice').style.display = hasKey ? 'none' : 'block';
+  return hasKey;
+}
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
-  const hasKey = loadClaudeKey().startsWith('sk-ant-');
-  showAiView(hasKey ? 'hub' : 'keysetup');
-  document.getElementById('aiKeySetupBackBtn').style.display = hasKey ? 'inline-flex' : 'none';
+  showAiView('hub');
+  const hasKey = refreshAiHubButtons();
+  document.getElementById('aiHelpDetails').open = !hasKey; // ghidam direct spre Ajutor daca nu ai inca o cheie
 }
 function closeAiSheet(){ aiSheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
 document.getElementById('openSheetBtn').addEventListener('click', openSheet);
@@ -1475,11 +1478,6 @@ document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
 document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
 document.getElementById('aiHubTranslateBtn').addEventListener('click', ()=> showAiView('translate'));
 document.getElementById('aiBackToHubBtn').addEventListener('click', ()=> showAiView('hub'));
-document.getElementById('aiHubKeySettingsBtn').addEventListener('click', ()=>{
-  showAiView('keysetup');
-  document.getElementById('aiKeySetupBackBtn').style.display = 'inline-flex';
-});
-document.getElementById('aiKeySetupBackBtn').addEventListener('click', ()=> showAiView('hub'));
 sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); });
 
 /* ---------- level chips ---------- */
@@ -2194,9 +2192,8 @@ document.getElementById('testClaudeBtn').addEventListener('click', async ()=>{
     if(res.ok){
       const data = await res.json();
       const text = data?.content?.[0]?.text || '';
-      statusEl.innerHTML = `✓ Conectat! Claude a răspuns: „${text.trim()}"<br><button class="chip active" id="aiContinueToHubBtn" style="margin-top:8px;">Continuă →</button>`;
-      const contBtn = document.getElementById('aiContinueToHubBtn');
-      if(contBtn) contBtn.addEventListener('click', ()=> showAiView('hub'));
+      statusEl.textContent = `✓ Conectat! Claude a răspuns: „${text.trim()}"`;
+      refreshAiHubButtons(); // reactiveaza butoanele din hub imediat, fara sa fie nevoie sa redeschizi panoul
     } else {
       const errData = await res.json().catch(()=>({}));
       const msg = errData?.error?.message || `Eroare HTTP ${res.status}`;

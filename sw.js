@@ -1,4 +1,4 @@
-const CACHE_NAME = 'karteikarten-v63';
+const CACHE_NAME = 'karteikarten-v64';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
