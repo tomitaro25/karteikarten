@@ -557,6 +557,74 @@
     </div>
     <div class="sheet-section">
       <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
+      <button class="btn-block" id="aiHubHistoryBtn" style="width:100%; margin-top:8px;"><span>📜 Istoric</span><span>›</span></button>
+    </div>
+  </div>
+
+  <div id="aiHistoryView" style="display:none;">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <button class="chip" id="aiHistoryBackBtn">← Înapoi</button>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Filtrează</div>
+      <div style="display:flex; gap:6px;">
+        <select id="aiHistYearFilter" class="btn-block" style="flex:1; appearance:none;"><option value="">An: toate</option></select>
+        <select id="aiHistMonthFilter" class="btn-block" style="flex:1; appearance:none;"><option value="">Lună: toate</option></select>
+      </div>
+      <div class="chip-row" style="margin-top:8px;">
+        <span class="chip ai-hist-sort active" data-sort="newest">Cele mai noi</span>
+        <span class="chip ai-hist-sort" data-sort="oldest">Cele mai vechi</span>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="chip" id="aiHistSelectModeBtn">☑ Selectează</button>
+        <button class="chip" id="aiHistDeleteSelectedBtn" style="display:none;">🗑 Șterge selectate (0)</button>
+        <button class="chip" id="aiHistDeleteAllBtn">🗑 Șterge tot istoricul</button>
+      </div>
+    </div>
+
+    <div class="sheet-section" id="aiHistListSection">
+      <div id="aiHistList"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Cuvinte</div>
+      <button class="btn-block" id="aiHistFrequentWordsBtn" style="width:100%;"><span>🔍 Cuvinte frecvente, neadăugate</span><span>›</span></button>
+      <div id="aiFrequentWordsBox" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Export / import</div>
+      <input type="file" id="aiHistImportInput" accept="application/json" style="display:none;">
+      <button class="btn-block" id="aiHistImportBtn" style="width:100%;"><span>⬆ Importă (combină după dispozitiv)</span><span>+</span></button>
+      <div class="upload-status" id="aiHistImportStatus"></div>
+      <div style="display:flex; gap:6px; margin-top:8px;">
+        <button class="btn-block" id="aiHistExportJsonBtn" style="flex:1;"><span>JSON</span><span>⬇</span></button>
+        <button class="btn-block" id="aiHistExportCsvBtn" style="flex:1;"><span>CSV</span><span>⬇</span></button>
+        <button class="btn-block" id="aiHistExportPdfBtn" style="flex:1;"><span>PDF</span><span>⬇</span></button>
+      </div>
+      <div class="upload-status">JSON e pentru combinat istoricul între dispozitive (PC + telefon); CSV/PDF sunt pentru citit/folosit în afara aplicației.</div>
+    </div>
+  </div>
+
+  <div id="aiHistDetailView" style="display:none;">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <button class="chip" id="aiHistDetailBackBtn">← Înapoi la istoric</button>
+    </div>
+    <div class="sheet-section">
+      <div class="sheet-label">Din istoric</div>
+      <div id="aiHistDetailBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <button class="btn-block" id="aiHistDetailSpeakBtn" style="width:100%; margin-top:8px;"><span>🔊 Ascultă</span><span>▶</span></button>
+      <div style="display:flex; gap:6px; margin-top:10px;">
+        <select id="aiHistDetailFormat" class="btn-block" style="flex:1; appearance:none;">
+          <option value="txt">Text (.txt)</option>
+          <option value="pdf">PDF (prin printare)</option>
+        </select>
+        <button class="btn-block" id="aiHistDetailDownloadBtn" style="flex:1;"><span>Descarcă</span><span>⬇</span></button>
+      </div>
     </div>
   </div>
 
@@ -1456,15 +1524,21 @@ function closeSheet(){ sheet.classList.remove('show'); sheetOverlay.classList.re
 function showAiView(view){
   document.getElementById('aiHubView').style.display = view === 'hub' ? 'block' : 'none';
   document.getElementById('aiTranslateView').style.display = view === 'translate' ? 'block' : 'none';
+  document.getElementById('aiHistoryView').style.display = view === 'history' ? 'block' : 'none';
+  document.getElementById('aiHistDetailView').style.display = view === 'histdetail' ? 'block' : 'none';
+  if(view === 'history'){ populateAiHistFilters(); renderAiHistList(); }
 }
 // activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
 // centralizat intr-o functie, ca sa poata fi rechemata oricand starea cheii se schimba (nu doar la deschidere)
 function refreshAiHubButtons(){
   const hasKey = loadClaudeKey().startsWith('sk-ant-');
   document.getElementById('aiHubTranslateBtn').disabled = !hasKey;
+  document.getElementById('aiHubHistoryBtn').disabled = !hasKey;
   document.getElementById('aiNoKeyNotice').style.display = hasKey ? 'none' : 'block';
   return hasKey;
 }
+document.getElementById('aiHubHistoryBtn').addEventListener('click', ()=> showAiView('history'));
+document.getElementById('aiHistoryBackBtn').addEventListener('click', ()=> showAiView('hub'));
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
   showAiView('hub');
@@ -1779,8 +1853,10 @@ function renderSearchResults(matches){
 /* ---------- adauga manual un cuvant negasit (doar din cautare scrisa) ---------- */
 function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
-function renderAddWordPrompt(searchedText, lang){
-  const resultsEl = document.getElementById('wordSearchResults');
+function renderAddWordPrompt(searchedText, lang, targetElId, onWordAdded){
+  targetElId = targetElId || 'wordSearchResults';
+  const resultsEl = document.getElementById(targetElId);
+  const isMainSearch = targetElId === 'wordSearchResults';
   const deKnown = (lang === 'de'); // daca am cautat pornind de la germana, stim deja campul german
   const deValue = deKnown ? searchedText : '';
   const roValue = deKnown ? '' : searchedText;
@@ -1856,14 +1932,16 @@ function renderAddWordPrompt(searchedText, lang){
       myWords[existingIdx] = { ...existing, ro, artikel };
       saveMyWords();
       statusEl.textContent = `✓ Suprascris: ${artikel ? artikel+' ' : ''}${de} = ${ro}`;
-      document.getElementById('wordSearchInput').value = '';
+      if(isMainSearch) document.getElementById('wordSearchInput').value = '';
+      if(typeof onWordAdded === 'function') onWordAdded(de);
       return;
     }
     myWords.push({ id: `MYWORDS-${Date.now()}`, de, ro, artikel, level: 'MYWORDS', category: '' });
     saveMyWords();
     updateMyWordsChipLabel();
     statusEl.textContent = `✓ Adăugat: ${artikel ? artikel+' ' : ''}${de} = ${ro}`;
-    document.getElementById('wordSearchInput').value = '';
+    if(isMainSearch) document.getElementById('wordSearchInput').value = '';
+    if(typeof onWordAdded === 'function') onWordAdded(de);
   });
 }
 
@@ -2161,6 +2239,7 @@ function saveClaudeKey(key){
 const claudeKeyInput = document.getElementById('claudeApiKeyInput');
 claudeKeyInput.value = loadClaudeKey();
 claudeKeyInput.addEventListener('change', ()=> saveClaudeKey(claudeKeyInput.value.trim()));
+document.getElementById('aiInputText').addEventListener('input', ()=>{ aiInputWasVoice = false; });
 document.getElementById('toggleKeyVisibilityBtn').addEventListener('click', ()=>{
   claudeKeyInput.type = claudeKeyInput.type === 'password' ? 'text' : 'password';
 });
@@ -2259,6 +2338,7 @@ async function callClaude(systemPrompt, contentBlocks, maxTokens){
 
 /* ---------- AI: dictare vocala (refoloseste acelasi API ca la cautarea de cuvinte) ---------- */
 let aiVoiceLang = 'ro';
+let aiInputWasVoice = false;
 if(supportsSpeechRecognition()){
   document.getElementById('aiVoiceLangRow').style.display = 'flex';
   document.getElementById('aiVoiceBtn').style.display = 'flex';
@@ -2299,6 +2379,7 @@ document.getElementById('aiVoiceBtn').addEventListener('click', ()=>{
   recognizer.onresult = (e) => {
     const transcript = e.results[0][0].transcript;
     textarea.value = formatDictatedSentence(transcript, aiVoiceLang);
+    aiInputWasVoice = true;
     statusEl.textContent = '';
   };
   recognizer.onerror = (e) => {
@@ -2391,6 +2472,275 @@ function parseTaggedAiResult(raw){
   return { html: htmlParts.join(''), cleanText, germanOnly };
 }
 
+/* ---------- AI: istoric traduceri ---------- */
+function loadAiHistory(){
+  try{ return JSON.parse(localStorage.getItem('aiHistory') || '[]'); }catch(e){ return []; }
+}
+function saveAiHistory(hist){
+  try{ localStorage.setItem('aiHistory', JSON.stringify(hist)); }catch(e){}
+}
+function saveAiHistoryEntry(originalText, rawTranslatedText, source){
+  const hist = loadAiHistory();
+  hist.push({ id: Date.now(), originalText, translatedText: rawTranslatedText, source: source || 'text' });
+  saveAiHistory(hist);
+}
+
+let aiHistSort = 'newest';
+let aiHistSelectMode = false;
+let aiHistSelected = new Set();
+
+function populateAiHistFilters(){
+  const hist = loadAiHistory();
+  const years = new Set(), monthsByYear = {};
+  hist.forEach(e=>{
+    const d = new Date(e.id);
+    const y = d.getFullYear(), m = d.getMonth();
+    years.add(y);
+  });
+  const yearSel = document.getElementById('aiHistYearFilter');
+  const curYear = yearSel.value;
+  yearSel.innerHTML = '<option value="">An: toate</option>' +
+    Array.from(years).sort((a,b)=>b-a).map(y=>`<option value="${y}">${y}</option>`).join('');
+  yearSel.value = curYear;
+}
+const AI_MONTH_NAMES = ['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'];
+document.getElementById('aiHistYearFilter').addEventListener('change', ()=>{
+  const monthSel = document.getElementById('aiHistMonthFilter');
+  const year = document.getElementById('aiHistYearFilter').value;
+  if(!year){ monthSel.innerHTML = '<option value="">Lună: toate</option>'; renderAiHistList(); return; }
+  const hist = loadAiHistory().filter(e => new Date(e.id).getFullYear() === parseInt(year,10));
+  const months = new Set(hist.map(e => new Date(e.id).getMonth()));
+  monthSel.innerHTML = '<option value="">Lună: toate</option>' +
+    Array.from(months).sort((a,b)=>a-b).map(m=>`<option value="${m}">${AI_MONTH_NAMES[m]}</option>`).join('');
+  renderAiHistList();
+});
+document.getElementById('aiHistMonthFilter').addEventListener('change', renderAiHistList);
+document.querySelectorAll('.ai-hist-sort').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.ai-hist-sort').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    aiHistSort = chip.dataset.sort;
+    renderAiHistList();
+  });
+});
+
+function getFilteredSortedAiHistory(){
+  const year = document.getElementById('aiHistYearFilter').value;
+  const month = document.getElementById('aiHistMonthFilter').value;
+  let hist = loadAiHistory();
+  if(year) hist = hist.filter(e => new Date(e.id).getFullYear() === parseInt(year,10));
+  if(month !== '') hist = hist.filter(e => new Date(e.id).getMonth() === parseInt(month,10));
+  hist.sort((a,b) => aiHistSort === 'newest' ? b.id - a.id : a.id - b.id);
+  return hist;
+}
+
+function renderAiHistList(){
+  const listEl = document.getElementById('aiHistList');
+  const hist = getFilteredSortedAiHistory();
+  if(!hist.length){
+    listEl.innerHTML = '<div class="upload-status">Niciun rezultat — istoricul e gol, sau filtrul nu găsește nimic.</div>';
+    updateAiHistSelectedCount();
+    return;
+  }
+  listEl.innerHTML = hist.map(e=>{
+    const d = new Date(e.id);
+    const dateStr = d.toLocaleDateString('ro-RO', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    const preview = escapeHtml(e.originalText.slice(0, 60)) + (e.originalText.length > 60 ? '…' : '');
+    const srcIcon = e.source === 'voice' ? '🎤' : (e.source === 'image' ? '📷' : '✍️');
+    const checked = aiHistSelected.has(e.id) ? 'checked' : '';
+    return `<div class="btn-block ai-hist-row" data-id="${e.id}" style="width:100%; margin-bottom:6px; cursor:pointer;">
+      ${aiHistSelectMode ? `<input type="checkbox" class="ai-hist-checkbox" data-id="${e.id}" ${checked} style="margin-right:8px; width:18px; height:18px; flex-shrink:0;">` : ''}
+      <span style="flex:1; overflow:hidden;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); display:block;">${srcIcon} ${dateStr}</span>
+        <span style="font-family:'Literata',serif; font-size:0.85rem;">${preview}</span>
+      </span>
+      ${!aiHistSelectMode ? '<span>›</span>' : ''}
+    </div>`;
+  }).join('');
+
+  listEl.querySelectorAll('.ai-hist-row').forEach(row=>{
+    row.addEventListener('click', (ev)=>{
+      const id = parseInt(row.dataset.id, 10);
+      if(aiHistSelectMode){
+        if(aiHistSelected.has(id)) aiHistSelected.delete(id); else aiHistSelected.add(id);
+        renderAiHistList();
+      } else {
+        openAiHistDetail(id);
+      }
+    });
+  });
+  updateAiHistSelectedCount();
+}
+
+function updateAiHistSelectedCount(){
+  const btn = document.getElementById('aiHistDeleteSelectedBtn');
+  btn.textContent = `🗑 Șterge selectate (${aiHistSelected.size})`;
+  btn.style.display = (aiHistSelectMode && aiHistSelected.size > 0) ? 'flex' : 'none';
+}
+
+document.getElementById('aiHistSelectModeBtn').addEventListener('click', ()=>{
+  aiHistSelectMode = !aiHistSelectMode;
+  aiHistSelected.clear();
+  document.getElementById('aiHistSelectModeBtn').textContent = aiHistSelectMode ? '✕ Anulează selecția' : '☑ Selectează';
+  renderAiHistList();
+});
+document.getElementById('aiHistDeleteSelectedBtn').addEventListener('click', ()=>{
+  if(!aiHistSelected.size) return;
+  if(!confirm(`Ștergi ${aiHistSelected.size} intrări din istoric?`)) return;
+  const hist = loadAiHistory().filter(e => !aiHistSelected.has(e.id));
+  saveAiHistory(hist);
+  aiHistSelected.clear();
+  aiHistSelectMode = false;
+  document.getElementById('aiHistSelectModeBtn').textContent = '☑ Selectează';
+  populateAiHistFilters();
+  renderAiHistList();
+});
+document.getElementById('aiHistDeleteAllBtn').addEventListener('click', ()=>{
+  if(!loadAiHistory().length){ return; }
+  if(!confirm('Ștergi TOT istoricul de traduceri AI? Nu se poate anula.')) return;
+  saveAiHistory([]);
+  populateAiHistFilters();
+  renderAiHistList();
+});
+
+let currentAiHistEntryId = null;
+function openAiHistDetail(id){
+  const entry = loadAiHistory().find(e => e.id === id);
+  if(!entry) return;
+  currentAiHistEntryId = id;
+  const parsed = parseTaggedAiResult(entry.translatedText);
+  document.getElementById('aiHistDetailBox').innerHTML = parsed.html;
+  showAiView('histdetail');
+}
+document.getElementById('aiHistDetailBackBtn').addEventListener('click', ()=> showAiView('history'));
+document.getElementById('aiHistDetailSpeakBtn').addEventListener('click', ()=>{
+  const entry = loadAiHistory().find(e => e.id === currentAiHistEntryId);
+  if(!entry) return;
+  const parsed = parseTaggedAiResult(entry.translatedText);
+  speakGerman(parsed.germanOnly);
+});
+document.getElementById('aiHistDetailDownloadBtn').addEventListener('click', ()=>{
+  const entry = loadAiHistory().find(e => e.id === currentAiHistEntryId);
+  if(!entry) return;
+  const parsed = parseTaggedAiResult(entry.translatedText);
+  const format = document.getElementById('aiHistDetailFormat').value;
+  const dateStr = new Date(entry.id).toISOString().slice(0,10);
+  if(format === 'txt'){
+    const content = `TEXT ORIGINAL:\n${entry.originalText}\n\nTRADUCERE:\n${parsed.cleanText}\n`;
+    downloadBlob(content, `traducere-ai-${dateStr}.txt`, 'text/plain;charset=utf-8');
+  } else {
+    const printArea = document.getElementById('aiPrintArea');
+    printArea.innerHTML = `<h1>Traducere AI — Karteikarten</h1><div class="print-date">${dateStr}</div>
+      <div class="print-label">Text original</div><div class="print-text">${escapeHtml(entry.originalText)}</div>
+      <div class="print-label">Traducere</div><div class="print-text">${escapeHtml(parsed.cleanText)}</div>`;
+    window.print();
+  }
+});
+
+/* export/import istoric */
+document.getElementById('aiHistExportJsonBtn').addEventListener('click', ()=>{
+  const hist = loadAiHistory();
+  if(!hist.length){ alert('Istoricul e gol — nimic de exportat.'); return; }
+  downloadBlob(JSON.stringify(hist), `istoric-ai-${new Date().toISOString().slice(0,10)}.json`, 'application/json;charset=utf-8');
+});
+document.getElementById('aiHistExportCsvBtn').addEventListener('click', ()=>{
+  const hist = getFilteredSortedAiHistory();
+  if(!hist.length){ alert('Nimic de exportat (verifică și filtrul activ).'); return; }
+  let content = 'data,sursa,text_original,traducere\n';
+  hist.forEach(e=>{
+    const parsed = parseTaggedAiResult(e.translatedText);
+    const dateStr = new Date(e.id).toLocaleString('ro-RO');
+    content += [dateStr, e.source, e.originalText, parsed.cleanText.replace(/\n/g,' | ')].map(csvEscape).join(',') + '\n';
+  });
+  downloadBlob(content, `istoric-ai-${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
+});
+document.getElementById('aiHistExportPdfBtn').addEventListener('click', ()=>{
+  const hist = getFilteredSortedAiHistory();
+  if(!hist.length){ alert('Nimic de exportat (verifică și filtrul activ).'); return; }
+  const printArea = document.getElementById('aiPrintArea');
+  let html = `<h1>Istoric traduceri AI — Karteikarten</h1><div class="print-date">${new Date().toISOString().slice(0,10)} — ${hist.length} intrări</div>`;
+  hist.forEach(e=>{
+    const parsed = parseTaggedAiResult(e.translatedText);
+    const dateStr = new Date(e.id).toLocaleString('ro-RO');
+    html += `<div class="print-label">${dateStr}</div><div class="print-text">${escapeHtml(e.originalText)}</div>
+      <div class="print-text" style="margin-top:6px;">${escapeHtml(parsed.cleanText)}</div><hr style="margin:16px 0;">`;
+  });
+  printArea.innerHTML = html;
+  window.print();
+});
+document.getElementById('aiHistImportBtn').addEventListener('click', ()=> document.getElementById('aiHistImportInput').click());
+document.getElementById('aiHistImportInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const statusEl = document.getElementById('aiHistImportStatus');
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const imported = JSON.parse(reader.result);
+      if(!Array.isArray(imported)) throw new Error('format necunoscut');
+      const existing = loadAiHistory();
+      const existingIds = new Set(existing.map(e=>e.id));
+      let added = 0;
+      imported.forEach(e=>{
+        if(e && typeof e.id === 'number' && !existingIds.has(e.id)){
+          existing.push(e); existingIds.add(e.id); added++;
+        }
+      });
+      existing.sort((a,b)=>a.id-b.id);
+      saveAiHistory(existing);
+      populateAiHistFilters();
+      renderAiHistList();
+      statusEl.textContent = `✓ Combinat: ${added} intrări noi adăugate (${imported.length - added} existau deja).`;
+    }catch(err){
+      statusEl.textContent = '✗ Fișier invalid — trebuie să fie un export JSON de istoric, generat de aplicație.';
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('aiHistImportInput').value = '';
+});
+
+/* cuvinte frecvente din istoric, neadaugate inca */
+document.getElementById('aiHistFrequentWordsBtn').addEventListener('click', ()=>{
+  const box = document.getElementById('aiFrequentWordsBox');
+  const hist = loadAiHistory();
+  if(!hist.length){ box.innerHTML = '<div class="upload-status">Istoricul e gol — nimic de analizat încă.</div>'; return; }
+
+  const known = new Set();
+  BUILTIN.forEach(w => known.add(w.de.toLowerCase()));
+  myWords.forEach(w => known.add(w.de.toLowerCase()));
+
+  const counts = {};
+  hist.forEach(e=>{
+    const germanText = parseTaggedAiResult(e.translatedText).germanOnly;
+    const words = germanText.toLowerCase().match(/[a-zäöüß]+/g) || [];
+    words.forEach(w=>{
+      if(w.length < 3) return; // ignoram cuvinte f. scurte (articole, prepozitii scurte etc.)
+      if(known.has(w)) return;
+      counts[w] = (counts[w] || 0) + 1;
+    });
+  });
+  const sorted = Object.entries(counts).filter(([w,c])=>c >= 2).sort((a,b)=>b[1]-a[1]).slice(0, 30);
+  if(!sorted.length){
+    box.innerHTML = '<div class="upload-status">Niciun cuvânt repetat, necunoscut încă — fie ai adăugat deja tot, fie istoricul e prea mic.</div>';
+    return;
+  }
+  box.innerHTML = sorted.map(([w,c])=>
+    `<div class="btn-block ai-freq-word-row" data-word="${escapeAttr(w)}" style="width:100%; margin-bottom:6px;">
+      <span>${escapeHtml(w)} <span style="color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:11px;">(×${c})</span></span>
+      <span>+</span>
+    </div>`
+  ).join('');
+  box.querySelectorAll('.ai-freq-word-row').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      const word = row.dataset.word;
+      renderAddWordPrompt(word, 'de', 'aiFrequentWordsBox', (addedWord)=>{
+        // dupa adaugare, reafisam lista, ca sa dispara cuvantul proaspat adaugat
+        document.getElementById('aiHistFrequentWordsBtn').click();
+      });
+    });
+  });
+});
+
 let lastAiOriginal = '', lastAiResult = '', lastAiGermanOnly = '';
 document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
   const statusEl = document.getElementById('aiStatus');
@@ -2424,6 +2774,8 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
     resultBox.innerHTML = parsed.html;
     resultSection.style.display = 'block';
     statusEl.textContent = '';
+    saveAiHistoryEntry(lastAiOriginal, result, aiImageBase64 ? 'image' : (aiInputWasVoice ? 'voice' : 'text'));
+    aiInputWasVoice = false;
   }catch(err){
     statusEl.textContent = `✗ ${err.message}`;
   }
