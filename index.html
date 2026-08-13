@@ -1790,6 +1790,14 @@ document.getElementById('backupFileInput').addEventListener('change', (e)=>{
         status.textContent = 'Fișierul nu pare un backup valid Karteikarten.';
         return;
       }
+      // backup-urile exportate inainte de v69 foloseau chei neprefixate, dintr-o perioada in care
+      // localStorage era partajat cu aplicatiile-sora (franceza, greaca) - ar putea contine date
+      // amestecate. Nu incercam sa le recuperam automat - mai sigur sa pornim curat.
+      const hasNewFormat = BACKUP_KEYS.some(key => parsed.data[key] !== undefined);
+      if(!hasNewFormat){
+        status.textContent = 'Acest backup e dintr-o versiune veche (dinainte de separarea datelor între aplicații) și nu mai e compatibil — ar putea conține date amestecate. Nu a fost restaurat nimic.';
+        return;
+      }
       const confirmMsg = `Restaurezi backup din ${parsed._exportedAt ? parsed._exportedAt.slice(0,10) : 'dată necunoscută'}? Progresul curent va fi suprascris.`;
       if(!confirm(confirmMsg)) return;
       BACKUP_KEYS.forEach(key=>{
