@@ -1430,7 +1430,7 @@ function renderQuestion(){
   const promptSpeaker = q.promptSide === 'de'
     ? `<button class="speak-btn" id="speakPrompt" aria-label="Ascultă">🔊</button>
        <a class="speak-btn" href="${dictCcUrl(q.prompt.value)}" target="_blank" rel="noopener" aria-label="dict.cc">📖</a>` : '';
-  const promptLabel = q.questionLabel || 'Traduce';
+  const promptLabel = q.questionLabel || 'Tradu';
   card.innerHTML = `
     <div class="tag-row">
       <span class="tag direction-tag">${q.direction}</span>
