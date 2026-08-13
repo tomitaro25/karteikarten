@@ -2,6 +2,13 @@
 
 Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive Web App) instalabilă pe telefon.
 
+## Actualizări recente
+
+**v69 — corecții de izolare/layout, descoperite la aplicația-soră de greacă:**
+- Toate cele 10 chei `localStorage` (progres, istoric AI, cuvinte proprii, cheie API etc.) sunt acum prefixate cu `karteikarten_`, ca să nu se mai amestece cu datele aplicațiilor-soră (franceză, greacă) găzduite pe același domeniu GitHub Pages. **Progresul salvat anterior versiunii asta nu mai e citit** — compromis necesar pentru a rezolva amestecul definitiv.
+- Zoom (A−/A+) rămâne mereu vizibil și accesibil pe orice lățime de ecran; doar procentul afișat și butonul de resetare se ascund pe ecrane foarte înguste (sub ~420px).
+- Numele aplicației se trunchiază cu „…" pe ecrane foarte înguste, în loc să împingă butonul de Setări pe un rând nou.
+
 ## Ce conține
 
 - `index.html` — aplicația

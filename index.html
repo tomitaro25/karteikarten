@@ -53,10 +53,11 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
   }
-  .brand{ font-family:'Special Elite', monospace; font-size:18.4px; line-height:1.1; }
+  .brand{ font-family:'Special Elite', monospace; font-size:18.4px; line-height:1.1; flex:1 1 auto; min-width:0; }
+  .brand-title{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:1.5px;
-    text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
-  .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+    text-transform:uppercase; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:nowrap; flex-shrink:0; justify-content:flex-end; }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
   .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
@@ -263,6 +264,12 @@
     border:none; border-radius:10px; padding:14px; min-height:50px; margin-top:6px;
   }
   #aiPrintArea{ display:none; }
+  @media (max-width: 420px){
+    .zoom-percent{ display:none; }
+    .zoom-reset-btn{ display:none; }
+    .gear-btn{ width:36px; height:36px; font-size:16px; }
+    .brand{ font-size:16px; }
+  }
   @media print{
     body > *:not(#aiPrintArea){ display:none !important; }
     #aiPrintArea{
@@ -282,7 +289,7 @@
 
 <div class="flag-banner"></div>
 <div class="topbar">
-  <div class="brand">Karteikarten<small>DE ⇄ RO · A1–B2</small></div>
+  <div class="brand"><span class="brand-title">Karteikarten</span><small>DE ⇄ RO · A1–B2</small></div>
   <div class="top-right">
     <div class="zoom-controls">
       <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
@@ -705,12 +712,12 @@ let roundNumber = 1;
 /* ---------- storage helpers ---------- */
 async function loadStats(){
   try{
-    const raw = localStorage.getItem('wordStats');
+    const raw = localStorage.getItem('karteikarten_wordStats');
     wordStats = raw ? JSON.parse(raw) : {};
   }catch(e){ wordStats = {}; }
 }
 async function saveStats(){
-  try{ localStorage.setItem('wordStats', JSON.stringify(wordStats)); }catch(e){}
+  try{ localStorage.setItem('karteikarten_wordStats', JSON.stringify(wordStats)); }catch(e){}
 }
 
 /* ---------- preferences persistence (niveluri, directie, mod, B2 scope/teme) ---------- */
@@ -721,13 +728,13 @@ function savePreferences(){
       direction: selectedDirection,
       mode: practiceMode
     };
-    localStorage.setItem('prefs', JSON.stringify(prefs));
+    localStorage.setItem('karteikarten_prefs', JSON.stringify(prefs));
   }catch(e){}
 }
 
 function loadPreferences(){
   try{
-    const raw = localStorage.getItem('prefs');
+    const raw = localStorage.getItem('karteikarten_prefs');
     if(!raw) return;
     const prefs = JSON.parse(raw);
     if(Array.isArray(prefs.levels) && prefs.levels.length){
@@ -774,24 +781,24 @@ function updateSummaryLine(){
 let mistakeIds = []; // cele mai recente greseli, cele mai noi primele, fara duplicate
 async function loadMistakes(){
   try{
-    const raw = localStorage.getItem('mistakeIds');
+    const raw = localStorage.getItem('karteikarten_mistakeIds');
     mistakeIds = raw ? JSON.parse(raw) : [];
   }catch(e){ mistakeIds = []; }
 }
 function saveMistakes(){
-  try{ localStorage.setItem('mistakeIds', JSON.stringify(mistakeIds)); }catch(e){}
+  try{ localStorage.setItem('karteikarten_mistakeIds', JSON.stringify(mistakeIds)); }catch(e){}
 }
 
 /* ---------- "Cuvintele mele" - lista personala, construita manual, persistenta ---------- */
 let myWords = [];
 async function loadMyWords(){
   try{
-    const raw = localStorage.getItem('myWords');
+    const raw = localStorage.getItem('karteikarten_myWords');
     myWords = raw ? JSON.parse(raw) : [];
   }catch(e){ myWords = []; }
 }
 function saveMyWords(){
-  try{ localStorage.setItem('myWords', JSON.stringify(myWords)); }catch(e){}
+  try{ localStorage.setItem('karteikarten_myWords', JSON.stringify(myWords)); }catch(e){}
 }
 function updateMyWordsChipLabel(){
   const chip = document.getElementById('myWordsChip');
@@ -884,11 +891,11 @@ let selectedVoiceURI = '';
 
 async function loadVoicePref(){
   try{
-    selectedVoiceURI = localStorage.getItem('voiceURI') || '';
+    selectedVoiceURI = localStorage.getItem('karteikarten_voiceURI') || '';
   }catch(e){ selectedVoiceURI = ''; }
 }
 async function saveVoicePref(uri){
-  try{ localStorage.setItem('voiceURI', uri); }catch(e){}
+  try{ localStorage.setItem('karteikarten_voiceURI', uri); }catch(e){}
 }
 
 function populateVoiceList(){
@@ -1754,7 +1761,7 @@ document.getElementById('exportMyWordsBtn').addEventListener('click', ()=>{
 });
 
 /* ---------- backup complet (statistici + preferinte + greseli + streak), ca fisier .json ---------- */
-const BACKUP_KEYS = ['wordStats', 'prefs', 'mistakeIds', 'streak', 'voiceURI', 'myWords'];
+const BACKUP_KEYS = ['karteikarten_wordStats', 'karteikarten_prefs', 'karteikarten_mistakeIds', 'karteikarten_streak', 'karteikarten_voiceURI', 'karteikarten_myWords'];
 document.getElementById('backupExportBtn').addEventListener('click', ()=>{
   const backup = { _app: 'Karteikarten', _version: 1, _exportedAt: new Date().toISOString(), data: {} };
   BACKUP_KEYS.forEach(key=>{
@@ -2086,11 +2093,11 @@ function isIOSDevice(){
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
 function installDismissed(){
-  try{ return localStorage.getItem('installBannerDismissed') === '1'; }catch(e){ return false; }
+  try{ return localStorage.getItem('karteikarten_installBannerDismissed') === '1'; }catch(e){ return false; }
 }
 function dismissInstallBanner(){
   installBanner.style.display = 'none';
-  try{ localStorage.setItem('installBannerDismissed', '1'); }catch(e){}
+  try{ localStorage.setItem('karteikarten_installBannerDismissed', '1'); }catch(e){}
 }
 
 function refreshInstallUI(){
@@ -2153,13 +2160,13 @@ installBannerClose.addEventListener('click', dismissInstallBanner);
 function updateStreak(){
   try{
     const today = new Date().toISOString().slice(0,10);
-    const raw = localStorage.getItem('streak');
+    const raw = localStorage.getItem('karteikarten_streak');
     let streak = raw ? JSON.parse(raw) : {count:0, lastDate:null};
     if(streak.lastDate !== today){
       const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
       streak.count = (streak.lastDate === yesterday) ? streak.count + 1 : 1;
       streak.lastDate = today;
-      localStorage.setItem('streak', JSON.stringify(streak));
+      localStorage.setItem('karteikarten_streak', JSON.stringify(streak));
     }
     return streak;
   }catch(e){ return {count:0, lastDate:null}; }
@@ -2200,14 +2207,14 @@ const ZOOM_MIN = 0.85, ZOOM_MAX = 1.7, ZOOM_STEP = 0.1, ZOOM_DEFAULT = 1;
 let fontZoom = 1;
 function loadZoom(){
   try{
-    const raw = localStorage.getItem('fontZoom');
+    const raw = localStorage.getItem('karteikarten_fontZoom');
     fontZoom = raw ? parseFloat(raw) : ZOOM_DEFAULT;
     if(!fontZoom || isNaN(fontZoom)) fontZoom = ZOOM_DEFAULT;
   }catch(e){ fontZoom = ZOOM_DEFAULT; }
 }
 function applyZoom(){
   document.documentElement.style.fontSize = (16 * fontZoom) + 'px';
-  try{ localStorage.setItem('fontZoom', String(fontZoom)); }catch(e){}
+  try{ localStorage.setItem('karteikarten_fontZoom', String(fontZoom)); }catch(e){}
   document.querySelectorAll('.zoom-percent').forEach(el => el.textContent = Math.round(fontZoom * 100) + '%');
 }
 document.querySelectorAll('.zoom-in-btn').forEach(btn=>{
@@ -2231,10 +2238,10 @@ document.querySelectorAll('.zoom-reset-btn').forEach(btn=>{
 
 /* ---------- AI (Claude) - Faza 0: doar cheie + test de conexiune ---------- */
 function loadClaudeKey(){
-  try{ return localStorage.getItem('claudeApiKey') || ''; }catch(e){ return ''; }
+  try{ return localStorage.getItem('karteikarten_claudeApiKey') || ''; }catch(e){ return ''; }
 }
 function saveClaudeKey(key){
-  try{ localStorage.setItem('claudeApiKey', key); }catch(e){}
+  try{ localStorage.setItem('karteikarten_claudeApiKey', key); }catch(e){}
 }
 const claudeKeyInput = document.getElementById('claudeApiKeyInput');
 claudeKeyInput.value = loadClaudeKey();
@@ -2474,10 +2481,10 @@ function parseTaggedAiResult(raw){
 
 /* ---------- AI: istoric traduceri ---------- */
 function loadAiHistory(){
-  try{ return JSON.parse(localStorage.getItem('aiHistory') || '[]'); }catch(e){ return []; }
+  try{ return JSON.parse(localStorage.getItem('karteikarten_aiHistory') || '[]'); }catch(e){ return []; }
 }
 function saveAiHistory(hist){
-  try{ localStorage.setItem('aiHistory', JSON.stringify(hist)); }catch(e){}
+  try{ localStorage.setItem('karteikarten_aiHistory', JSON.stringify(hist)); }catch(e){}
 }
 function saveAiHistoryEntry(originalText, rawTranslatedText, source){
   const hist = loadAiHistory();
