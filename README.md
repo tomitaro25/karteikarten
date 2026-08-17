@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v83 — verificare gramaticală în doi pași (AI), pentru traducere și exerciții**
+- Fiecare traducere/generare trece acum printr-un al doilea apel automat, un "corector" separat — verifică acorduri de gen/număr (română), cazuri gramaticale (germană), ortografie, și dacă sensul s-a păstrat corect.
+- Plasă de siguranță: dacă verificarea ar produce un număr diferit de perechi `[DE]`/`[RO]` decât originalul (semn de pierdere de conținut), se păstrează traducerea inițială, nerevizuită — niciodată un rezultat trunchiat.
+- Cost: aproximativ dublu per traducere (2 apeluri, nu 1) — rămâne sub un cent per traducere scurtă cu modelul Haiku.
+
 **v75 — modul nou: „Exersează ce ai învățat" (AI)**
 - Claude generează un text scurt, pe o temă dată de tine, folosind strict cuvintele la care ai răspuns corect de cel puțin 2 ori (nu tot vocabularul disponibil, nici cuvintele abia atinse o singură dată) — alegi nivelul (A1-A2, max 60 cuvinte, sau B1-B2, max 100 cuvinte) și limba în care apare textul.
 - Traducerea rămâne ascunsă până apeși „Arată traducerea"; poți scrie întâi propria încercare, într-un câmp liber, ca autotestare.
