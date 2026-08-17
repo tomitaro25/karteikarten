@@ -544,6 +544,7 @@
       <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): o traducere scurtă costă sub un cent — cu 5$ ajungi la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
       <p><b>Ce face automat traducerea:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici, inclusiv cratime lipsă din dictare vocală) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
       <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna. Pe calculator, funcționează direct — orice copiezi poate fi lipit imediat.</p>
+      <p><b>📝 Exersează ce ai învățat:</b> Claude generează un text scurt, pe o temă dată de tine, folosind <b>strict cuvintele la care ai răspuns corect de cel puțin 2 ori</b> (nu tot vocabularul disponibil, nici cuvintele abia atinse o singură dată) — alegi nivelul (A1-A2 sau B1-B2) și limba în care apare textul. Traducerea rămâne ascunsă până apeși „Arată traducerea" — poți scrie întâi propria ta încercare, într-un câmp liber, ca autotestare. Fiecare exercițiu se salvează automat în Istoric, cu propria ta încercare alături de traducerea corectă, ca să poți reveni oricând la ce ai exersat.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -564,6 +565,7 @@
     </div>
     <div class="sheet-section">
       <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
+      <button class="btn-block" id="aiHubExerciseBtn" style="width:100%; margin-top:8px;"><span>📝 Exersează ce ai învățat</span><span>›</span></button>
       <button class="btn-block" id="aiHubHistoryBtn" style="width:100%; margin-top:8px;"><span>📜 Istoric</span><span>›</span></button>
     </div>
   </div>
@@ -681,6 +683,51 @@
       <button class="btn-block" id="aiDownloadBtn" style="flex:1;"><span>Descarcă</span><span>⬇</span></button>
     </div>
   </div>
+  </div>
+
+  <div id="aiExerciseView" style="display:none;">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <button class="chip" id="aiExerciseBackBtn">← Înapoi</button>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Nivel</div>
+      <div class="chip-row">
+        <span class="chip ai-ex-level active" data-level="a1a2">A1-A2</span>
+        <span class="chip ai-ex-level" data-level="b1b2">B1-B2</span>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Text generat în</div>
+      <div class="chip-row">
+        <span class="chip ai-ex-lang active" data-lang="de">Germană (traduci tu în română)</span>
+        <span class="chip ai-ex-lang" data-lang="ro">Română (traduci tu în germană)</span>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Temă (scurtă, în română)</div>
+      <input type="text" id="aiExerciseTheme" class="btn-block" style="width:100%;" placeholder="ex. La plimbare prin parc" maxlength="60">
+      <button class="btn-block paste-highlight" id="aiExerciseGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează</span><span>→</span></button>
+      <div class="upload-status" id="aiExerciseStatus"></div>
+    </div>
+
+    <div class="sheet-section" id="aiExerciseResultSection" style="display:none;">
+      <div class="sheet-label">Text</div>
+      <div id="aiExerciseTextBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+
+      <div class="sheet-label" style="margin-top:16px;">Traducerea ta (opțional)</div>
+      <textarea id="aiExerciseUserAttempt" class="btn-block" style="width:100%; min-height:90px; font-family:'Literata',serif; resize:vertical;" placeholder="Scrie aici încercarea ta de traducere..."></textarea>
+
+      <button class="btn-block" id="aiExerciseRevealBtn" style="width:100%; margin-top:10px;"><span>👁 Arată traducerea</span><span>›</span></button>
+
+      <div id="aiExerciseTranslationSection" style="display:none; margin-top:12px;">
+        <div class="sheet-label">Traducere (AI)</div>
+        <div id="aiExerciseTranslationBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+        <button class="btn-block" id="aiExerciseSpeakBtn" style="width:100%; margin-top:8px;" disabled><span>🔊 Ascultă (germană)</span><span>▶</span></button>
+      </div>
+    </div>
   </div>
 
   <button class="sheet-close" id="closeAiSheetBtn">Închide</button>
@@ -1533,6 +1580,7 @@ function showAiView(view){
   document.getElementById('aiTranslateView').style.display = view === 'translate' ? 'block' : 'none';
   document.getElementById('aiHistoryView').style.display = view === 'history' ? 'block' : 'none';
   document.getElementById('aiHistDetailView').style.display = view === 'histdetail' ? 'block' : 'none';
+  document.getElementById('aiExerciseView').style.display = view === 'exercise' ? 'block' : 'none';
   if(view === 'history'){ populateAiHistFilters(); renderAiHistList(); }
 }
 // activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
@@ -1541,11 +1589,14 @@ function refreshAiHubButtons(){
   const hasKey = loadClaudeKey().startsWith('sk-ant-');
   document.getElementById('aiHubTranslateBtn').disabled = !hasKey;
   document.getElementById('aiHubHistoryBtn').disabled = !hasKey;
+  document.getElementById('aiHubExerciseBtn').disabled = !hasKey;
   document.getElementById('aiNoKeyNotice').style.display = hasKey ? 'none' : 'block';
   return hasKey;
 }
 document.getElementById('aiHubHistoryBtn').addEventListener('click', ()=> showAiView('history'));
 document.getElementById('aiHistoryBackBtn').addEventListener('click', ()=> showAiView('hub'));
+document.getElementById('aiHubExerciseBtn').addEventListener('click', ()=> showAiView('exercise'));
+document.getElementById('aiExerciseBackBtn').addEventListener('click', ()=> showAiView('hub'));
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
   showAiView('hub');
@@ -2351,6 +2402,124 @@ async function callClaude(systemPrompt, contentBlocks, maxTokens){
   return data?.content?.[0]?.text || '';
 }
 
+/* ---------- AI: "Exersează ce ai învățat" ---------- */
+let aiExerciseLevel = 'a1a2';
+let aiExerciseLang = 'de';
+document.querySelectorAll('.ai-ex-level').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.ai-ex-level').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    aiExerciseLevel = chip.dataset.level;
+  });
+});
+document.querySelectorAll('.ai-ex-lang').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.ai-ex-lang').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    aiExerciseLang = chip.dataset.lang;
+  });
+});
+
+function getKnownWordsForLevelGroup(levelGroup){
+  const coreLevels = levelGroup === 'a1a2' ? ['A1','A2'] : ['B1','B2'];
+  const helperLevels = levelGroup === 'a1a2' ? [] : ['A1','A2']; // conectori de baza, mereu permisi la B1-B2
+  // cuvinte "cunoscute" = raspuns corect macar de 2 ori, cumulat (nu neaparat consecutiv - o greseala
+  // ocazionala intre ele nu-l scoate din pool, ramanem permisivi)
+  const isKnown = w => { const s = wordStats[w.id]; return s && s.correct >= 2; };
+  const core = BUILTIN.filter(w => coreLevels.includes(w.level) && isKnown(w)).map(w=>w.de);
+  const helpers = BUILTIN.filter(w => helperLevels.includes(w.level) && isKnown(w)).map(w=>w.de);
+  return { core: [...new Set(core)], helpers: [...new Set(helpers)] };
+}
+
+function buildExercisePrompt(levelGroup, targetLang, theme, knownWords, maxWords){
+  const langName = targetLang === 'de' ? 'germană' : 'română';
+  const otherLangName = targetLang === 'de' ? 'română' : 'germană';
+  const wordListTxt = knownWords.core.join(', ') + (knownWords.helpers.length ? ' | (conectori de bază, mereu permiși): ' + knownWords.helpers.join(', ') : '');
+  return `Ești un profesor de germană care scrie texte scurte de exersat, STRICT din vocabularul pe care elevul îl cunoaște deja.
+Lista de cuvinte cunoscute de elev (folosește aceste cuvinte pentru MAJORITATEA COVÂRȘITOARE a textului):
+${wordListTxt || '(listă goală - elevul nu are încă niciun cuvânt cunoscut la acest nivel)'}
+
+Excepție, doar cât e strict necesar pentru gramatică și logică: poți folosi și un cuvânt din afara listei de mai sus, DE ORICE TIP gramatical (nu doar articole/pronume/prepoziții/numerale/verbe - poate fi orice categorie, dacă e strict necesară), atunci când textul chiar nu s-ar putea forma corect fără el. Nu te limita la o listă fixă de tipuri de cuvinte pentru asta - judecă de la caz la caz ce-i strict necesar.
+Limită numerică clară pentru aceste cuvinte din afara listei: **cel mult 15% din totalul cuvintelor textului**. Dacă ai nevoie de mai mult de-atât ca să faci un text coerent, înseamnă că lista de cuvinte cunoscute e prea mică pentru tema asta - în acest caz, scrie un text mai scurt sau mai simplu, nu adăuga tot mai multe cuvinte din afara listei.
+
+Reguli stricte:
+1. Scrie textul STRICT în ${langName}, pe tema primită între """ ... """.
+2. Cuvintele din lista dată mai sus trebuie să domine clar textul (minim ~85% din cuvinte). Cuvintele din afara listei rămân sub acest plafon de 15%, folosite doar unde sunt inevitabile.
+3. Lungime maximă: ${maxWords} cuvinte. Dacă lista de cuvinte nu permite un text coerent de această lungime (respectând plafonul de 15% de mai sus), scrie un text MAI SCURT, dar NU adăuga cuvinte în afara listei doar ca să atingi lungimea țintă.
+4. Textul trebuie să aibă sens și coerență clară legată de temă, gramatical corect — nu doar o înșiruire de cuvinte disparate.
+5. Dacă lista de cuvinte e goală sau prea mică pentru orice text coerent pe temă, scrie un mesaj scurt în ${langName} explicând asta (fără etichete [DE]/[RO] în acest caz).
+6. Altfel, după ce scrii textul, tradu-l în ${otherLangName}, propoziție cu propoziție, în formatul EXACT: pentru fiecare propoziție, o pereche de linii:
+[DE] <propoziția în germană>
+[RO] <propoziția în română>
+(fără numerotare, fără introducere, fără concluzie — doar perechile).`;
+}
+
+let lastAiExerciseTheme = '', lastAiExerciseRaw = '';
+document.getElementById('aiExerciseGenerateBtn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('aiExerciseStatus');
+  const theme = document.getElementById('aiExerciseTheme').value.trim();
+  const resultSection = document.getElementById('aiExerciseResultSection');
+  const translationSection = document.getElementById('aiExerciseTranslationSection');
+  if(!theme){ statusEl.textContent = 'Scrie mai întâi o temă.'; return; }
+  const key = loadClaudeKey();
+  if(!key || !key.startsWith('sk-ant-')){ statusEl.textContent = 'Nu ai o cheie Claude salvată.'; return; }
+
+  const maxWords = aiExerciseLevel === 'a1a2' ? 60 : 100;
+  const knownWords = getKnownWordsForLevelGroup(aiExerciseLevel);
+  if(knownWords.core.length < 5){
+    statusEl.textContent = `Ai prea puține cuvinte exersate cu succes la nivelul ${aiExerciseLevel==='a1a2'?'A1-A2':'B1-B2'} (${knownWords.core.length}) — exersează mai întâi câteva runde din acel nivel.`;
+    return;
+  }
+  statusEl.textContent = 'Se generează...';
+  resultSection.style.display = 'none';
+  translationSection.style.display = 'none';
+  document.getElementById('aiExerciseUserAttempt').value = '';
+  document.getElementById('aiExerciseSpeakBtn').disabled = true;
+  try{
+    const systemPrompt = buildExercisePrompt(aiExerciseLevel, aiExerciseLang, theme, knownWords, maxWords);
+    const wrapped = `"""\n${theme}\n"""`;
+    const result = await callClaude(systemPrompt, [{type:'text', text: wrapped}], 4096);
+    const parsed = parseTaggedAiResult(result);
+    lastAiExerciseTheme = theme;
+    lastAiExerciseRaw = result;
+    // afisam INITIAL doar limba generata (target), ascundem cealalta pana la "Arata traducerea"
+    const linesOnly = result.split('\n').map(l=>l.trim()).filter(Boolean);
+    const targetTag = aiExerciseLang === 'de' ? '[DE]' : '[RO]';
+    const targetLines = linesOnly.filter(l => l.startsWith(targetTag)).map(l => l.replace(targetTag, '').trim());
+    const textBox = document.getElementById('aiExerciseTextBox');
+    if(targetLines.length){
+      textBox.textContent = targetLines.join(' ');
+    } else {
+      // caz special: raspuns fara etichete (ex. lista de cuvinte insuficienta, semnalat de AI insusi)
+      textBox.textContent = parsed.cleanText;
+    }
+    resultSection.style.display = 'block';
+    statusEl.textContent = '';
+  }catch(err){
+    statusEl.textContent = `✗ ${err.message}`;
+  }
+});
+
+document.getElementById('aiExerciseRevealBtn').addEventListener('click', ()=>{
+  const parsed = parseTaggedAiResult(lastAiExerciseRaw);
+  document.getElementById('aiExerciseTranslationBox').innerHTML = parsed.html;
+  document.getElementById('aiExerciseTranslationSection').style.display = 'block';
+  document.getElementById('aiExerciseSpeakBtn').disabled = false;
+
+  const userAttempt = document.getElementById('aiExerciseUserAttempt').value.trim();
+  const entry = { id: Date.now(), originalText: lastAiExerciseTheme, translatedText: lastAiExerciseRaw, source: 'exercitiu' };
+  if(userAttempt) entry.exersare = userAttempt;
+  const hist = loadAiHistory();
+  hist.push(entry);
+  saveAiHistory(hist);
+});
+
+document.getElementById('aiExerciseSpeakBtn').addEventListener('click', ()=>{
+  const parsed = parseTaggedAiResult(lastAiExerciseRaw);
+  speakGerman(parsed.germanOnly);
+});
+
+
 /* ---------- AI: dictare vocala (refoloseste acelasi API ca la cautarea de cuvinte) ---------- */
 let aiVoiceLang = 'ro';
 let aiInputWasVoice = false;
@@ -2557,7 +2726,7 @@ function renderAiHistList(){
     updateAiHistSelectedCount();
     return;
   }
-  const AI_SRC_TAGS = { text:'[txt]', voice:'[rec]', image:'[img]' };
+  const AI_SRC_TAGS = { text:'[txt]', voice:'[rec]', image:'[img]', exercitiu:'[exc]' };
   listEl.innerHTML = hist.map(e=>{
     const d = new Date(e.id);
     const dateStr = d.toLocaleDateString('ro-RO', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
@@ -2625,7 +2794,14 @@ function openAiHistDetail(id){
   if(!entry) return;
   currentAiHistEntryId = id;
   const parsed = parseTaggedAiResult(entry.translatedText);
-  document.getElementById('aiHistDetailBox').innerHTML = parsed.html;
+  let html = '';
+  if(entry.exersare){
+    html += `<div class="sheet-label" style="margin-bottom:4px;">Exersarea ta</div>
+      <div style="margin-bottom:14px; padding:10px; border:1.5px solid var(--line); border-radius:10px;">${escapeHtml(entry.exersare)}</div>
+      <div class="sheet-label" style="margin-bottom:4px;">Traducere corectă (AI)</div>`;
+  }
+  html += parsed.html;
+  document.getElementById('aiHistDetailBox').innerHTML = html;
   showAiView('histdetail');
 }
 document.getElementById('aiHistDetailBackBtn').addEventListener('click', ()=> showAiView('history'));

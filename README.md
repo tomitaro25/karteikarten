@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v75 — modul nou: „Exersează ce ai învățat" (AI)**
+- Claude generează un text scurt, pe o temă dată de tine, folosind strict cuvintele la care ai răspuns corect de cel puțin 2 ori (nu tot vocabularul disponibil, nici cuvintele abia atinse o singură dată) — alegi nivelul (A1-A2, max 60 cuvinte, sau B1-B2, max 100 cuvinte) și limba în care apare textul.
+- Traducerea rămâne ascunsă până apeși „Arată traducerea"; poți scrie întâi propria încercare, într-un câmp liber, ca autotestare.
+- Fiecare exercițiu se salvează automat în Istoric (tag `[exc]`), cu propria încercare afișată alături de traducerea corectă la redeschidere.
+
 **v69 — corecții de izolare/layout, descoperite la aplicația-soră de greacă:**
 - Toate cele 10 chei `localStorage` (progres, istoric AI, cuvinte proprii, cheie API etc.) sunt acum prefixate cu `karteikarten_`, ca să nu se mai amestece cu datele aplicațiilor-soră (franceză, greacă) găzduite pe același domeniu GitHub Pages. **Progresul salvat anterior versiunii asta nu mai e citit** — compromis necesar pentru a rezolva amestecul definitiv.
 - Zoom (A−/A+) rămâne mereu vizibil și accesibil pe orice lățime de ecran; doar procentul afișat și butonul de resetare se ascund pe ecrane foarte înguste (sub ~420px).
@@ -73,7 +78,11 @@ Aplicația nu colectează, nu transmite și nu stochează nicio dată pe niciun 
 
 ## Licență
 
-Codul aplicației (`index.html`, `sw.js`, `manifest.json`) e disponibil liber pentru refolosire și modificare personală. Vocabularul urmează atribuirile de mai sus (MIT pentru selecția de frecvență; traducerile românești sunt libere de folosit, fără garanții).
+Codul aplicației (`index.html`, `sw.js`, `manifest.json`) e liber de refolosit, adaptat, sau folosit ca bază pentru alte proiecte — cu o singură condiție: **menționează sursa**. O mențiune simplă, vizibilă undeva (README, footer, secțiune de credite), e suficientă:
+
+> Bazat pe Karteikarten, de tomitaro25 — github.com/tomitaro25
+
+Vocabularul urmează atribuirile separate de mai sus (MIT pentru selecția de frecvență din hermitdave/FrequencyWords; traducerile românești sunt muncă originală, libere de refolosit cu aceeași condiție de atribuire).
 
 ## Disclaimer
 
@@ -81,4 +90,9 @@ Vocabularul și traducerile pot conține ocazional imprecizii; verifică indepen
 
 ## Donații / susținere
 
-Aplicația **nu are** (deocamdată) niciun buton de donații (Ko-fi, Buy Me a Coffee etc.) și nu e monetizată în niciun fel. E un proiect personal, făcut pentru uz propriu și distribuit liber. Dacă asta se schimbă vreodată, va fi menționat explicit aici, cu actualizarea corespunzătoare a acestei secțiuni.
+Aplicația **nu costă nimic** și rămâne liberă de folosit — dar dacă vrei să susții proiectul (ex. ca să-mi permit un abonament plătit către Anthropic, folosit chiar la construirea acestei aplicații), poți lăsa o mică donație, complet opțională:
+
+- **Ko-fi** — [ko-fi.com/tomitaro25](https://ko-fi.com/tomitaro25) *(actualizează linkul după ce creezi contul)* — 0% comision pe planul gratuit, nu-ți cere niciun cont special
+- **GitHub Sponsors** — direct de pe [github.com/tomitaro25](https://github.com/tomitaro25), dacă preferi
+
+Nimic din aplicație nu depinde de donații — toate funcțiile rămân complet gratuite, indiferent dacă susții sau nu proiectul.
