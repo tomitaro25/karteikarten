@@ -4,6 +4,16 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v85 — două module noi (AI): „Simplifică" și „Descrie o poză"**
+- **📖 Simplifică** — al treilea mod în panoul de traducere (lângă Traducere/Corectură): lipești un text german greu, alegi nivelul țintă (A1-A2/B1-B2), primești o versiune simplificată, cu vocabular tipic acelui nivel general (CEFR), plus traducere română.
+- **📷 Descrie o poză** — modul separat, în hub: încarci o poză personală, Claude o descrie în germană, strict din cuvintele tale exersate cu succes la nivelul ales (ca la „Exersează ce ai învățat"), cu traducere română alături.
+- Ambele refolosesc integral infrastructura existentă — formatul `[DE]`/`[RO]`, Agentul 2 de revizuire, ascultare, istoric.
+
+**v84 — mod nou: „✓ Corectură germană" (AI), portat din aplicația-soră franceză**
+- Chip nou în panoul de traducere ("🔄 Traducere" / "✓ Corectură germană") — comută modul, în același panou, fără buton separat.
+- Scrii (sau dictezi, sau fotografiezi) propriul tău text în germană — Claude corectează doar greșeli reale (ortografie, acorduri, conjugări, topică, cratime), fără să reformuleze stilul; afișează și o listă de explicații, în română, pentru fiecare greșeală găsită.
+- Agentul 2 de revizuire (folosit la traducere) a primit și el verificări suplimentare, portate din franceză: punctuație completă, poziția verbului/topică germană.
+
 **v83 — verificare gramaticală în doi pași (AI), pentru traducere și exerciții**
 - Fiecare traducere/generare trece acum printr-un al doilea apel automat, un "corector" separat — verifică acorduri de gen/număr (română), cazuri gramaticale (germană), ortografie, și dacă sensul s-a păstrat corect.
 - Plasă de siguranță: dacă verificarea ar produce un număr diferit de perechi `[DE]`/`[RO]` decât originalul (semn de pierdere de conținut), se păstrează traducerea inițială, nerevizuită — niciodată un rezultat trunchiat.
