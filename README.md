@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v86 — corecție critică: prăbușire silențioasă la selectarea combinată de niveluri, descoperită la aplicația-soră franceză**
+- Dacă erau selectate simultan cel puțin un nivel normal de vocabular ȘI cel puțin unul dintre nivelurile „virtuale" (Antonime & Sinonime, Conjugare verbe), generarea rundei putea eșua silențios, intermitent — pagina rămânea aproape goală, fără mesaj de eroare, în funcție de ce cuvinte ieșeau aleatoriu în eșantion. Cauza: funcția de clasificare gramaticală era apelată și pe intrări din nivelurile virtuale, care au altă structură de date (fără câmpul folosit pentru clasificare).
+- Corectat: intrările din nivelurile virtuale sunt acum excluse explicit din grupul folosit la generarea distractorilor.
+- Verificat programatic: 200/200 simulări eșuau înainte de corecție, 0/200 după.
+
 **v85 — două module noi (AI): „Simplifică" și „Descrie o poză"**
 - **📖 Simplifică** — al treilea mod în panoul de traducere (lângă Traducere/Corectură): lipești un text german greu, alegi nivelul țintă (A1-A2/B1-B2), primești o versiune simplificată, cu vocabular tipic acelui nivel general (CEFR), plus traducere română.
 - **📷 Descrie o poză** — modul separat, în hub: încarci o poză personală, Claude o descrie în germană, strict din cuvintele tale exersate cu succes la nivelul ales (ca la „Exersează ce ai învățat"), cu traducere română alături.

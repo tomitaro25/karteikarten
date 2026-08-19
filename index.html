@@ -1449,7 +1449,7 @@ function buildRound(){
     const answerSide = deToRo ? 'ro' : 'de';
     const prompt = formatSide(word, promptSide);
     const correct = formatSide(word, answerSide);
-    const others = shuffle(words.filter(w => w.id !== word.id));
+    const others = shuffle(words.filter(w => w.id !== word.id && w.level !== 'ANTSYN' && w.level !== 'VERBS'));
     const wordCategory = classifyWord(word);
     const sameCategory = others.filter(o => classifyWord(o) === wordCategory);
     const candidatePools = [sameCategory, others]; // incercam mai intai aceeasi categorie, apoi relaxam
