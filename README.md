@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v87 — calitate traducere îmbunătățită, plus escaladare rară către model mai avansat**
+- Agentul 2 (revizuire) verifică acum și acordul participiilor, fidelitatea de sens (nu doar gramatica), și expresiile idiomatice traduse mecanic, greșit — găsite prin testare pe text real.
+- Regulă nouă, critică: dacă Agentul 2 nu e sigur de un cuvânt/expresie, NU mai inventează sau ghicește — marchează explicit acea bucată, iar aplicația trimite **doar acel fragment**, cu context, către un model mai avansat (Sonnet), care-l rezolvă. Cost suplimentar doar rar, când chiar e nevoie, nu la fiecare traducere.
+- Verificat programatic: extragerea și recombinarea fragmentelor marcate, cu fallback sigur dacă escaladarea eșuează sau nu se potrivește numeric.
+
 **v86 — corecție critică: prăbușire silențioasă la selectarea combinată de niveluri, descoperită la aplicația-soră franceză**
 - Dacă erau selectate simultan cel puțin un nivel normal de vocabular ȘI cel puțin unul dintre nivelurile „virtuale" (Antonime & Sinonime, Conjugare verbe), generarea rundei putea eșua silențios, intermitent — pagina rămânea aproape goală, fără mesaj de eroare, în funcție de ce cuvinte ieșeau aleatoriu în eșantion. Cauza: funcția de clasificare gramaticală era apelată și pe intrări din nivelurile virtuale, care au altă structură de date (fără câmpul folosit pentru clasificare).
 - Corectat: intrările din nivelurile virtuale sunt acum excluse explicit din grupul folosit la generarea distractorilor.

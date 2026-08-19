@@ -541,7 +541,7 @@
       4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
       5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
       6. Lipește cheia mai jos → „Testează conexiunea"</p>
-      <p><b>Verificare gramaticală, în doi pași:</b> orice traducere sau text generat trece printr-un al doilea pas, automat — un "corector" separat, care verifică acordurile de gen/număr (română), cazurile gramaticale (germană), ortografia și dacă sensul s-a păstrat corect. Dacă verificarea eșuează dintr-un motiv tehnic, rămâi cu traducerea inițială, nu cu una trunchiată — niciodată nu primești un rezultat corupt.</p>
+      <p><b>Verificare gramaticală, în doi pași (uneori trei):</b> orice traducere sau text generat trece printr-un al doilea pas, automat — un "corector" separat, care verifică acordurile complete (gen, număr, participii), cazurile gramaticale, ortografia, expresiile idiomatice și dacă sensul exact s-a păstrat, nu doar gramatica. Dacă verificarea eșuează dintr-un motiv tehnic, rămâi cu traducerea inițială, nu cu una trunchiată. <b>Rar</b>, dacă corectorul întâlnește ceva de care chiar nu e sigur (nu ghicește, nu inventează cuvinte), trimite <b>doar acea bucată</b> către un model mai avansat, care o rezolvă — un al treilea pas, dar doar când chiar e nevoie, nu la fiecare traducere.</p>
       <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): fiecare traducere/generare presupune acum <b>2 apeluri</b> (traducere + verificare), deci aproximativ dublu față de un singur pas — tot sub un cent per traducere scurtă, cu 5$ ajungi în continuare la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
       <p><b>Ce face automat traducerea:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici, inclusiv cratime lipsă din dictare vocală) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
       <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna. Pe calculator, funcționează direct — orice copiezi poate fi lipit imediat.</p>
@@ -2535,7 +2535,7 @@ Reguli stricte, obligatorii:
 9. Dacă primești o IMAGINE: extrage întâi tot textul vizibil și lizibil din ea (ignoră elemente grafice fără text), apoi aplică exact aceleași reguli de mai sus asupra textului extras — inclusiv regula 5 (perechi [DE]/[RO]). Dacă imaginea nu conține deloc text lizibil, spune asta scurt, în germană, fără etichete.`;
 }
 
-async function callClaude(systemPrompt, contentBlocks, maxTokens){
+async function callClaude(systemPrompt, contentBlocks, maxTokens, model){
   const key = loadClaudeKey();
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -2546,7 +2546,7 @@ async function callClaude(systemPrompt, contentBlocks, maxTokens){
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: model || 'claude-haiku-4-5-20251001',
       max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: 'user', content: contentBlocks }]
@@ -2567,27 +2567,67 @@ function buildAiReviewPrompt(){
 
 Verifică, pentru fiecare pereche:
 1. GERMANA: cazul gramatical corect (Nominativ/Akkusativ/Dativ/Genitiv), genul corect al articolelor (der/die/das), conjugarea corectă a verbelor, ordinea corectă a cuvintelor — mai ales poziția verbului (pe locul 2 în propoziții principale, la final în subordonate) și ordinea complementelor —, cratimele corecte la cuvinte compuse care le folosesc. Exemplu concret de greșeală de evitat: "der Mädchen" (greșit — "Mädchen" e neutru, terminația "-chen" e ÎNTOTDEAUNA neutră) — corect: "das Mädchen".
-2. ROMÂNA: acordul de gen și număr al substantivelor cu articolele lor, conjugarea corectă a verbelor, cratimele corecte la pronume clitice. Exemplu concret de greșeală de evitat: "o ajutoare" (greșit — "ajutoare" e pluralul lui "ajutor") — corect: "un ajutor".
+2. ROMÂNA — acorduri complete, nu doar substantiv-articol: acordul de gen și număr al substantivelor cu articolele lor, ȘI acordul participiilor (folosite cu "a fi"/pasiv) cu subiectul lor, cratimele corecte la pronume clitice. Exemple concrete de evitat: "o ajutoare" (greșit, "ajutoare" e pluralul lui "ajutor") — corect "un ajutor"; "moțiunea a fost respingă" (greșit, participiul nu se acordă cu subiectul feminin) — corect "moțiunea a fost respinsă".
 3. Punctuație corectă și completă, în ambele limbi (virgule, puncte, semne de întrebare/exclamare) — inclusiv cazuri unde traducătorul a omis din greșeală un semn necesar.
 4. Ortografia, în ambele limbi (diacritice, umlaut-uri, caractere speciale, fără greșeli de tastare) — inclusiv cazuri unde traducătorul a omis din greșeală un diacritic/umlaut.
-5. Că cele două propoziții dintr-o pereche chiar păstrează același sens — traducerea nu s-a abătut de la original.
+5. FIDELITATE DE SENS, nu doar corectitudine gramaticală — o propoziție poate fi perfect corectă gramatical, dar să transmită alt sens decât originalul. Exemplu concret de evitat: "Missachtung der Kultur" tradus ca "ignoranța culturii" (greșit — "Missachtung" înseamnă desconsiderare/disprețuire, nu lipsă de cunoștințe) — corect: "desconsiderarea culturii". Verifică mereu dacă sensul exact s-a păstrat, nu doar gramatica.
+6. EXPRESII IDIOMATICE — dacă germana originală folosește o expresie fixă/idiomatică (nu sens literal, cuvânt-cu-cuvânt), verifică dacă traducerea română transmite ACELAȘI SENS printr-o expresie/formulare naturală românească, nu o traducere mecanică, cuvânt-cu-cuvânt, care sună străin sau fără sens în română. Exemple concrete de evitat: "gehört zum guten Ton" (expresie fixă, sens: "e considerat acceptabil/la modă") tradus mecanic ca "aparține tonului bun" (fără sens în română) — corect, ceva de genul "e considerat normal/acceptat"; "jemanden verächtlich machen" tradus ca "a face pe ușor cu cineva" (greșit, expresie inventată, fără sens) — corect "a denigra pe cineva".
+7. NICIODATĂ nu inventezi cuvinte care nu există în română sau germană, chiar dacă "sună plauzibil" — dacă nu ești SIGUR de un cuvânt/formă corectă, NU-l inventa și NU ghici. Exemplu real de evitat: "antideutsche Kunst" tradus ca "artă antiduitasă" ("antiduitasă" NU e un cuvânt românesc, e inventat) — corect: "artă anti-germană" sau "artă antigermană".
 
-REGULĂ IMPORTANTĂ, citește cu atenție: corectezi FORMA greșită a unui cuvânt deja ales (gen, număr, caz, conjugare, ortografie, poziție în propoziție) — NU înlocuiești cuvinte cu sinonime din preferință stilistică. O formă gramaticală greșită a unui cuvânt E o greșeală de corectat, chiar dacă tehnic "nu înlocuiești cuvântul cu altul" — corectezi doar TERMINAȚIA/FORMA/POZIȚIA lui, nu alegi alt cuvânt.
+REGULĂ IMPORTANTĂ despre corectare vs. înlocuire: corectezi FORMA greșită a unui cuvânt deja ales (gen, număr, caz, conjugare, ortografie, poziție în propoziție) — NU înlocuiești cuvinte cu sinonime din preferință stilistică. O formă gramaticală greșită a unui cuvânt E o greșeală de corectat, chiar dacă tehnic "nu înlocuiești cuvântul cu altul" — corectezi doar TERMINAȚIA/FORMA/POZIȚIA lui, nu alegi alt cuvânt.
+
+REGULĂ CRITICĂ despre incertitudine — dacă, verificând, întâlnești un cuvânt/expresie/idiom pentru care NU EȘTI SIGUR care-i forma sau traducerea corectă (nu-i o greșeală clară pe care o poți corecta cu încredere, ci o zonă unde chiar nu știi), NU ghici și NU inventa nimic. În loc, marchează STRICT DOAR acea bucată (cuvântul sau expresia problematică, nimic mai mult din propoziție) cu etichetele [UNCERTAIN]...[/UNCERTAIN], lăsând-o exact așa cum a scris-o traducătorul, în interiorul liniei [DE] sau [RO] corespunzătoare. Exemplu: [RO] Aceasta este o expresie [UNCERTAIN]tradusă ambiguu[/UNCERTAIN] aici. Folosește aceste etichete DOAR când chiar nu știi — nu pentru orice ezitare minoră de stil.
 
 Formatul de intrare și de ieșire e IDENTIC — perechi de linii:
 [DE] <propoziția în germană>
 [RO] <propoziția în română>
 
 OBLIGATORIU: întorci EXACT ACELAȘI NUMĂR de perechi ca la intrare — nu adaugi, nu ștergi, nu contopești perechi între ele. Dacă o pereche e deja complet corectă, o repeți neschimbată. Dacă găsești o greșeală, o corectezi direct, păstrând formatul.
-Fără nicio explicație, introducere, sau concluzie — doar perechile [DE]/[RO], corectate sau neschimbate, exact în numărul primit.`;
+Fără nicio explicație, introducere, sau concluzie — doar perechile [DE]/[RO], corectate sau neschimbate (cu eventualele marcaje [UNCERTAIN] incluse), exact în numărul primit.`;
 }
 function countTaggedPairs(text){
   return (text.match(/^\[(DE|RO)\]/gm) || []).length;
 }
+
+/* ---------- Escaladare catre model mai avansat, doar pt bucatile marcate [UNCERTAIN] de Agentul 2 ---------- */
+function extractUncertainSegments(text){
+  const regex = /\[UNCERTAIN\](.*?)\[\/UNCERTAIN\]/g;
+  const segments = [];
+  let match;
+  while((match = regex.exec(text)) !== null){
+    segments.push(match[1]);
+  }
+  return segments;
+}
+function buildEscalationPrompt(){
+  return `Ești un traducător expert, senior, specializat în perechea română-germană, chemat să rezolvi cazuri dificile pe care un traducător junior nu a fost sigur cum să le rezolve corect.
+Primești o listă de fragmente (cuvinte sau expresii scurte), fiecare extras dintr-o propoziție mai mare, pe care junior-ul nu a știut sigur cum să le traducă/formuleze corect și le-a lăsat nerezolvate.
+Pentru FIECARE fragment din listă, oferă varianta corectă, naturală, în limba în care ar trebui să fie fragmentul respectiv (română sau germană, dedus din context) — un fragment de înlocuire scurt, care să se potrivească gramatical exact la locul din care a fost extras.
+Format de ieșire STRICT: câte o linie per fragment, în aceeași ordine ca la intrare, fără numerotare, fără introducere, fără explicații:
+[FIX] <fragmentul de înlocuire corect>
+(o linie [FIX] pentru fiecare fragment primit, în ordine, exact același număr de linii câte fragmente ai primit).`;
+}
+async function escalateUncertainSegments(reviewedText){
+  const segments = extractUncertainSegments(reviewedText);
+  if(!segments.length) return reviewedText;
+  try{
+    const listText = segments.map((s,i) => `${i+1}. ${s}`).join('\n');
+    const escalationPrompt = buildEscalationPrompt();
+    const result = await callClaude(escalationPrompt, [{type:'text', text: listText}], 2048, 'claude-sonnet-5');
+    const fixes = (result.match(/^\[FIX\]\s*(.*)$/gm) || []).map(l => l.replace(/^\[FIX\]\s*/, ''));
+    if(fixes.length !== segments.length) return reviewedText.replace(/\[UNCERTAIN\](.*?)\[\/UNCERTAIN\]/g, '$1'); // nepotrivire - scoatem doar etichetele, pastram varianta initiala
+    let i = 0;
+    return reviewedText.replace(/\[UNCERTAIN\](.*?)\[\/UNCERTAIN\]/g, () => fixes[i++]);
+  }catch(err){
+    return reviewedText.replace(/\[UNCERTAIN\](.*?)\[\/UNCERTAIN\]/g, '$1'); // escaladarea a esuat - scoatem etichetele, pastram varianta initiala nerezolvata
+  }
+}
+
 // traduce/genereaza (Agentul 1), apoi trimite rezultatul catre Agentul 2 pt revizuire gramaticala.
 // plasa de siguranta: daca numarul de perechi [DE]/[RO] nu se potriveste dupa revizuire (semn ca
 // modelul a pierdut/contopit o pereche, mai probabil la texte lungi), pastram rezultatul NErevizuit,
 // nu unul trunchiat - mai bine nerevizuit decat corupt.
+// daca Agentul 2 marcheaza bucati [UNCERTAIN], le escaladam catre Sonnet, doar pe acelea, nu tot textul.
 async function translateWithReview(draftResult){
   const draftPairCount = countTaggedPairs(draftResult);
   if(draftPairCount === 0) return draftResult; // fara etichete (ex. mesaj de redirectionare) - nimic de revizuit
@@ -2595,8 +2635,9 @@ async function translateWithReview(draftResult){
     const reviewPrompt = buildAiReviewPrompt();
     const reviewed = await callClaude(reviewPrompt, [{type:'text', text: draftResult}], 8192);
     const reviewedPairCount = countTaggedPairs(reviewed);
-    if(reviewedPairCount === draftPairCount) return reviewed;
-    return draftResult; // nepotrivire de numar de perechi - pastram varianta nerevizuita, sigura
+    if(reviewedPairCount !== draftPairCount) return draftResult; // nepotrivire de numar de perechi - pastram varianta nerevizuita, sigura
+    if(reviewed.includes('[UNCERTAIN]')) return await escalateUncertainSegments(reviewed);
+    return reviewed;
   }catch(err){
     return draftResult; // revizuirea a esuat (retea etc.) - pastram traducerea initiala, nu blocam utilizatorul
   }
