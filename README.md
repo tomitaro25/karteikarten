@@ -4,6 +4,10 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v88 — text generat mai fidel temei cerute, plus opțiune discretă de susținere**
+- „Exersează ce ai învățat": textul generat rămâne acum clar legat de tema cerută, chiar cu vocabular limitat — găsit prin testare că teme ca „Anul Nou" sau „vacanță de vară" puteau aluneca spre ceva generic ("o zi nouă", "vacanță" fără mențiunea sezonului), fără nicio legătură recognoscibilă cu ce s-a cerut.
+- Buton discret de susținere (Ko-fi), în Setări, sub semnătură — aplicația rămâne complet gratuită, opțiunea ajută doar la acoperirea costului cheii AI folosite la construirea ei; menționat și în Ajutor, ca reper.
+
 **v87 — calitate traducere îmbunătățită, plus escaladare rară către model mai avansat**
 - Agentul 2 (revizuire) verifică acum și acordul participiilor, fidelitatea de sens (nu doar gramatica), și expresiile idiomatice traduse mecanic, greșit — găsite prin testare pe text real.
 - Regulă nouă, critică: dacă Agentul 2 nu e sigur de un cuvânt/expresie, NU mai inventează sau ghicește — marchează explicit acea bucată, iar aplicația trimite **doar acel fragment**, cu context, către un model mai avansat (Sonnet), care-l rezolvă. Cost suplimentar doar rar, când chiar e nevoie, nu la fiecare traducere.
@@ -117,7 +121,7 @@ Vocabularul și traducerile pot conține ocazional imprecizii; verifică indepen
 
 Aplicația **nu costă nimic** și rămâne liberă de folosit — dar dacă vrei să susții proiectul (ex. ca să-mi permit un abonament plătit către Anthropic, folosit chiar la construirea acestei aplicații), poți lăsa o mică donație, complet opțională:
 
-- **Ko-fi** — [ko-fi.com/tomitaro25](https://ko-fi.com/tomitaro25) *(actualizează linkul după ce creezi contul)* — 0% comision pe planul gratuit, nu-ți cere niciun cont special
+- **Ko-fi** — [ko-fi.com/tomitaro25](https://ko-fi.com/tomitaro25) — 0% comision pe planul gratuit, nu-ți cere niciun cont special
 - **GitHub Sponsors** — direct de pe [github.com/tomitaro25](https://github.com/tomitaro25), dacă preferi
 
 Nimic din aplicație nu depinde de donații — toate funcțiile rămân complet gratuite, indiferent dacă susții sau nu proiectul.

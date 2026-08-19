@@ -382,6 +382,7 @@
       <p><b>Backup</b> — salvează tot progresul într-un fișier, ca să nu-l pierzi dacă schimbi telefonul.</p>
       <p>Toate datele (statistici, preferințe) rămân doar pe acest dispozitiv — nimic nu se trimite nicăieri.</p>
       <p><b>🤖 AI (Claude)</b> — funcție separată, cu propriul ajutor dedicat; apasă butonul 🤖 din bara de sus.</p>
+      <p><b>☕ Susține proiectul</b> — aplicația rămâne gratuită, mereu; dacă vrei totuși să ajuți la acoperirea costului cheii AI folosite la construirea ei, găsești un link discret la finalul acestui panou de Setări, sub semnătură.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Căutare vocală 🎤</div>
@@ -524,6 +525,10 @@
 
   <button class="sheet-close" id="closeSheetBtn">Închide</button>
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
+  <div style="text-align:center; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-soft); line-height:1.5;">
+    Aplicația rămâne gratuită, mereu. Dacă vrei să ajuți la acoperirea costului cheii AI folosite la construirea ei —
+    <a href="https://ko-fi.com/tomitaro25" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:underline;">☕ o cafea pe Ko-fi</a>
+  </div>
 </div>
 
 <div class="sheet" id="aiSheet">
@@ -2688,6 +2693,7 @@ Reguli stricte:
 2. Cuvintele din lista dată mai sus trebuie să domine clar textul (minim ~85% din cuvinte). Cuvintele din afara listei rămân sub acest plafon de 15%, folosite doar unde sunt inevitabile — dar tot în ${langName}, niciodată netraduse.
 3. Lungime maximă: ${maxWords} cuvinte. Dacă lista de cuvinte nu permite un text coerent de această lungime (respectând plafonul de 15% de mai sus), scrie un text MAI SCURT, dar NU adăuga cuvinte în afara listei doar ca să atingi lungimea țintă.
 4. Textul trebuie să spună o mică poveste sau descriere cu FIR LOGIC CLAR, ușor de urmărit — fiecare propoziție trebuie să continue logic din cea precedentă (cine face ceva, de ce, ce se întâmplă apoi ca urmare), NU o serie de propoziții separate, disparate, puse una după alta doar ca să folosească vocabularul disponibil. Dacă recitind textul propozițiile par interschimbabile între ele, fără nicio legătură cauzală/temporală clară, textul NU e suficient de coerent — rescrie-l.
+4b. Textul trebuie să rămână CLAR, RECOGNOSCIBIL legat de tema primită — nu doar vag inspirat de ea, sau alunecat spre ceva general/neînrudit doar pentru că-i mai ușor de construit cu vocabularul disponibil. Dacă tema are mai multe cuvinte/părți (ex. "vacanță de vară" = vacanță + calificativul "vară"), NU păstra doar partea generică și nu scăpa calificativul specific — ambele părți ale temei trebuie să rămână recognoscibile în text, nu doar una dintre ele. Dacă vocabularul cunoscut nu conține cuvântul exact al temei (ex. numele unei sărbători specifice), tot trebuie să găsești o cale să faci tema recognoscibilă, cu cuvinte disponibile (ex. anul care se schimbă, sărbătoarea, oamenii care se adună la o dată importantă) — nu înlocui tema cu ceva generic, fără nicio legătură clară cu ea. Exemple concrete de evitat: (1) pentru tema "Anul Nou", NU scrie un text vag despre "o zi nouă" oarecare, fără nicio referire la an/sărbătoare/dată — folosește cel puțin cuvinte ca "Jahr" (an), dacă e în lista cunoscută; (2) pentru tema "vacanță de vară", NU scrie doar despre "Ferien" (vacanță, generic), fără nicio mențiune a sezonului — folosește și cuvântul "Sommer" (vară), dacă e în lista cunoscută, ca ambele părți ale temei să rămână clar recognoscibile, nu doar jumătate din ea.
 5. La partea în ROMÂNĂ (fie textul principal, dacă limba țintă e română, fie traducerea, la pasul 7 de mai jos), verifică mereu acordul de gen și număr al substantivului ales cu articolul folosit — o greșeală comună e alegerea formei greșite de plural/singular a substantivului, cu un articol care nu se potrivește gramatical cu ea. Exemplu concret al acestei greșeli, de evitat: NU scrie "o ajutoare" (greșit — "ajutoare" e pluralul lui "ajutor", nu poate fi articulat cu "o" la singular) — corect: "un ajutor". Verifică mereu acest tip de potrivire înainte să finalizezi orice propoziție română.
 6. Dacă lista de cuvinte e goală sau prea mică pentru orice text coerent pe temă, scrie un mesaj scurt în ${langName} explicând asta (fără etichete [DE]/[RO] în acest caz).
 7. Altfel, după ce scrii textul, tradu-l în ${otherLangName}, propoziție cu propoziție, în formatul EXACT: pentru fiecare propoziție, o pereche de linii:
