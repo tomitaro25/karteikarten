@@ -133,6 +133,8 @@
   .help-text p:last-child{ margin-bottom:0; }
   .tag{ border:1px solid var(--line); border-radius:20px; padding:3px 10px; }
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
+  .sep-tag{ color:var(--der); border-color:var(--der); }
+  .sep-prefix{ color:var(--der); font-weight:700; }
   .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:8px; }
   .verb-person{ font-size:1.05rem; font-weight:700; letter-spacing:0; text-transform:none; color:var(--ink); font-family:'Literata', serif; }
@@ -370,9 +372,11 @@
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Nivelul „Conjugare verbe"</div>
-      <p>Vezi infinitivul unui verb și persoana cerută (ich, du, er/sie/es, wir, ihr, sie/Sie) — alegi forma corect conjugată, la <b>Präsens</b> (prezent) sau <b>Perfekt</b> (trecut compus).</p>
-      <p>La Perfekt, răspunsul corect include și auxiliarul potrivit (<i>haben</i> sau <i>sein</i>) — unele verbe (mai ales cele de mișcare, ca „gehen" sau „kommen") folosesc <i>sein</i>, nu <i>haben</i>.</p>
+      <p>Vezi infinitivul unui verb și persoana cerută (ich, du, er/sie/es, wir, ihr, sie/Sie) — alegi forma corect conjugată, la unul din 5 timpuri: <b>Präsens</b> (prezent), <b>Perfekt</b> (trecut compus), <b>Plusquamperfekt</b> (mai mult ca perfectul), <b>Futur I</b> (viitor), sau <b>Konjunktiv II</b> (condițional).</p>
+      <p>La Perfekt și Plusquamperfekt, răspunsul corect include și auxiliarul potrivit (<i>haben</i> sau <i>sein</i>) — unele verbe (mai ales cele de mișcare, ca „gehen" sau „kommen") folosesc <i>sein</i>, nu <i>haben</i>.</p>
+      <p>La Konjunktiv II, câteva verbe foarte comune (sein, haben, werden și verbele modale) au o formă proprie, scurtă (<i>wäre</i>, <i>hätte</i>, <i>könnte</i> etc.) — restul verbelor folosesc construcția cu <i>würde</i> + infinitiv.</p>
       <p>Distractorii sunt mereu alte forme ale <b>aceluiași verb</b> — testează exact terminația corectă, nu doar dacă recunoști verbul.</p>
+      <p><b>Verbe separabile</b> (ex. <i>auf·hören</i>, cu punct median în infinitiv) au prefixul colorat, albastru, oriunde apare — la Präsens, ca ultim cuvânt separat; la celelalte timpuri, fuzionat cu participiul sau infinitivul. O etichetă mică, „↔ verb separabil", apare pe card doar la aceste verbe.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Alte funcții utile</div>
@@ -1355,11 +1359,70 @@ const VERB_DATA = [
   ["bemerken", ["bemerke","bemerkst","bemerkt","bemerken","bemerkt","bemerken"], "haben", "bemerkt"],
   ["gefallen", ["gefalle","gefällst","gefällt","gefallen","gefallt","gefallen"], "haben", "gefallen"],
   ["aussehen", ["sehe aus","siehst aus","sieht aus","sehen aus","seht aus","sehen aus"], "haben", "ausgesehen"],
-  ["verbringen", ["verbringe","verbringst","verbringt","verbringen","verbringt","verbringen"], "haben", "verbracht"]
+  ["verbringen", ["verbringe","verbringst","verbringt","verbringen","verbringt","verbringen"], "haben", "verbracht"],
+  ["anfangen", ["fange an","fängst an","fängt an","fangen an","fangt an","fangen an"], "haben", "angefangen"],
+  ["mitnehmen", ["nehme mit","nimmst mit","nimmt mit","nehmen mit","nehmt mit","nehmen mit"], "haben", "mitgenommen"],
+  ["einladen", ["lade ein","lädst ein","lädt ein","laden ein","ladet ein","laden ein"], "haben", "eingeladen"],
+  ["aufpassen", ["passe auf","passt auf","passt auf","passen auf","passt auf","passen auf"], "haben", "aufgepasst"],
+  ["mitkommen", ["komme mit","kommst mit","kommt mit","kommen mit","kommt mit","kommen mit"], "sein", "mitgekommen"],
+  ["vorbereiten", ["bereite vor","bereitest vor","bereitet vor","bereiten vor","bereitet vor","bereiten vor"], "haben", "vorbereitet"],
+  ["abholen", ["hole ab","holst ab","holt ab","holen ab","holt ab","holen ab"], "haben", "abgeholt"],
+  ["aufstehen", ["stehe auf","stehst auf","steht auf","stehen auf","steht auf","stehen auf"], "sein", "aufgestanden"],
+  ["zurückkommen", ["komme zurück","kommst zurück","kommt zurück","kommen zurück","kommt zurück","kommen zurück"], "sein", "zurückgekommen"],
+  ["aufmachen", ["mache auf","machst auf","macht auf","machen auf","macht auf","machen auf"], "haben", "aufgemacht"],
+  ["anziehen", ["ziehe an","ziehst an","zieht an","ziehen an","zieht an","ziehen an"], "haben", "angezogen"],
+  ["zuhören", ["höre zu","hörst zu","hört zu","hören zu","hört zu","hören zu"], "haben", "zugehört"],
+  ["ankommen", ["komme an","kommst an","kommt an","kommen an","kommt an","kommen an"], "sein", "angekommen"],
+  ["aufwachen", ["wache auf","wachst auf","wacht auf","wachen auf","wacht auf","wachen auf"], "sein", "aufgewacht"],
+  ["ausziehen", ["ziehe aus","ziehst aus","zieht aus","ziehen aus","zieht aus","ziehen aus"], "haben", "ausgezogen"],
+  ["einkaufen", ["kaufe ein","kaufst ein","kauft ein","kaufen ein","kauft ein","kaufen ein"], "haben", "eingekauft"],
+  ["aussteigen", ["steige aus","steigst aus","steigt aus","steigen aus","steigt aus","steigen aus"], "sein", "ausgestiegen"],
+  ["weggehen", ["gehe weg","gehst weg","geht weg","gehen weg","geht weg","gehen weg"], "sein", "weggegangen"],
+  ["umziehen", ["ziehe um","ziehst um","zieht um","ziehen um","zieht um","ziehen um"], "sein", "umgezogen"],
+  ["einsteigen", ["steige ein","steigst ein","steigt ein","steigen ein","steigt ein","steigen ein"], "sein", "eingestiegen"],
+  ["aufräumen", ["räume auf","räumst auf","räumt auf","räumen auf","räumt auf","räumen auf"], "haben", "aufgeräumt"],
+  ["stattfinden", ["finde statt","findest statt","findet statt","finden statt","findet statt","finden statt"], "haben", "stattgefunden"],
+  ["teilnehmen", ["nehme teil","nimmst teil","nimmt teil","nehmen teil","nehmt teil","nehmen teil"], "haben", "teilgenommen"],
+  ["zumachen", ["mache zu","machst zu","macht zu","machen zu","macht zu","machen zu"], "haben", "zugemacht"],
+  ["fernsehen", ["sehe fern","siehst fern","sieht fern","sehen fern","seht fern","sehen fern"], "haben", "ferngesehen"],
+  ["einschlafen", ["schlafe ein","schläfst ein","schläft ein","schlafen ein","schlaft ein","schlafen ein"], "sein", "eingeschlafen"],
+  ["aufwecken", ["wecke auf","weckst auf","weckt auf","wecken auf","weckt auf","wecken auf"], "haben", "aufgeweckt"],
+  ["loslassen", ["lasse los","lässt los","lässt los","lassen los","lasst los","lassen los"], "haben", "losgelassen"],
+  ["wegwerfen", ["werfe weg","wirfst weg","wirft weg","werfen weg","werft weg","werfen weg"], "haben", "weggeworfen"],
+  ["abmelden", ["melde ab","meldest ab","meldet ab","melden ab","meldet ab","melden ab"], "haben", "abgemeldet"],
+  ["einloggen", ["logge ein","loggst ein","loggt ein","loggen ein","loggt ein","loggen ein"], "haben", "eingeloggt"],
+  ["ausloggen", ["logge aus","loggst aus","loggt aus","loggen aus","loggt aus","loggen aus"], "haben", "ausgeloggt"],
+  ["vorbeigehen", ["gehe vorbei","gehst vorbei","geht vorbei","gehen vorbei","geht vorbei","gehen vorbei"], "sein", "vorbeigegangen"],
+  ["durchfallen", ["falle durch","fällst durch","fällt durch","fallen durch","fallt durch","fallen durch"], "sein", "durchgefallen"],
+  ["hinsetzen", ["setze hin","setzt hin","setzt hin","setzen hin","setzt hin","setzen hin"], "haben", "hingesetzt"],
+  ["zurücklegen", ["lege zurück","legst zurück","legt zurück","legen zurück","legt zurück","legen zurück"], "haben", "zurückgelegt"],
+  ["aufessen", ["esse auf","isst auf","isst auf","essen auf","esst auf","essen auf"], "haben", "aufgegessen"]
 ];
 const AUX_FORMS = {
   haben: ["habe","hast","hat","haben","habt","haben"],
   sein: ["bin","bist","ist","sind","seid","sind"]
+};
+// Präteritum al auxiliarelor (haben/sein), folosit pt Plusquamperfekt = aux la Präteritum + participiu
+const AUX_PRATERITUM_FORMS = {
+  haben: ["hatte","hattest","hatte","hatten","hattet","hatten"],
+  sein: ["war","warst","war","waren","wart","waren"]
+};
+// werden la Präsens, folosit pt Futur I = werden conjugat + infinitiv
+const WERDEN_FORMS = ["werde","wirst","wird","werden","werdet","werden"];
+// würde (Konjunktiv II analitic), folosit la majoritatea verbelor: würde + infinitiv
+const WUERDE_FORMS = ["würde","würdest","würde","würden","würdet","würden"];
+// Konjunktiv II SINTETIC, pt cele cateva verbe unde forma sintetica e cea naturala/uzuala
+// (nu "würde sein" ci "wäre", nu "würde können" ci "könnte" etc.) - restul verbelor
+// folosesc forma analitica (würde + infinitiv), calculata direct, fara tabel separat
+const KONJUNKTIV2_SYNTHETIC = {
+  "sein": ["wäre","wärst","wäre","wären","wärt","wären"],
+  "haben": ["hätte","hättest","hätte","hätten","hättet","hätten"],
+  "werden": ["würde","würdest","würde","würden","würdet","würden"],
+  "können": ["könnte","könntest","könnte","könnten","könntet","könnten"],
+  "müssen": ["müsste","müsstest","müsste","müssten","müsstet","müssten"],
+  "wollen": ["wollte","wolltest","wollte","wollten","wolltet","wollten"],
+  "sollen": ["sollte","solltest","sollte","sollten","solltet","sollten"],
+  "dürfen": ["dürfte","dürftest","dürfte","dürften","dürftet","dürften"]
 };
 
 function buildVerbEntries(){
@@ -1368,61 +1431,123 @@ function buildVerbEntries(){
     for(let p=0; p<6; p++){
       entries.push({id:`VERB-PR-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'praesens', person:p});
       entries.push({id:`VERB-PF-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'perfekt', person:p});
+      entries.push({id:`VERB-FU-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'futur1', person:p});
+      entries.push({id:`VERB-PQ-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'plusquamperfekt', person:p});
+      entries.push({id:`VERB-KJ-${vi}-${p}`, level:'VERBS', verbIdx:vi, tense:'konjunktiv2', person:p});
     }
   });
   return entries;
 }
 const VERB_ENTRIES = buildVerbEntries();
 
-function buildVerbQuestion(entry){
-  const [inf, pr, aux, pp] = VERB_DATA[entry.verbIdx];
-  const personLabel = PERSONS[entry.person];
-  let correctVal, allFormsThisTense;
-  if(entry.tense === 'praesens'){
-    correctVal = pr[entry.person];
-    allFormsThisTense = pr;
-  } else {
-    const auxForms = AUX_FORMS[aux];
-    allFormsThisTense = auxForms.map(a => `${a} ${pp}`);
-    correctVal = allFormsThisTense[entry.person];
+// calculeaza toate cele 6 forme (o persoana per index) pt un verb dat, intr-un timp dat -
+// centralizat intr-o singura functie, folosita atat pt raspunsul corect cat si pt distractori
+function computeVerbForms(verbData, tense){
+  const [inf, pr, aux, pp] = verbData;
+  switch(tense){
+    case 'praesens': return pr;
+    case 'perfekt': return AUX_FORMS[aux].map(a => `${a} ${pp}`);
+    case 'futur1': return WERDEN_FORMS.map(w => `${w} ${inf}`);
+    case 'plusquamperfekt': return AUX_PRATERITUM_FORMS[aux].map(a => `${a} ${pp}`);
+    case 'konjunktiv2': return KONJUNKTIV2_SYNTHETIC[inf] || WUERDE_FORMS.map(w => `${w} ${inf}`);
   }
-  // distractori: celelalte 5 persoane ale ACELUIASI verb, in ACELASI timp -
-  // testeaza exact terminatia corecta, nu doar recunoasterea verbului
-  const otherForms = allFormsThisTense.filter((f,i) => i !== entry.person && f !== correctVal);
-  let distractorPool = shuffle([...new Set(otherForms)]);
-  // pt Perfekt, adaugam si un distractor cu auxiliarul GRESIT (testeaza haben/sein), la persoana corecta
-  if(entry.tense === 'perfekt'){
+}
+const TENSE_LABELS = {
+  praesens: 'Präsens', perfekt: 'Perfekt', futur1: 'Futur I',
+  plusquamperfekt: 'Plusquamperfekt', konjunktiv2: 'Konjunktiv II'
+};
+// timpurile care folosesc un auxiliar (haben/sein) inaintea participiului - la ele are sens
+// distractorul "auxiliar gresit"; celelalte (praesens/futur1/konjunktiv2) nu au acest concept
+const AUX_BASED_TENSES = new Set(['perfekt', 'plusquamperfekt']);
+
+// verbe separabile: prefixul apare ca ultimul cuvant separat la Prasens ("hoere auf") -
+// il extragem direct de-acolo, nu-i nevoie de o lista noua, separata, de date
+function getSeparablePrefix(verbData){
+  const praesensIch = verbData[1][0];
+  if(!praesensIch.includes(' ')) return null;
+  return praesensIch.split(' ')[1];
+}
+// afisarea infinitivului cu punct median, conventia din dictionarele germane (auf·hören) -
+// doar pt verbele separabile; restul raman neschimbate
+function formatInfinitiveDisplay(verbData){
+  const prefix = getSeparablePrefix(verbData);
+  if(!prefix) return verbData[0];
+  return `${prefix}·${verbData[0].slice(prefix.length)}`;
+}
+// coloreaza prefixul separabil oriunde apare intr-o forma conjugata - fie ca ultim cuvant
+// intreg (Prasens: "hoere auf"), fie ca inceput al ultimului cuvant (restul timpurilor,
+// unde prefixul e fuzionat cu participiul sau infinitivul: "aufgehoert", "aufhoeren")
+function highlightSeparablePrefix(formStr, prefix){
+  if(!prefix) return escapeHtml(formStr);
+  const tokens = formStr.split(' ');
+  const lastIdx = tokens.length - 1;
+  const lastToken = tokens[lastIdx];
+  let highlightedLast;
+  if(lastToken === prefix){
+    highlightedLast = `<span class="sep-prefix">${escapeHtml(prefix)}</span>`;
+  } else if(lastToken.startsWith(prefix)){
+    highlightedLast = `<span class="sep-prefix">${escapeHtml(prefix)}</span>${escapeHtml(lastToken.slice(prefix.length))}`;
+  } else {
+    highlightedLast = escapeHtml(lastToken); // plasa de siguranta, nu ar trebui sa ajunga aici
+  }
+  const otherTokens = tokens.slice(0, lastIdx).map(escapeHtml);
+  return [...otherTokens, highlightedLast].join(' ');
+}
+
+function buildVerbQuestion(entry){
+  const verbData = VERB_DATA[entry.verbIdx];
+  const [inf, pr, aux, pp] = verbData;
+  const personLabel = PERSONS[entry.person];
+  const myPrefix = getSeparablePrefix(verbData);
+  const allFormsThisTense = computeVerbForms(verbData, entry.tense);
+  const correctVal = allFormsThisTense[entry.person];
+  // distractori: celelalte 5 persoane ale ACELUIASI verb, in ACELASI timp - pastram si verbData
+  // de origine a fiecarei forme (aici, mereu verbData, verbul curent), ca sa stim ce prefix sa
+  // coloram la afisare (relevant doar pt verbele separabile)
+  const otherForms = allFormsThisTense
+    .map(f => ({value: f, verbData}))
+    .filter((o,i) => i !== entry.person && o.value !== correctVal);
+  let distractorPool = shuffle(otherForms.filter((o,i,arr) => arr.findIndex(x=>x.value===o.value) === i));
+  // pt timpurile cu auxiliar (Perfekt/Plusquamperfekt), adaugam un distractor cu auxiliarul
+  // GRESIT (testeaza haben/sein), la persoana corecta - tot din verbul curent, deci acelasi prefix
+  if(AUX_BASED_TENSES.has(entry.tense)){
     const wrongAux = aux === 'haben' ? 'sein' : 'haben';
-    const wrongAuxForm = `${AUX_FORMS[wrongAux][entry.person]} ${pp}`;
-    if(wrongAuxForm !== correctVal) distractorPool.unshift(wrongAuxForm);
+    const wrongAuxForms = entry.tense === 'perfekt' ? AUX_FORMS[wrongAux] : AUX_PRATERITUM_FORMS[wrongAux];
+    const wrongAuxForm = `${wrongAuxForms[entry.person]} ${pp}`;
+    if(wrongAuxForm !== correctVal) distractorPool.unshift({value: wrongAuxForm, verbData});
   }
   const distractors = [];
-  for(const f of distractorPool){
+  for(const o of distractorPool){
     if(distractors.length === 3) break;
-    if(!distractors.includes(f)) distractors.push(f);
+    if(!distractors.some(d=>d.value===o.value)) distractors.push(o);
   }
   // plasa de siguranta: cateva verbe (heissen, setzen, sitzen, benutzen etc.) au radacina
   // terminata in s/ss/z/tz, unde "du" si "er/sie/es" coincid la Prasens - raman doar 3 forme
   // unice din 6, insuficient pt 3 distractori. Completam cu forme de la ALTE verbe, la aceeasi
-  // persoana/timp - tot testeaza corect daca stii forma potrivita pt verbul intrebat.
+  // persoana/timp - tot testeaza corect daca stii forma potrivita pt verbul intrebat. Pastram
+  // verbData-ul ACELUI verb (nu al celui intrebat), ca prefixul colorat sa fie cel corect al lui.
   if(distractors.length < 3){
     const otherVerbIdxs = shuffle(VERB_DATA.map((_,i)=>i).filter(i=>i!==entry.verbIdx));
     for(const vi2 of otherVerbIdxs){
       if(distractors.length === 3) break;
-      const [,pr2,aux2,pp2] = VERB_DATA[vi2];
-      const f = entry.tense === 'praesens' ? pr2[entry.person] : `${AUX_FORMS[aux2][entry.person]} ${pp2}`;
-      if(f !== correctVal && !distractors.includes(f)) distractors.push(f);
+      const otherVerbData = VERB_DATA[vi2];
+      const f = computeVerbForms(otherVerbData, entry.tense)[entry.person];
+      if(f !== correctVal && !distractors.some(d=>d.value===f)) distractors.push({value: f, verbData: otherVerbData});
     }
   }
-  const correct = {value: correctVal, html: escapeHtml(correctVal)};
-  const options = shuffle([correct, ...distractors.map(f=>({value:f, html:escapeHtml(f)}))]);
-  const tenseLabel = entry.tense === 'praesens' ? 'Präsens' : 'Perfekt';
+  const correct = {value: correctVal, html: highlightSeparablePrefix(correctVal, myPrefix)};
+  const options = shuffle([
+    correct,
+    ...distractors.map(d => ({value: d.value, html: highlightSeparablePrefix(d.value, getSeparablePrefix(d.verbData))}))
+  ]);
+  const tenseLabel = TENSE_LABELS[entry.tense];
   return {
     id: entry.id,
-    prompt: {value: inf, html: escapeHtml(inf)},
+    prompt: {value: inf, html: escapeHtml(formatInfinitiveDisplay(verbData))},
     correct, options,
     promptSide: 'de', answerSide: 'de',
     direction: tenseLabel,
+    isSeparable: !!myPrefix,
     questionLabel: `<span class="verb-person">${personLabel}</span>`
   };
 }
@@ -1540,6 +1665,7 @@ function renderQuestion(){
     <div class="tag-row">
       <span class="tag direction-tag">${q.direction}</span>
       <span class="tag">${currentIndex+1}/${roundQuestions.length}</span>
+      ${q.isSeparable ? '<span class="tag sep-tag">↔ verb separabil</span>' : ''}
       ${wordStageStars(q.id)}
       <button class="skip-btn" id="skipBtn">Sari →</button>
     </div>

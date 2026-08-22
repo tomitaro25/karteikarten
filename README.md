@@ -4,6 +4,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v90 — extindere majoră: 3 timpuri noi, verbe separabile marcate vizual, 37 verbe noi, plus corecții acumulate**
+- Modulul de conjugare primește 3 timpuri noi: **Plusquamperfekt** (mai mult ca perfectul), **Futur I** (viitor), **Konjunktiv II** (condițional — formă sintetică pentru verbele foarte comune precum sein/haben/modalele, formă analitică cu „würde" pentru restul).
+- Verbele separabile (ex. „aufhören") sunt acum marcate vizual: infinitiv cu punct median (`auf·hören`, convenția din dicționare), prefix colorat oriunde apare în răspunsuri, etichetă discretă pe card.
+- Modulul de conjugare crește de la 100 la **137 de verbe** (4110 întrebări, față de 1200 inițial) — 24 verbe separabile suplimentare, deja existente în vocabular, plus „fernsehen" și încă 12 verbe complet noi.
+- Vocabularul general crește cu 13 cuvinte noi (7120→7133): „fernsehen" la A1, restul la Suplimentar.
+- Verificat programatic: 4110 combinații testate exhaustiv (137 verbe × 5 timpuri × 6 persoane), 0 eșecuri.
+- Text de susținere (Ko-fi) reformulat mai general — „susții întreținerea și dezvoltarea" în loc de o mențiune tehnică prea specifică.
+
 **v88 — text generat mai fidel temei cerute, plus opțiune discretă de susținere**
 - „Exersează ce ai învățat": textul generat rămâne acum clar legat de tema cerută, chiar cu vocabular limitat — găsit prin testare că teme ca „Anul Nou" sau „vacanță de vară" puteau aluneca spre ceva generic ("o zi nouă", "vacanță" fără mențiunea sezonului), fără nicio legătură recognoscibilă cu ce s-a cerut.
 - Buton discret de susținere (Ko-fi), în Setări, sub semnătură — aplicația rămâne complet gratuită, opțiunea ajută doar cine vrea să susțină întreținerea și dezvoltarea ei în continuare; menționat și în Ajutor, ca reper.
@@ -70,7 +78,7 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 - **Căutare vocală** (🎤, unde browserul o suportă) — rostești un cuvânt în română sau germană, aplicația îl caută în listă și afișează + pronunță rezultatul; tolerantă la lipsa diacriticelor și la articolele germane rostite din reflex
 - **Adaugă cuvinte care lipsesc din listă** — dacă o căutare scrisă nu găsește nimic, poți verifica traducerea pe dict.cc și adăuga cuvântul manual, cu ajutor de lipire din clipboard; rămâne salvat permanent, ca nivel separat ("Cuvintele mele"), exportabil CSV
 - **Antonime & Sinonime** — nivel nou, exclusiv în germană (213 perechi, 426 de întrebări, generate automat în ambele sensuri): vezi un cuvânt, alegi opusul sau apropiatul ca sens, din 4 variante tot germane, cu ascultare și dict.cc disponibile pe fiecare după ce răspunzi
-- **Conjugare verbe** — nivel nou, complet (toate cele 100 din cele mai comune verbe germane, extrase din aceeași sursă de frecvență): vezi infinitivul, alegi forma corectă la Präsens sau Perfekt, pentru persoana cerută (1200 de întrebări); distractorii sunt mereu alte forme ale aceluiași verb; include și verbe cu prefix separabil (aufhören, anrufen, vorstellen, aussehen)
+- **Conjugare verbe** — nivel extins (137 verbe germane comune, incluzând 41 verbe separabile, cu prefix marcat vizual — punct median în infinitiv, prefix colorat în răspunsuri, etichetă pe card): vezi infinitivul, alegi forma corectă la Präsens, Perfekt, Plusquamperfekt, Futur I, sau Konjunktiv II, pentru persoana cerută (4110 de întrebări); distractorii sunt mereu alte forme ale aceluiași verb
 - **🤖 AI (Claude) — traducere liberă, experimental** — funcție opțională, separată de restul aplicației: folosește propria ta cheie API de la Anthropic pentru a traduce orice text (nu doar cele ~7000 de cuvinte din listă), dictat sau scris, cu detectare automată română/germană și traducere naturală (nu cuvânt-cu-cuvânt); acceptă și imagini cu text (poze, screenshot-uri); text lung se aliniază automat propoziție-cu-propoziție; rezultatul se descarcă ca `.txt` sau `.pdf` (prin funcția de printare a telefonului). Cheia rămâne salvată doar pe dispozitiv, costul folosirii se plătește direct către Anthropic — detalii complete și pașii de obținere a cheii, în tab-ul de Ajutor din aplicație.
 - **Backup complet** — exportă/restaurează tot progresul (statistici, preferințe, greșeli, streak) ca fișier `.json`
 - **Prompt de instalare** — banner automat pe Android/Chrome (instalare cu un tap) și instrucțiuni clare pe iOS Safari (unde Apple nu permite instalare programatică)
