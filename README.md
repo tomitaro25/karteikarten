@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v91 — modul nou (AI): „🆕 Cuvinte noi în context"**
+- Alege automat până la 5 cuvinte văzute abia o dată sau de două ori (indiferent dacă răspunsul a fost corect) — selecția se face direct în cod, din progresul local, fără niciun apel AI, gratuit și instant.
+- Generează 3 texte scurte, independente, fiecare cu temă proprie, în care cele 5 cuvinte apar natural — conjugate/declinate cum cere gramatica reală, nu forțate la forma de bază.
+- Cuvintele țintă sunt evidențiate cu roșu, oriunde apar, indiferent de forma exactă folosită — un al treilea pas dedicat (după generare și revizuire gramaticală) cere modelului să marcheze el însuși formele exacte folosite, cu verificare de siguranță pe fiecare linie, ca marcarea să nu poată altera și textul.
+- Traducere română vizibilă direct (nu ascunsă), ascultare disponibilă imediat pentru fiecare text.
+
 **v90 — extindere majoră: 3 timpuri noi, verbe separabile marcate vizual, 37 verbe noi, plus corecții acumulate**
 - Modulul de conjugare primește 3 timpuri noi: **Plusquamperfekt** (mai mult ca perfectul), **Futur I** (viitor), **Konjunktiv II** (condițional — formă sintetică pentru verbele foarte comune precum sein/haben/modalele, formă analitică cu „würde" pentru restul).
 - Verbele separabile (ex. „aufhören") sunt acum marcate vizual: infinitiv cu punct median (`auf·hören`, convenția din dicționare), prefix colorat oriunde apare în răspunsuri, etichetă discretă pe card.
