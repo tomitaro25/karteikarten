@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v94 — 5 corecții suplimentare la „Cuvinte noi în context", găsite prin testare intensivă**
+- **Generarea eșua complet** (toate cele 3 texte „lipsă"), atât la selecție automată cât și manuală — cauza probabilă: o instrucțiune de prompt care invita modelul să scrie vizibil verificarea lui, stricând formatul strict așteptat. Simplificat, cu interdicție explicită de comentarii vizibile în răspuns.
+- **Plasă de siguranță nouă la parsare** — dacă formatul `[TEXT1]/[TEXT2]/[TEXT3]` ar lipsi complet din răspuns (orice motiv), aplicația recuperează acum liniile de traducere existente și le împarte aproximativ în 3, în loc să afișeze „text lipsă" la toate.
+- **Cuvinte compuse/expresii** (ex. „Chef, -s / Chefin", „dank (Präposition)") — în loc să fie excluse din selecție, se extrage acum forma utilizabilă (până la primul spațiu sau `/`), păstrând afișarea completă către utilizator neschimbată.
+- **Nivelul dedus din cuvintele alese nu ajungea explicit în prompt** — era folosit doar indirect (restrângerea vocabularului), fără să i se spună clar modelului „scrie la nivel A1-A2/B1-B2". Corectat — nivelul e acum menționat explicit, cu instrucțiune și despre complexitatea gramaticală potrivită.
+- Verificat programatic: toate cele 5 corecții testate izolat, cu exemple reale din date.
+
 **v93 — 5 corecții la „Cuvinte noi în context", găsite prin testare**
 - **Roșu pierdut în Istoric** — corectat: se salvează acum textul final (marcat + revizuit), nu ciorna brută; parserul comun recunoaște marcajele oriunde apar, inclusiv la redeschiderea unei intrări vechi.
 - **Cuvinte inconsistente între cele 3 texte** — regulă de prompt mai fermă, plus verificare programatică (dacă un text nu conține toate cuvintele-țintă, se reîncearcă generarea o singură dată).

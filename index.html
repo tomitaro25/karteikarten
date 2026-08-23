@@ -2700,7 +2700,7 @@ document.getElementById('aiNewWordsManualGenerateBtn').addEventListener('click',
   if(!pendingManualWords.length) return;
   const knownWords = getKnownWordsForLevelGroup(pendingManualLevel);
   const knownPool = [...knownWords.core, ...knownWords.helpers];
-  await generateNewWordsTexts(pendingManualWords, knownPool);
+  await generateNewWordsTexts(pendingManualWords, knownPool, pendingManualLevel);
 });
 
 function renderLevelProgress(){
@@ -3136,6 +3136,16 @@ Reguli stricte:
 /* ---------- AI: "Cuvinte noi in context" ---------- */
 // selecteaza pana la 5 cuvinte vazute o data sau de doua ori (attempts 1 sau 2), indiferent
 // daca raspunsul a fost corect - din TOATE nivelurile (nu grupate), din BUILTIN + myWords
+// extrage forma utilizabila a unui cuvant din campul "de", oprindu-se la primul separator
+// (spatiu sau /) - util la intrari compuse: perechi masculin/feminin ("Chef, -s / Chefin" ->
+// "Chef"), expresii/note ("dank (Präposition)" -> "dank", "für/gegen etwas sprechen" -> "für")
+// afisarea catre utilizator ramane intotdeauna forma completa din flashcard, doar ce trimitem
+// spre Claude foloseste forma extrasa, curata
+function extractCoreWord(deField){
+  const m = deField.match(/^[^\s\/]+/);
+  let core = m ? m[0] : deField;
+  return core.replace(/[,.;:]+$/, '');
+}
 function pickFreshWords(){
   const eligible = BUILTIN.concat(myWords).filter(w=>{
     const s = wordStats[w.id];
@@ -3156,23 +3166,25 @@ function deriveLevelGroupFromWords(words){
   });
   return b1b2Count > a1a2Count ? 'b1b2' : 'a1a2';
 }
-function buildNewWordsPrompt(targetWords, knownWordsAll){
-  const targetList = targetWords.map(w=>w.de).join(', ');
+function buildNewWordsPrompt(targetWords, knownWordsAll, levelGroup){
+  const targetList = targetWords.map(w=>extractCoreWord(w.de)).join(', ');
   const knownListTxt = knownWordsAll.length ? knownWordsAll.join(', ') : '(nu are inca alte cuvinte cunoscute)';
-  return `Ești un profesor de germană care ajută un elev să vadă cuvinte noi, abia întâlnite, în context real, de mai multe ori, în situații diferite, exact cum apar în vorbirea/scrierea germană curentă.
+  const levelTxt = levelGroup === 'b1b2' ? 'B1-B2 (intermediar)' : 'A1-A2 (începător)';
+  return `Ești un profesor de germană care ajută un elev, de nivel ${levelTxt} (CEFR), să vadă cuvinte noi, abia întâlnite, în context real, de mai multe ori, în situații diferite, exact cum apar în vorbirea/scrierea germană curentă.
 
 Cuvintele ȚINTĂ (elevul le-a văzut abia o dată sau de două ori, nu le știe încă bine — sunt date la forma de bază/dicționar, DOAR ca referință de sens): ${targetList}
 Restul vocabularului pe care elevul îl cunoaște deja bine, de folosit pentru restul textului (păstrează totul ușor de înțeles, nu doar cuvintele țintă): ${knownListTxt}
 
 Sarcina ta:
 1. Generează EXACT 3 texte scurte, INDEPENDENTE, fiecare cu un subiect propriu, diferit clar de celelalte două (nu 3 variații ale aceleiași idei sau situații) — de exemplu, dacă un text e despre o zi la birou, celelalte două nu mai sunt tot despre birou.
-2. FIECARE din cele 3 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar în unele texte. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5, al treilea doar 3 — FIECARE din cele 3 texte trebuie să conțină, separat, TOATE cele 5. Înainte să treci la textul următor, numără explicit, pentru textul pe care tocmai l-ai scris: câte din cuvintele țintă apar în el? Dacă răspunsul e mai mic decât numărul total de cuvinte țintă primite, rescrie ACEL text, adăugând cuvintele lipsă, înainte să continui.
+2. FIECARE din cele 3 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar în unele texte. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5, al treilea doar 3 — FIECARE din cele 3 texte trebuie să conțină, separat, TOATE cele 5. Verifică intern, înainte de a preda răspunsul, că fiecare text le conține pe toate — dacă lipsește vreunul dintr-un text, rescrie doar acel text. IMPORTANT: nu include în răspuns nicio verificare, numărătoare, explicație sau comentariu vizibil — doar cele 3 texte, exact în formatul cerut mai jos, nimic altceva.
 3. IMPORTANT — cuvintele țintă sunt date la forma de bază DOAR ca referință de sens, NU ca formă obligatorie de folosit. Folosește-le NATURAL, la orice formă gramaticală corectă cere contextul (conjugate, declinate, la plural, la alt caz) — scopul e ca elevul să vadă germana REALĂ, vorbită/scrisă curent, nu propoziții artificiale construite doar ca să păstreze forma de dicționar. NU forța forma de bază dacă gramatica sau naturalețea cer altă formă — corectitudinea gramaticală și naturalețea au prioritate absolută asupra păstrării formei exacte din listă.
 4. Restul cuvintelor din text (în afara celor țintă) vino din lista de cuvinte cunoscute de mai sus, pe cât posibil — conectori gramaticali de bază (articole, pronume, prepoziții comune, "a fi"/"a avea") sunt mereu permiși, chiar dacă nu apar explicit în listă.
 5. Fiecare text: 3-5 propoziții, cu FIR LOGIC CLAR — fiecare propoziție continuă logic din precedenta (cine face ceva, de ce, ce urmează), nu propoziții disparate puse una după alta doar ca să introducă cuvintele țintă.
-6. NICIODATĂ nu lăsa vreun cuvânt netradus, dintr-o limbă în cealaltă, strecurat în text.
-7. La partea română, verifică acordul de gen și număr al substantivelor cu articolele lor (ex. NU "o ajutoare", corect "un ajutor").
-8. Scrie fiecare text STRICT în germană, apoi tradu-l propoziție cu propoziție în română.
+6. NIVEL DE COMPLEXITATE — pe lângă vocabular, ȘI structura gramaticală/lungimea propozițiilor trebuie să corespundă nivelului ${levelTxt}: la A1-A2, propoziții scurte, structuri simple, fără subordonate multiple; la B1-B2, propoziții ceva mai complexe sunt acceptabile, dar tot clare, nu suprîncărcate.
+7. NICIODATĂ nu lăsa vreun cuvânt netradus, dintr-o limbă în cealaltă, strecurat în text.
+8. La partea română, verifică acordul de gen și număr al substantivelor cu articolele lor (ex. NU "o ajutoare", corect "un ajutor").
+9. Scrie fiecare text STRICT în germană, apoi tradu-l propoziție cu propoziție în română.
 
 Format de ieșire EXACT, obligatoriu — respectă-l STRICT, inclusiv etichetele [TEXT1]/[/TEXT1] etc., care încadrează fiecare text (aplicația le citește programatic):
 [TEXT1]
@@ -3214,9 +3226,29 @@ function stripMarkers(s){ return s.replace(/\{\{|\}\}/g, ''); }
 function splitIntoThreeTexts(raw){
   const blocks = [];
   for(let i=1; i<=3; i++){
-    const re = new RegExp(`\\[TEXT${i}\\]([\\s\\S]*?)\\[\\/TEXT${i}\\]`);
+    const re = new RegExp(`\\[TEXT${i}\\]([\\s\\S]*?)\\[\\/TEXT${i}\\]`, 'i');
     const m = raw.match(re);
     blocks.push(m ? m[1].trim() : '');
+  }
+  // plasa de siguranta: daca NICIUNUL din cele 3 marcaje [TEXT_n] n-a fost gasit (raspunsul
+  // nu a respectat deloc formatul cerut - poate a inclus text in plus, sau alt format usor
+  // diferit), recuperam macar liniile [DE]/[RO] existente, flat, si le impartim aproximativ
+  // in 3 grupuri egale - mai bine un rezultat aproximativ decat "text lipsa" la toate 3
+  if(blocks.every(b => !b)){
+    const flatLines = raw.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
+    const pairs = [];
+    for(let i=0; i<flatLines.length-1; i+=2){
+      if(flatLines[i].startsWith('[DE]') && flatLines[i+1] && flatLines[i+1].startsWith('[RO]')){
+        pairs.push([flatLines[i], flatLines[i+1]]);
+      }
+    }
+    if(pairs.length >= 3){
+      const perText = Math.ceil(pairs.length / 3);
+      for(let i=0; i<3; i++){
+        const slice = pairs.slice(i*perText, (i+1)*perText);
+        blocks[i] = slice.map(p=>p.join('\n')).join('\n');
+      }
+    }
   }
   return blocks;
 }
@@ -3397,10 +3429,10 @@ document.getElementById('aiDescribeSpeakBtn').addEventListener('click', ()=>{
 
 /* ---------- AI: "Cuvinte noi in context" - handler principal ---------- */
 let lastAiNewWordsRawBlocks = ['', '', ''];
-async function generateNewWordsTexts(targetWords, knownWordsPool){
+async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
   const statusEl = document.getElementById('aiNewWordsStatus');
   const resultSection = document.getElementById('aiNewWordsResultSection');
-  const targetWordStrings = targetWords.map(w=>w.de);
+  const targetWordStrings = targetWords.map(w=>extractCoreWord(w.de));
   resultSection.style.display = 'none';
   statusEl.textContent = 'Se generează 3 texte...';
 
@@ -3417,7 +3449,7 @@ async function generateNewWordsTexts(targetWords, knownWordsPool){
   }
 
   try{
-    const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool);
+    const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool, levelGroup);
     let draft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
     let draftBlocks = splitIntoThreeTexts(draft);
     // plasa de siguranta: daca vreun text nu contine toate cuvintele tinta, incercam O SINGURA
@@ -3519,7 +3551,7 @@ document.getElementById('aiNewWordsGenerateBtn').addEventListener('click', async
   pickedSection.style.display = 'block';
   const derivedLevel = deriveLevelGroupFromWords(targetWords);
   const knownWords = getKnownWordsForLevelGroup(derivedLevel);
-  await generateNewWordsTexts(targetWords, [...knownWords.core, ...knownWords.helpers]);
+  await generateNewWordsTexts(targetWords, [...knownWords.core, ...knownWords.helpers], derivedLevel);
 });
 [1,2,3].forEach(i=>{
   document.getElementById(`aiNewWordsSpeakBtn${i}`).addEventListener('click', function(){
