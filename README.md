@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v93 — 5 corecții la „Cuvinte noi în context", găsite prin testare**
+- **Roșu pierdut în Istoric** — corectat: se salvează acum textul final (marcat + revizuit), nu ciorna brută; parserul comun recunoaște marcajele oriunde apar, inclusiv la redeschiderea unei intrări vechi.
+- **Cuvinte inconsistente între cele 3 texte** — regulă de prompt mai fermă, plus verificare programatică (dacă un text nu conține toate cuvintele-țintă, se reîncearcă generarea o singură dată).
+- **Nivel dedus automat** — textul folosește acum nivelul (A1-A2/B1-B2) determinat de majoritatea cuvintelor-țintă alese, nu tot vocabularul cunoscut nediferențiat.
+- **Generare manuală separată de selecție** — butoane distincte („Generează — Cuvinte alese aleatoriu" / „Generează — Cuvinte alese manual"); alegerea cuvintelor nu mai declanșează automat generarea.
+- **Panouri suprapuse, în ambele sensuri** — corectat: fundalul întunecat rămâne continuu pe durata tranziției (nu mai dispare și reapare), tranziția calibrată exact la durata reală CSS (250ms).
+
 **v92 — corecție critică la backup (combinare reală, nu suprascriere), plus selecție manuală de cuvinte**
 - **Backup general** (cuvinte exersate, stelute, cuvinte proprii): la import, acum se **combină** cu progresul deja existent pe dispozitiv, nu-l mai suprascrie — dacă exersezi și pe telefon și pe PC, nu mai pierzi progresul niciunuia. Cuvintele exersate pe ambele: încercările se adună, starea curentă (stelute, greșeli) vine din activitatea cea mai recentă. Setările (nivel selectat, voce) rămân cele locale ale dispozitivului, nu se suprascriu.
 - **Listă nouă, „📋 Cuvintele mele exersate"** — în Setări, toate cuvintele la care ai răspuns până acum, sortabile după stelute/alfabetic, sau filtrate doar pe cele cu greșeală activă.

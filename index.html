@@ -595,7 +595,7 @@
       <p><b>✓ Corectură germană</b> — mod separat de traducere, ales din chip-urile de sus ale panoului: scrii (sau dictezi, sau fotografiezi) propriul tău text în germană, Claude corectează doar greșelile reale (ortografie, acorduri, conjugări, topică, cratime), fără să-ți reformuleze stilul. Sub textul corectat apare o listă cu explicații, în română, pentru fiecare greșeală găsită — sau o confirmare, dacă textul era deja corect.</p>
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — cu traducere română alături și ascultare disponibilă imediat.</p>
-      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect), și generează 3 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct. Poți alege și tu cuvintele manual — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate.</p>
+      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generează 3 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
@@ -840,8 +840,9 @@
     <div class="sheet-section">
       <div class="sheet-label">Cum funcționează</div>
       <p class="help-text" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 3 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
-      <button class="btn-block paste-highlight" id="aiNewWordsGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează (automat)</span><span>→</span></button>
+      <button class="btn-block paste-highlight" id="aiNewWordsGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează — Cuvinte alese aleatoriu</span><span>→</span></button>
       <button class="btn-block" id="aiNewWordsManualBtn" style="width:100%; margin-top:8px;"><span>✋ Alege manual cuvintele</span><span>›</span></button>
+      <button class="btn-block paste-highlight" id="aiNewWordsManualGenerateBtn" style="width:100%; margin-top:8px; display:none;"><span>Generează — Cuvinte alese manual</span><span>→</span></button>
       <div class="upload-status" id="aiNewWordsStatus"></div>
     </div>
 
@@ -1860,7 +1861,13 @@ document.getElementById('aiHubExerciseBtn').addEventListener('click', ()=> showA
 document.getElementById('aiExerciseBackBtn').addEventListener('click', ()=> showAiView('hub'));
 document.getElementById('aiHubDescribeBtn').addEventListener('click', ()=> showAiView('describe'));
 document.getElementById('aiDescribeBackBtn').addEventListener('click', ()=> showAiView('hub'));
-document.getElementById('aiHubNewWordsBtn').addEventListener('click', ()=> showAiView('newwords'));
+document.getElementById('aiHubNewWordsBtn').addEventListener('click', ()=>{
+  showAiView('newwords');
+  document.getElementById('aiNewWordsManualGenerateBtn').style.display = 'none';
+  document.getElementById('aiNewWordsPickedSection').style.display = 'none';
+  document.getElementById('aiNewWordsResultSection').style.display = 'none';
+  document.getElementById('aiNewWordsStatus').textContent = '';
+});
 document.getElementById('aiNewWordsBackBtn').addEventListener('click', ()=> showAiView('hub'));
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
@@ -2664,21 +2671,36 @@ function closeWordListSheet(){
 }
 document.getElementById('openWordListBrowseBtn').addEventListener('click', ()=> openWordListSheet('browse'));
 document.getElementById('closeWordListSheetBtn').addEventListener('click', closeWordListSheet);
-document.getElementById('aiNewWordsManualBtn').addEventListener('click', ()=> openWordListSheet('select'));
-document.getElementById('wordListConfirmBtn').addEventListener('click', async ()=>{
+document.getElementById('aiNewWordsManualBtn').addEventListener('click', ()=>{
+  // inchidem panoul AI (doar pe el, overlay-ul ramane, aceeasi continuitate ca la sensul invers)
+  aiSheet.classList.remove('show');
+  setTimeout(()=> openWordListSheet('select'), 260);
+});
+let pendingManualWords = [], pendingManualLevel = 'a1a2';
+document.getElementById('wordListConfirmBtn').addEventListener('click', ()=>{
   if(!wordListSelected.length) return;
-  const chosen = [...wordListSelected];
-  const level = wordListLevel;
-  closeWordListSheet();
-  aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
-  showAiView('newwords');
-  const pickedSection = document.getElementById('aiNewWordsPickedSection');
-  const pickedList = document.getElementById('aiNewWordsPickedList');
-  pickedList.innerHTML = chosen.map(w => `<span class="chip">${escapeHtml(w.de)}</span>`).join('');
-  pickedSection.style.display = 'block';
-  const knownWords = getKnownWordsForLevelGroup(level);
+  pendingManualWords = [...wordListSelected];
+  pendingManualLevel = wordListLevel;
+  // inchidem DOAR panoul de lista, pastram fundalul intunecat (overlay) continuu - senzatia
+  // ramane de "schimb panoul, in acelasi flux", nu de "s-a inchis totul, apoi s-a redeschis"
+  document.getElementById('wordListSheet').classList.remove('show');
+  setTimeout(()=>{
+    aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
+    showAiView('newwords');
+    const pickedSection = document.getElementById('aiNewWordsPickedSection');
+    const pickedList = document.getElementById('aiNewWordsPickedList');
+    pickedList.innerHTML = pendingManualWords.map(w => `<span class="chip">${escapeHtml(w.de)}</span>`).join('');
+    pickedSection.style.display = 'block';
+    document.getElementById('aiNewWordsManualGenerateBtn').style.display = 'flex';
+    document.getElementById('aiNewWordsResultSection').style.display = 'none';
+    document.getElementById('aiNewWordsStatus').textContent = `Cuvinte alese: ${pendingManualWords.map(w=>w.de).join(', ')} — apasă „Generează" când ești gata.`;
+  }, 260);
+});
+document.getElementById('aiNewWordsManualGenerateBtn').addEventListener('click', async ()=>{
+  if(!pendingManualWords.length) return;
+  const knownWords = getKnownWordsForLevelGroup(pendingManualLevel);
   const knownPool = [...knownWords.core, ...knownWords.helpers];
-  await generateNewWordsTexts(chosen, knownPool);
+  await generateNewWordsTexts(pendingManualWords, knownPool);
 });
 
 function renderLevelProgress(){
@@ -3123,9 +3145,16 @@ function pickFreshWords(){
 }
 // vocabular cunoscut general (toate nivelurile, nu grupat pe A1-A2/B1-B2) - folosit ca sa
 // mentinem restul textului (in afara celor 5 cuvinte tinta) usor de inteles, nu doar cele 5
-function getKnownWordsAllLevels(){
-  const isKnown = w => { const s = wordStats[w.id]; return s && s.correct >= 2; };
-  return [...new Set(BUILTIN.concat(myWords).filter(isKnown).map(w=>w.de))];
+// dedeuce grupul de nivel (a1a2/b1b2) din nivelurile reale ale cuvintelor tinta - cel cu
+// MAJORITATEA cuvintelor castiga; cuvinte fara nivel clar (EXT/MYWORDS/PFLEGE) nu voteaza;
+// daca niciunul nu are nivel clar, sau e egalitate, ramane implicit a1a2 (varianta sigura)
+function deriveLevelGroupFromWords(words){
+  let a1a2Count = 0, b1b2Count = 0;
+  words.forEach(w=>{
+    if(w.level === 'A1' || w.level === 'A2') a1a2Count++;
+    else if(w.level === 'B1' || w.level === 'B2') b1b2Count++;
+  });
+  return b1b2Count > a1a2Count ? 'b1b2' : 'a1a2';
 }
 function buildNewWordsPrompt(targetWords, knownWordsAll){
   const targetList = targetWords.map(w=>w.de).join(', ');
@@ -3137,7 +3166,7 @@ Restul vocabularului pe care elevul îl cunoaște deja bine, de folosit pentru r
 
 Sarcina ta:
 1. Generează EXACT 3 texte scurte, INDEPENDENTE, fiecare cu un subiect propriu, diferit clar de celelalte două (nu 3 variații ale aceleiași idei sau situații) — de exemplu, dacă un text e despre o zi la birou, celelalte două nu mai sunt tot despre birou.
-2. FIECARE din cele 3 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text. Înainte să încheie fiecare text, verifică-l: dacă lipsește vreun cuvânt țintă din el, rescrie textul ca să-l includă.
+2. FIECARE din cele 3 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar în unele texte. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5, al treilea doar 3 — FIECARE din cele 3 texte trebuie să conțină, separat, TOATE cele 5. Înainte să treci la textul următor, numără explicit, pentru textul pe care tocmai l-ai scris: câte din cuvintele țintă apar în el? Dacă răspunsul e mai mic decât numărul total de cuvinte țintă primite, rescrie ACEL text, adăugând cuvintele lipsă, înainte să continui.
 3. IMPORTANT — cuvintele țintă sunt date la forma de bază DOAR ca referință de sens, NU ca formă obligatorie de folosit. Folosește-le NATURAL, la orice formă gramaticală corectă cere contextul (conjugate, declinate, la plural, la alt caz) — scopul e ca elevul să vadă germana REALĂ, vorbită/scrisă curent, nu propoziții artificiale construite doar ca să păstreze forma de dicționar. NU forța forma de bază dacă gramatica sau naturalețea cer altă formă — corectitudinea gramaticală și naturalețea au prioritate absolută asupra păstrării formei exacte din listă.
 4. Restul cuvintelor din text (în afara celor țintă) vino din lista de cuvinte cunoscute de mai sus, pe cât posibil — conectori gramaticali de bază (articole, pronume, prepoziții comune, "a fi"/"a avea") sunt mereu permiși, chiar dacă nu apar explicit în listă.
 5. Fiecare text: 3-5 propoziții, cu FIR LOGIC CLAR — fiecare propoziție continuă logic din precedenta (cine face ceva, de ce, ce urmează), nu propoziții disparate puse una după alta doar ca să introducă cuvintele țintă.
@@ -3375,10 +3404,34 @@ async function generateNewWordsTexts(targetWords, knownWordsPool){
   resultSection.style.display = 'none';
   statusEl.textContent = 'Se generează 3 texte...';
 
+  // verificare tolerantă (potrivire pe radacina cuvantului, nu exacta - conjugarea schimba
+  // sufixul) - fiecare text trebuie sa contina toate cuvintele tinta, nu doar unele
+  function validateAllWordsInEachText(blocks){
+    return blocks.every(block=>{
+      const lowerBlock = block.toLowerCase();
+      return targetWordStrings.every(w=>{
+        const stem = w.toLowerCase().slice(0, Math.min(4, w.length));
+        return lowerBlock.includes(stem);
+      });
+    });
+  }
+
   try{
     const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool);
-    const draft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
-    const draftBlocks = splitIntoThreeTexts(draft);
+    let draft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
+    let draftBlocks = splitIntoThreeTexts(draft);
+    // plasa de siguranta: daca vreun text nu contine toate cuvintele tinta, incercam O SINGURA
+    // data din nou (nu bucla infinita) - daca nici a doua incercare nu e completa, continuam
+    // oricum cu ce avem, mai bine un text imperfect decat blocat la nesfarsit
+    if(!validateAllWordsInEachText(draftBlocks)){
+      statusEl.textContent = 'Un text nu conținea toate cuvintele — se reîncearcă...';
+      const retryDraft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
+      const retryBlocks = splitIntoThreeTexts(retryDraft);
+      if(validateAllWordsInEachText(retryBlocks)){ draft = retryDraft; draftBlocks = retryBlocks; }
+      // daca nici reincercarea nu trece validarea, continuam cu reincercarea oricum (poate fi
+      // totusi mai buna decat originalul, sau macar diferita) - nu blocam utilizatorul la nesfarsit
+      else { draft = retryDraft; draftBlocks = retryBlocks; }
+    }
     const extractDeRoLines = block => block.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
     const blockLineArrays = draftBlocks.map(extractDeRoLines);
     const blockLineCounts = blockLineArrays.map(a=>a.length);
@@ -3438,7 +3491,10 @@ async function generateNewWordsTexts(targetWords, knownWordsPool){
     }
     resultSection.style.display = 'block';
     statusEl.textContent = '';
-    saveAiHistoryEntry(`(cuvinte noi) ${targetWordStrings.join(', ')}`, draft, 'text');
+    // salvam textul FINAL (marcat + revizuit), nu ciorna bruta - altfel evidentierea rosie
+    // s-ar pierde la redeschiderea intrarii din Istoric, pentru ca marcajele nu ar mai exista deloc
+    const finalRawForHistory = useLines.join('\n');
+    saveAiHistoryEntry(`(cuvinte noi) ${targetWordStrings.join(', ')}`, finalRawForHistory, 'text');
   }catch(err){
     statusEl.textContent = `✗ ${err.message}`;
   }
@@ -3458,9 +3514,12 @@ document.getElementById('aiNewWordsGenerateBtn').addEventListener('click', async
     document.getElementById('aiNewWordsResultSection').style.display = 'none';
     return;
   }
+  document.getElementById('aiNewWordsManualGenerateBtn').style.display = 'none';
   pickedList.innerHTML = targetWords.map(w => `<span class="chip">${escapeHtml(w.de)}</span>`).join('');
   pickedSection.style.display = 'block';
-  await generateNewWordsTexts(targetWords, getKnownWordsAllLevels());
+  const derivedLevel = deriveLevelGroupFromWords(targetWords);
+  const knownWords = getKnownWordsForLevelGroup(derivedLevel);
+  await generateNewWordsTexts(targetWords, [...knownWords.core, ...knownWords.helpers]);
 });
 [1,2,3].forEach(i=>{
   document.getElementById(`aiNewWordsSpeakBtn${i}`).addEventListener('click', function(){
@@ -3593,11 +3652,14 @@ function parseTaggedAiResult(raw){
     return { lang:null, text:line }; // linie fara eticheta (ex. mesajul de redirectionare)
   });
   const htmlParts = parsed.map(p=>{
-    const esc = escapeHtml(p.text);
-    return p.lang === 'de' ? `<div style="color:var(--der); font-weight:600;">${esc}</div>` : `<div>${esc}</div>`;
+    // marcajele {{...}} (ex. de la modulul "Cuvinte noi in context") se convertesc mereu in
+    // evidentiere rosie, oriunde ar aparea - astfel istoricul/redeschiderea unei intrari
+    // pastreaza aceeasi evidentiere ca la generarea initiala, nu doar afisarea "pe viu"
+    const contentHtml = p.text.includes('{{') ? markersToHighlightHtml(p.text) : escapeHtml(p.text);
+    return p.lang === 'de' ? `<div style="color:var(--der); font-weight:600;">${contentHtml}</div>` : `<div>${contentHtml}</div>`;
   });
-  const cleanText = parsed.map(p=>p.text).join('\n');
-  const germanLines = parsed.filter(p=>p.lang === 'de').map(p=>p.text);
+  const cleanText = parsed.map(p=>stripMarkers(p.text)).join('\n');
+  const germanLines = parsed.filter(p=>p.lang === 'de').map(p=>stripMarkers(p.text));
   // daca nu exista deloc etichete (ex. mesajul de redirectionare, intreg in germana), citim tot textul curat
   const germanOnly = germanLines.length
     ? germanLines.map(l => /[.!?]$/.test(l) ? l : l + '.').join(' ') // evitam punct dublu la unire
