@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v92 — corecție critică la backup (combinare reală, nu suprascriere), plus selecție manuală de cuvinte**
+- **Backup general** (cuvinte exersate, stelute, cuvinte proprii): la import, acum se **combină** cu progresul deja existent pe dispozitiv, nu-l mai suprascrie — dacă exersezi și pe telefon și pe PC, nu mai pierzi progresul niciunuia. Cuvintele exersate pe ambele: încercările se adună, starea curentă (stelute, greșeli) vine din activitatea cea mai recentă. Setările (nivel selectat, voce) rămân cele locale ale dispozitivului, nu se suprascriu.
+- **Listă nouă, „📋 Cuvintele mele exersate"** — în Setări, toate cuvintele la care ai răspuns până acum, sortabile după stelute/alfabetic, sau filtrate doar pe cele cu greșeală activă.
+- **Selecție manuală în „Cuvinte noi în context"** — „✋ Alege manual cuvintele" deschide aceeași listă, în mod selecție (până la 5 cuvinte, ca niște etichete, nu bife) — alegi și nivelul (A1-A2/B1-B2) care determină restul vocabularului folosit în text.
+- Verificat programatic: scenariu realist de combinare progres telefon+PC, sortare/filtrare listă.
+
 **v91 — modul nou (AI): „🆕 Cuvinte noi în context"**
 - Alege automat până la 5 cuvinte văzute abia o dată sau de două ori (indiferent dacă răspunsul a fost corect) — selecția se face direct în cod, din progresul local, fără niciun apel AI, gratuit și instant.
 - Generează 3 texte scurte, independente, fiecare cu temă proprie, în care cele 5 cuvinte apar natural — conjugate/declinate cum cere gramatica reală, nu forțate la forma de bază.
