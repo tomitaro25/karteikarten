@@ -541,6 +541,10 @@
   <div class="sheet-handle"></div>
   <div class="sheet-title" id="wordListTitle">📋 Cuvintele mele exersate</div>
 
+  <div class="sheet-section" style="padding-bottom:0;">
+    <input type="text" id="wordListSearchInput" class="btn-block" style="width:100%;" placeholder="Caută (română sau germană)...">
+  </div>
+
   <div class="sheet-section">
     <div class="sheet-label">Sortare</div>
     <div class="chip-row">
@@ -565,9 +569,13 @@
     <button class="btn-block paste-highlight" id="wordListConfirmBtn" style="width:100%; margin-top:8px;" disabled><span>Folosește aceste cuvinte</span><span>→</span></button>
   </div>
 
-  <div class="sheet-section">
+  <div class="sheet-section" style="padding-bottom:90px;">
     <div id="wordListRows"></div>
   </div>
+
+  <button class="btn-block paste-highlight" id="wordListFloatingConfirmBtn" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); width:calc(100% - 48px); max-width:420px; display:none; z-index:60; box-shadow:0 4px 18px rgba(0,0,0,0.35);">
+    <span>✓ Validează selecția (<span id="wordListFloatingCount">0</span>/5)</span><span>→</span>
+  </button>
 
   <button class="sheet-close" id="closeWordListSheetBtn">Închide</button>
 </div>
@@ -596,7 +604,7 @@
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — cu traducere română alături și ascultare disponibilă imediat.</p>
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generează 3 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
-      <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum.</p>
+      <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -2571,6 +2579,7 @@ let wordListMode = 'browse'; // 'browse' | 'select'
 let wordListSort = 'stars-desc';
 let wordListSelected = []; // array de cuvinte alese, in modul 'select', max 5
 let wordListLevel = 'a1a2';
+let wordListSearchQuery = '';
 
 function wordStarsCount(id){
   const s = wordStats[id];
@@ -2588,11 +2597,21 @@ function sortWordListRows(rows){
   else if(wordListSort === 'mistakes') return sorted.filter(w => wordStats[w.id] && wordStats[w.id].mistakeFlag);
   return sorted;
 }
+// filtrare dupa cautare - raspunde la potrivire fie in germana, fie in romana, fara sensibilitate
+// la majuscule/diacritice de baza (potrivire simpla, substring)
+function filterWordListBySearch(rows){
+  const q = wordListSearchQuery.trim().toLowerCase();
+  if(!q) return rows;
+  return rows.filter(w => w.de.toLowerCase().includes(q) || w.ro.toLowerCase().includes(q));
+}
 function renderWordList(){
   const container = document.getElementById('wordListRows');
-  const rows = sortWordListRows(getPracticedWords());
+  const rows = filterWordListBySearch(sortWordListRows(getPracticedWords()));
   if(!rows.length){
-    container.innerHTML = `<div class="upload-status">${wordListSort === 'mistakes' ? 'Niciun cuvânt cu greșeală activă acum.' : 'Niciun cuvânt exersat încă.'}</div>`;
+    const emptyMsg = wordListSearchQuery.trim()
+      ? 'Niciun cuvânt găsit pentru căutarea asta.'
+      : (wordListSort === 'mistakes' ? 'Niciun cuvânt cu greșeală activă acum.' : 'Niciun cuvânt exersat încă.');
+    container.innerHTML = `<div class="upload-status">${emptyMsg}</div>`;
     return;
   }
   const isSelectMode = wordListMode === 'select';
@@ -2627,6 +2646,7 @@ function renderWordList(){
 }
 function renderWordListSelectedChips(){
   document.getElementById('wordListSelectedCount').textContent = wordListSelected.length;
+  document.getElementById('wordListFloatingCount').textContent = wordListSelected.length;
   document.getElementById('wordListSelectedChips').innerHTML = wordListSelected.map(w=>
     `<span class="chip active word-list-chip-remove" data-id="${escapeAttr(w.id)}">${escapeHtml(w.de)} ✕</span>`
   ).join('');
@@ -2637,8 +2657,16 @@ function renderWordListSelectedChips(){
       renderWordList();
     });
   });
-  document.getElementById('wordListConfirmBtn').disabled = wordListSelected.length === 0;
+  const hasSelection = wordListSelected.length > 0;
+  document.getElementById('wordListConfirmBtn').disabled = !hasSelection;
+  // butonul flotant - vizibil doar in modul de selectie, doar cand ai ales cel putin un cuvant,
+  // ca sa nu trebuiasca sa derulezi inapoi sus la butonul static, indiferent cat de jos esti in lista
+  document.getElementById('wordListFloatingConfirmBtn').style.display = (wordListMode === 'select' && hasSelection) ? 'flex' : 'none';
 }
+document.getElementById('wordListSearchInput').addEventListener('input', (e)=>{
+  wordListSearchQuery = e.target.value;
+  renderWordList();
+});
 document.querySelectorAll('.word-list-sort').forEach(chip=>{
   chip.addEventListener('click', ()=>{
     document.querySelectorAll('.word-list-sort').forEach(c=>c.classList.remove('active'));
@@ -2657,18 +2685,25 @@ document.querySelectorAll('.word-list-level').forEach(chip=>{
 function openWordListSheet(mode){
   wordListMode = mode;
   wordListSelected = [];
+  wordListSearchQuery = '';
+  document.getElementById('wordListSearchInput').value = '';
   document.getElementById('wordListTitle').textContent = mode === 'select' ? '✋ Alege până la 5 cuvinte' : '📋 Cuvintele mele exersate';
   document.getElementById('wordListSelectLevelSection').style.display = mode === 'select' ? 'block' : 'none';
   document.getElementById('wordListSelectedSection').style.display = mode === 'select' ? 'block' : 'none';
   if(mode === 'select') renderWordListSelectedChips();
+  else document.getElementById('wordListFloatingConfirmBtn').style.display = 'none';
   renderWordList();
   document.getElementById('wordListSheet').classList.add('show');
   sheetOverlay.classList.add('show');
 }
 function closeWordListSheet(){
   document.getElementById('wordListSheet').classList.remove('show');
+  document.getElementById('wordListFloatingConfirmBtn').style.display = 'none';
   sheetOverlay.classList.remove('show');
 }
+document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', ()=>{
+  document.getElementById('wordListConfirmBtn').click(); // reutilizam exact acelasi handler de confirmare
+});
 document.getElementById('openWordListBrowseBtn').addEventListener('click', ()=> openWordListSheet('browse'));
 document.getElementById('closeWordListSheetBtn').addEventListener('click', closeWordListSheet);
 document.getElementById('aiNewWordsManualBtn').addEventListener('click', ()=>{

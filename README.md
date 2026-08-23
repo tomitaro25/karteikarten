@@ -4,6 +4,10 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v95 — căutare și buton flotant în „Cuvintele mele exersate"**
+- **Câmp de căutare** — filtrează instant lista, răspunde atât la cuvinte germane cât și românești, insensibil la majuscule.
+- **Buton flotant de validare** — la selecția manuală de cuvinte, un buton cu poziție fixă (jos, centrat) rămâne vizibil indiferent cât ai derulat lista, arătând numărul curent de cuvinte alese (X/5) — nu mai trebuie să revii sus pentru a confirma.
+
 **v94 — 5 corecții suplimentare la „Cuvinte noi în context", găsite prin testare intensivă**
 - **Generarea eșua complet** (toate cele 3 texte „lipsă"), atât la selecție automată cât și manuală — cauza probabilă: o instrucțiune de prompt care invita modelul să scrie vizibil verificarea lui, stricând formatul strict așteptat. Simplificat, cu interdicție explicită de comentarii vizibile în răspuns.
 - **Plasă de siguranță nouă la parsare** — dacă formatul `[TEXT1]/[TEXT2]/[TEXT3]` ar lipsi complet din răspuns (orice motiv), aplicația recuperează acum liniile de traducere existente și le împarte aproximativ în 3, în loc să afișeze „text lipsă" la toate.
