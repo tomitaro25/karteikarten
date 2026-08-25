@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v99 — "Cuvinte noi în context" trece la generare în 2 pași separați (germană, apoi traducere)**
+- Generarea combinată (germană + română, într-un singur apel) e înlocuită cu **doi pași dedicați**: Pasul 1 generează strict textul german (cu persona de profesor de germanistică și o rutină de auto-verificare internă, în 3 etape); Pasul 2, separat, traduce liniile germane deja finalizate, cu un prompt dedicat exclusiv acurateței traducerii (consecvență pe concepte repetate, fără informații adăugate/omise, ortografie română atentă).
+- Motivul schimbării: testare extinsă, manuală, a arătat că traducerea produsă în același apel cu generarea germană tindea să fie inconsecventă (același concept tradus diferit de două ori) sau să adauge/omită nuanțe — separarea completă a eliminat aceste probleme, în testele făcute, fără cost suplimentar semnificativ.
+- Restul mecanismului (marcarea cuvintelor, evidențierea roșie, istoricul) rămâne neschimbat — se leagă direct de rezultatul celor 2 pași noi.
+- Verificat programatic: recombinarea corectă a perechilor [DE]/[RO] după cei 2 pași, inclusiv plasa de siguranță dacă traducerea eșuează (rămâne doar germana, nu se amestecă nimic greșit).
+
 **v98 — renunțare la nivelurile de calitate AI (cost real mult mai mare la Sonnet, fără câștig observabil), plus 2 corecții confirmate**
 - **Selectorul de calitate (Rapid/Îmbunătățită/Superioară) eliminat complet** — verificare de cost real a arătat consum considerabil mai mare la Sonnet, fără diferență observată în calitate/corectitudine, și texte de fapt mai simple decât la Haiku. Rămâne doar pipeline-ul Haiku (Rapid), cu escaladarea țintită către Sonnet deja existentă, doar când chiar e nevoie (acorduri nesigure, sau divergență de sens confirmată la texte mai lungi).
 - **Buton flotant persistent** — bug real confirmat: la confirmarea selecției, panoul se închidea printr-o cale care uita să ascundă butonul flotant. Corectat.

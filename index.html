@@ -605,7 +605,7 @@
       <p><b>✓ Corectură germană</b> — mod separat de traducere, ales din chip-urile de sus ale panoului: scrii (sau dictezi, sau fotografiezi) propriul tău text în germană, Claude corectează doar greșelile reale (ortografie, acorduri, conjugări, topică, cratime), fără să-ți reformuleze stilul. Sub textul corectat apare o listă cu explicații, în română, pentru fiecare greșeală găsită — sau o confirmare, dacă textul era deja corect.</p>
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — cu traducere română alături și ascultare disponibilă imediat.</p>
-      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generează 2 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
+      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
@@ -3357,38 +3357,124 @@ function deriveLevelGroupFromWords(words){
   });
   return b1b2Count > a1a2Count ? 'b1b2' : 'a1a2';
 }
-function buildNewWordsPrompt(targetWords, knownWordsAll, levelGroup){
+// PASUL 1 - doar generare germana, fara traducere deloc. Persona + structura testate azi in
+// chat, cu Haiku, pe mai multe seturi de cuvinte - a produs consecvent germana solida (verbe
+// separabile corecte, gen respectat, fara constructii inventate).
+function buildGermanOnlyPrompt(targetWords, knownWordsAll, levelGroup){
   const targetList = targetWords.map(w=>extractCoreWord(w.de)).join(', ');
   const knownListTxt = knownWordsAll.length ? knownWordsAll.join(', ') : '(nu are inca alte cuvinte cunoscute)';
   const levelTxt = levelGroup === 'b1b2' ? 'B1-B2 (intermediar)' : 'A1-A2 (începător)';
-  return `Ești un profesor de germană care ajută un elev, de nivel ${levelTxt} (CEFR), să vadă cuvinte noi, abia întâlnite, în context real, de mai multe ori, în situații diferite, exact cum apar în vorbirea/scrierea germană curentă.
+  return `Ești profesor de germanistică, cu experiență vastă în predarea limbii germane pentru adulți non-nativi.
 
-Cuvintele ȚINTĂ (elevul le-a văzut abia o dată sau de două ori, nu le știe încă bine — sunt date la forma de bază/dicționar, DOAR ca referință de sens): ${targetList}
-Restul vocabularului pe care elevul îl cunoaște deja bine, de folosit pentru restul textului (păstrează totul ușor de înțeles, nu doar cuvintele țintă): ${knownListTxt}
+Scopul este să creezi texte scurte în germană, naturale și realiste, potrivite unui vorbitor adult de română la nivel ${levelTxt}, astfel încât cuvintele țintă să apară repetat în contexte diferite și ușor de înțeles.
 
-Sarcina ta:
-1. Generează EXACT 2 texte scurte, INDEPENDENTE, fiecare cu un subiect propriu, diferit clar unul de celălalt (nu 2 variații ale aceleiași idei sau situații) — de exemplu, dacă un text e despre o zi la birou, celălalt nu mai e tot despre birou.
-2. FIECARE din cele 2 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar într-un singur text. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5 — FIECARE din cele 2 texte trebuie să conțină, separat, TOATE cele 5. Verifică intern, înainte de a preda răspunsul, că fiecare text le conține pe toate — dacă lipsește vreunul dintr-un text, rescrie doar acel text. IMPORTANT: nu include în răspuns nicio verificare, numărătoare, explicație sau comentariu vizibil — doar cele 2 texte, exact în formatul cerut mai jos, nimic altceva.
-3. IMPORTANT — cuvintele țintă sunt date la forma de bază DOAR ca referință de sens, NU ca formă obligatorie de folosit. Folosește-le NATURAL, la orice formă gramaticală corectă cere contextul (conjugate, declinate, la plural, la alt caz) — scopul e ca elevul să vadă germana REALĂ, vorbită/scrisă curent, nu propoziții artificiale construite doar ca să păstreze forma de dicționar. NU forța forma de bază dacă gramatica sau naturalețea cer altă formă — corectitudinea gramaticală și naturalețea au prioritate absolută asupra păstrării formei exacte din listă.
-4. Restul cuvintelor din text (în afara celor țintă) vino din lista de cuvinte cunoscute de mai sus, pe cât posibil — conectori gramaticali de bază (articole, pronume, prepoziții comune, "a fi"/"a avea") sunt mereu permiși, chiar dacă nu apar explicit în listă.
-5. Fiecare text: 3-5 propoziții, cu FIR LOGIC CLAR — fiecare propoziție continuă logic din precedenta (cine face ceva, de ce, ce urmează), nu propoziții disparate puse una după alta doar ca să introducă cuvintele țintă.
-6. NIVEL DE COMPLEXITATE — pe lângă vocabular, ȘI structura gramaticală/lungimea propozițiilor trebuie să corespundă nivelului ${levelTxt}: la A1-A2, propoziții scurte, structuri simple, fără subordonate multiple; la B1-B2, propoziții ceva mai complexe sunt acceptabile, dar tot clare, nu suprîncărcate.
-7. NICIODATĂ nu lăsa vreun cuvânt netradus, dintr-o limbă în cealaltă, strecurat în text.
-8. La partea română, verifică acordul de gen și număr al substantivelor cu articolele lor (ex. NU "o ajutoare", corect "un ajutor").
-9. Scrie fiecare text STRICT în germană, apoi tradu-l propoziție cu propoziție în română.
+## PRIORITĂȚI
 
-Format de ieșire EXACT, obligatoriu — respectă-l STRICT, inclusiv etichetele [TEXT1]/[/TEXT1] etc., care încadrează fiecare text (aplicația le citește programatic):
+1. Germană naturală și corectă, apropiată de modul în care ar vorbi sau scrie un vorbitor nativ.
+2. Respectarea tuturor cerințelor de conținut și nivel.
+3. Respectarea STRICTĂ a formatului de ieșire, deoarece rezultatul este procesat automat.
+
+Când există mai multe variante corecte în germană, preferă varianta pe care un vorbitor nativ ar folosi-o cel mai probabil într-o conversație sau situație obișnuită.
+
+## CUVINTE ȚINTĂ
+
+${targetList}
+
+Sunt date la forma de bază doar ca referință. Folosește forma gramaticală cerută natural de context (conjugate, declinate, la plural, la alt caz) — corectitudinea gramaticală și naturalețea au prioritate absolută asupra păstrării formei exacte din listă.
+
+## VOCABULAR CUNOSCUT
+
+Restul cuvintelor din text (în afara celor țintă) vino, pe cât posibil, din lista de mai jos — conectori de bază (articole, pronume, prepoziții comune, "a fi"/"a avea") sunt mereu permiși, chiar dacă nu apar explicit în listă:
+${knownListTxt}
+
+## SARCINĂ
+
+Generează EXACT 2 texte scurte și independente.
+
+Pentru fiecare text:
+
+* EXACT 3-5 propoziții.
+* Toate cuvintele țintă trebuie să apară cel puțin o dată.
+* Situația și subiectul trebuie să fie clar diferite între cele două texte.
+* Folosește situații realiste din viața unui adult.
+* Cuvintele țintă trebuie integrate natural, nu introduse artificial doar pentru a fi bifate.
+* Păstrează nivelul ${levelTxt}: propoziții relativ scurte, vocabular uzual și structuri simple.
+* Preferă formulările simple, uzuale și naturale în locul celor sofisticate.
+
+## REVIZIE INTERNĂ
+
+După generare, verifică intern rezultatul în această ordine:
+
+### 1. Revizie germană
+
+Verifică și corectează pentru: gramatică; conjugarea verbelor; acord; cazuri, articole și declinare; prepoziții; ordinea cuvintelor și topica; poziția verbelor; verbe separabile și prefixe; ortografie, majuscule, umlaut și ß; punctuație; alegerea cuvintelor; expresii naturale; nivel ${levelTxt}.
+
+Verifică dacă fiecare propoziție continuă logic ideea precedentă. Folosește conectorii numai când sensul e natural și clar. Dacă o propoziție sună nenatural sau artificial, reformuleaz-o.
+
+### 2. Revizie de sens și context
+
+Verifică: propozițiile se leagă logic; nu există contradicții; evenimentele sunt plauzibile; cuvintele țintă sunt folosite cu sensul corect; conectorii exprimă relații reale, nu doar bifează cerințe; cele două texte sunt suficient de diferite.
+
+### 3. Verificare finală a cerințelor și formatului
+
+Verifică: EXACT 2 texte; 3-5 propoziții fiecare; toate cuvintele țintă; germana e corectă, naturală, coerentă; nu există text în afara blocurilor.
+
+Toate verificările sunt interne. Nu afișa explicații, verificări sau comentarii.
+
+## FORMAT — STRICT, NU MODIFICA
+
 [TEXT1]
-[DE] <propoziția 1, germană>
-[RO] <propoziția 1, română>
-[DE] <propoziția 2, germană>
-[RO] <propoziția 2, română>
+[DE] <propoziția 1>
+[DE] <propoziția 2>
+[DE] <propoziția 3>
 [/TEXT1]
+
 [TEXT2]
-[DE] ...
-[RO] ...
+[DE] <propoziția 1>
+[DE] <propoziția 2>
+[DE] <propoziția 3>
 [/TEXT2]
-Fără nicio introducere, explicație, sau concluzie în afara acestor 2 blocuri — doar cele 2 texte, în formatul exact de mai sus.`;
+
+Nu afișa nimic înainte sau după cele două blocuri. Fiecare text poate avea 3, 4 sau 5 propoziții.`;
+}
+
+// PASUL 2 - doar traducere, primeste liniile germane deja finalizate (din Pasul 1), fara sa
+// mai genereze nimic nou. Testat azi, separat de generare - a iesit consecvent mai curat decat
+// traducerea facuta in aceeasi trecere cu generarea (consecventa mai buna pe acelasi concept
+// repetat, mai putine informatii adaugate/omise, ortografie romana mai atenta).
+function buildTranslationOnlyPrompt(){
+  return `Ești traducător expert german-română, specializat în traduceri clare, corecte ca sens, pentru texte de învățare a limbii germane.
+
+Primești mai jos propoziții în germană, numerotate. Tradu-le în română, păstrând exact aceeași numerotare.
+
+## PRIORITĂȚI, în ordine
+
+1. Sensul trebuie să corespundă exact propoziției germane — nu adăuga informații (intensificatori, obligații, nuanțe) care nu există în german; nu omite informații care există.
+2. Dacă același concept german apare de mai multe ori (chiar în propoziții diferite), tradu-l consecvent, cu același cuvânt/expresie română, nu diferit de fiecare dată.
+3. Traducerea trebuie să fie naturală în română, nu literală cuvânt-cu-cuvânt — dar niciodată în detrimentul acurateței de sens.
+4. Ortografie română corectă: toate diacriticele (ă, â, î, ș, ț), fără cuvinte trunchiate, inventate, sau greșit flexionate.
+
+## REVIZIE INTERNĂ
+
+După ce traduci, verifică intern:
+* fiecare traducere corespunde exact sensului propoziției germane, fără informație adăugată sau omisă;
+* același concept german, dacă repetat, e tradus consecvent;
+* diacritice corecte peste tot, niciun cuvânt trunchiat/inventat;
+* traducerea sună natural în română.
+
+Corectează orice problemă găsită înainte de a afișa rezultatul final. Nu afișa verificări sau comentarii — doar traducerea finală.
+
+## FORMAT DE INTRARE (primit)
+
+Propoziții numerotate, o linie per propoziție.
+
+## FORMAT DE IEȘIRE — STRICT
+
+1. <traducerea 1>
+2. <traducerea 2>
+...
+
+Exact același număr de linii câte ai primit. Nimic altceva în afara liniilor numerotate.`;
 }
 // Agent 3, dedicat: dupa ce textul e deja generat SI revizuit gramatical (deci final), ii cerem
 // sa marcheze EXACT formele pe care chiar le-a folosit pt cuvintele tinta - oricare ar fi ele
@@ -3628,30 +3714,55 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
   }
 
   try{
-    const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool, levelGroup);
-    let draft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 2 texte'}], 8192);
+    // PASUL 1 - doar germana
+    const germanPrompt = buildGermanOnlyPrompt(targetWords, knownWordsPool, levelGroup);
+    let draft = await callClaude(germanPrompt, [{type:'text', text: 'generează cele 2 texte'}], 4096);
     let draftBlocks = splitIntoTextBlocks(draft, 2);
     // plasa de siguranta: daca vreun text nu contine toate cuvintele tinta, incercam O SINGURA
     // data din nou (nu bucla infinita) - daca nici a doua incercare nu e completa, continuam
     // oricum cu ce avem, mai bine un text imperfect decat blocat la nesfarsit
     if(!validateAllWordsInEachText(draftBlocks)){
       statusEl.textContent = 'Un text nu conținea toate cuvintele — se reîncearcă...';
-      const retryDraft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 2 texte'}], 8192);
+      const retryDraft = await callClaude(germanPrompt, [{type:'text', text: 'generează cele 2 texte'}], 4096);
       const retryBlocks = splitIntoTextBlocks(retryDraft, 2);
       if(validateAllWordsInEachText(retryBlocks)){ draft = retryDraft; draftBlocks = retryBlocks; }
-      // daca nici reincercarea nu trece validarea, continuam cu reincercarea oricum (poate fi
-      // totusi mai buna decat originalul, sau macar diferita) - nu blocam utilizatorul la nesfarsit
       else { draft = retryDraft; draftBlocks = retryBlocks; }
     }
-    const extractDeRoLines = block => block.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
-    const blockLineArrays = draftBlocks.map(extractDeRoLines);
+    const extractDeLines = block => block.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]'));
+    const blockLineArrays = draftBlocks.map(extractDeLines);
     const blockLineCounts = blockLineArrays.map(a=>a.length);
-    const flatText = blockLineArrays.flat().join('\n');
+    const flatDeLines = blockLineArrays.flat();
 
-    statusEl.textContent = 'Se verifică gramatical...';
-    const reviewedFlat = flatText ? await translateWithReview(flatText) : '';
-    const reviewedLines = reviewedFlat.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
-    let useLines = (reviewedLines.length === flatText.split('\n').filter(Boolean).length) ? reviewedLines : blockLineArrays.flat();
+    // PASUL 2 - doar traducere, primeste liniile germane deja finalizate din Pasul 1, numerotate
+    statusEl.textContent = 'Se traduce...';
+    let useLines = flatDeLines; // implicit, fara traducere (fallback daca ceva esueaza mai jos)
+    if(flatDeLines.length){
+      try{
+        const plainDe = flatDeLines.map(l => l.replace(/^\[DE\]\s*/, ''));
+        const numberedInput = plainDe.map((l,i)=>`${i+1}. ${l}`).join('\n');
+        const translationPrompt = buildTranslationOnlyPrompt();
+        const translationRaw = await callClaude(translationPrompt, [{type:'text', text: numberedInput}], 4096);
+        const translations = parseNumberedLines(translationRaw, plainDe.length);
+        if(translations){
+          // recombinam in perechi [DE]/[RO], in ordine - formatul pe care restul codului
+          // (marcarea Agentul 3, randarea) il asteapta deja, neschimbat
+          useLines = [];
+          flatDeLines.forEach((deLine, i) => {
+            useLines.push(deLine);
+            useLines.push(`[RO] ${translations[i]}`);
+          });
+        }
+        // daca parseNumberedLines esueaza (numar de linii nepotrivit), ramanem la fallback
+        // (doar germana, fara traducere) - nu riscam sa amestecam gresit perechile
+      }catch(translateErr){
+        // Pasul 2 a esuat (retea etc.) - ramanem cu germana simpla, fara traducere, nu blocam
+      }
+    }
+    // liniile de bloc-count de mai sus erau pt numarul de linii [DE] - acum ca am adaugat [RO]
+    // dupa fiecare, recalculam count-ul per bloc (dublu, daca traducerea a mers) pt recombinare corecta
+    const linesPerBlockFinal = useLines.length === flatDeLines.length
+      ? blockLineCounts // fallback: fara traducere, tot doar linii DE, acelasi count ca inainte
+      : blockLineCounts.map(c => c * 2); // cu traducere: fiecare linie DE are acum si un RO dupa ea
 
     statusEl.textContent = 'Se marchează cuvintele...';
     const deIndices = [];
@@ -3689,7 +3800,7 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
     }
 
     let cursor = 0;
-    const finalTexts = blockLineCounts.map(count=>{
+    const finalTexts = linesPerBlockFinal.map(count=>{
       const chunkLines = useLines.slice(cursor, cursor + count);
       cursor += count;
       return renderChunk(chunkLines);
