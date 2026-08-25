@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v100 — arhitectura în 2 pași (generare + traducere separate) extinsă la încă 3 module**
+- **Descrie o poză**, **Simplifică**, și **Exersează ce ai învățat** trec de la generare combinată (germană + română, într-un singur apel) la **2 pași dedicați** — aceeași abordare aplicată deja la „Cuvinte noi în context", care a arătat, prin testare extinsă, o traducere mai consecventă și mai fidelă.
+- La „Exersează ce ai învățat" (singurul modul bidirecțional — poate genera în germană SAU română), traducerea Pasului 2 se adaptează automat la direcția corectă, oricare-ar fi ea.
+- **Traducere liberă** și **Corectură** rămân neschimbate — nu au aceeași structură (traducere de conținut dat de utilizator, respectiv corectare fără traducere), deci separarea în 2 pași nu li se aplică.
+- Curățare: o funcție de prompt veche, devenită neapelată, a fost eliminată complet din cod.
+- Verificat: sintaxă validă pe tot fișierul, ambele prompturi noi (generare exercițiu, traducere cu direcție parametrizată) testate izolat pentru ambele direcții (DE→RO și RO→DE).
+
 **v99 — "Cuvinte noi în context" trece la generare în 2 pași separați (germană, apoi traducere)**
 - Generarea combinată (germană + română, într-un singur apel) e înlocuită cu **doi pași dedicați**: Pasul 1 generează strict textul german (cu persona de profesor de germanistică și o rutină de auto-verificare internă, în 3 etape); Pasul 2, separat, traduce liniile germane deja finalizate, cu un prompt dedicat exclusiv acurateței traducerii (consecvență pe concepte repetate, fără informații adăugate/omise, ortografie română atentă).
 - Motivul schimbării: testare extinsă, manuală, a arătat că traducerea produsă în același apel cu generarea germană tindea să fie inconsecventă (același concept tradus diferit de două ori) sau să adauge/omită nuanțe — separarea completă a eliminat aceste probleme, în testele făcute, fără cost suplimentar semnificativ.
