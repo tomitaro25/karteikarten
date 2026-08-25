@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v98 — renunțare la nivelurile de calitate AI (cost real mult mai mare la Sonnet, fără câștig observabil), plus 2 corecții confirmate**
+- **Selectorul de calitate (Rapid/Îmbunătățită/Superioară) eliminat complet** — verificare de cost real a arătat consum considerabil mai mare la Sonnet, fără diferență observată în calitate/corectitudine, și texte de fapt mai simple decât la Haiku. Rămâne doar pipeline-ul Haiku (Rapid), cu escaladarea țintită către Sonnet deja existentă, doar când chiar e nevoie (acorduri nesigure, sau divergență de sens confirmată la texte mai lungi).
+- **Buton flotant persistent** — bug real confirmat: la confirmarea selecției, panoul se închidea printr-o cale care uita să ascundă butonul flotant. Corectat.
+- **Player audio, simplificat la un singur buton Redă/Oprește** — Pauză/Reluare eliminate: `speechSynthesis.pause()`+`resume()` are un bug documentat, pe scară largă, în browsere/Android (reluarea nu funcționează fiabil) — aceeași limitare care exclusese și derularea cu secunde.
+- Verificat cu DOM real (jsdom): toggle Redă↔Oprește, izolare corectă între playere multiple.
+
 **v97 — corecții critice la nivelul de calitate AI, plus mini-player audio**
 - **Eroarea de generare la Calitate îmbunătățită/superioară** (`effort: Extra inputs are not permitted`) — corectată: parametrul de efort trebuia încadrat în `output_config`, nu trimis direct.
 - **Mesaje rămase la "3 texte"** — actualizate peste tot la 2, inclusiv cele trimise efectiv către API.
