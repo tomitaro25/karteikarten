@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v96 — 3 niveluri de calitate AI, verificare de fidelitate prin retraducere independentă, mini-player audio**
+- **Nivel de calitate ales de utilizator** — ⚡ Rapid / ✨ Calitate îmbunătățită / 💎 Calitate superioară, selectabil direct din panoul AI. Diferențele de cost sunt mici, explicat clar la fiecare alegere și în Ajutor.
+- **Rapid** (implicit) — pipeline complet: traducere, verificare gramaticală, și (doar la texte mai lungi, peste 3 perechi de propoziții) o verificare suplimentară de fidelitate — un model retraduce independent traducerea română înapoi în germană, fără să vadă originalul, apoi se compară obiectiv dacă sensul (cauzalitate, sentiment, timp) s-a păstrat; doar diferențele reale se corectează, țintit.
+- **Calitate îmbunătățită/superioară** — un singur model, mai atent, generează direct rezultatul final.
+- „Cuvinte noi în context" generează acum **2 texte**, nu 3.
+- Verificat programatic: toate cele 3 niveluri de dispecerizare, pragul de lungime pentru verificarea de fidelitate, parsarea (inclusiv un bug real de regex evitat din start), și cazurile cu/fără divergență de sens.
+
 **v95 — căutare și buton flotant în „Cuvintele mele exersate"**
 - **Câmp de căutare** — filtrează instant lista, răspunde atât la cuvinte germane cât și românești, insensibil la majuscule.
 - **Buton flotant de validare** — la selecția manuală de cuvinte, un buton cu poziție fixă (jos, centrat) rămâne vizibil indiferent cât ai derulat lista, arătând numărul curent de cuvinte alese (X/5) — nu mai trebuie să revii sus pentru a confirma.

@@ -595,7 +595,10 @@
       4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
       5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
       6. Lipește cheia mai jos → „Testează conexiunea"</p>
-      <p><b>Verificare gramaticală, în doi pași (uneori trei):</b> orice traducere sau text generat trece printr-un al doilea pas, automat — un "corector" separat, care verifică acordurile complete (gen, număr, participii), cazurile gramaticale, ortografia, expresiile idiomatice și dacă sensul exact s-a păstrat, nu doar gramatica. Dacă verificarea eșuează dintr-un motiv tehnic, rămâi cu traducerea inițială, nu cu una trunchiată. <b>Rar</b>, dacă corectorul întâlnește ceva de care chiar nu e sigur (nu ghicește, nu inventează cuvinte), trimite <b>doar acea bucată</b> către un model mai avansat, care o rezolvă — un al treilea pas, dar doar când chiar e nevoie, nu la fiecare traducere.</p>
+      <p><b>Calitate răspuns AI</b> — poți alege, în orice moment, din trei niveluri: <b>⚡ Rapid</b> (implicit), <b>✨ Calitate îmbunătățită</b>, sau <b>💎 Calitate superioară</b>. Diferențele de cost între ele sunt mici — toate rămân ieftine de folosit, sub un cent per generare de obicei; alegerea contează mai ales pentru cât de atent verifică rezultatul, nu pentru buzunar.</p>
+      <p><b>La Rapid:</b> traducerea trece printr-un al doilea pas automat — un "corector" separat, care verifică acordurile complete (gen, număr, participii), cazurile gramaticale, ortografia, expresiile idiomatice. La texte mai lungi (peste câteva propoziții), se adaugă și o verificare de fidelitate prin retraducere independentă — un al treilea model traduce înapoi traducerea ta română, fără să vadă originalul, apoi se compară obiectiv dacă sensul (cauzalitate, sentiment, timp) s-a păstrat corect. Rar, dacă apare o diferență reală, doar acea bucată se trimite către un model mai avansat pentru corectare. Dacă orice pas eșuează tehnic, rămâi cu varianta anterioară, nu cu una trunchiată.</p>
+      <p><b>La Calitate îmbunătățită/superioară:</b> un singur model, mai atent, generează direct rezultatul final, fără pașii separați de mai sus.</p>
+      <p><b>„Cuvinte noi în context"</b> generează acum <b>2 texte</b> (nu 3), fiecare cu temă proprie — le poți asculta oricând din Istoric, evidențierea cuvintelor rămâne păstrată.</p>
       <p><b>Cost aproximativ</b> (model Haiku, cel mai ieftin): fiecare traducere/generare presupune acum <b>2 apeluri</b> (traducere + verificare), deci aproximativ dublu față de un singur pas — tot sub un cent per traducere scurtă, cu 5$ ajungi în continuare la mii de traduceri text. O imagine costă considerabil mai mult (poate câteva sute de poze cu 5$) — decupează poza doar pe zona cu text, nu tot ecranul, ca să reduci costul.</p>
       <p><b>Ce face automat traducerea:</b> detectează singur dacă textul e în română sau germană (corectând mental diacritice/greșeli mici, inclusiv cratime lipsă din dictare vocală) și traduce natural, nu cuvânt-cu-cuvânt; pentru text cu mai multe propoziții, le aliniază original→traducere, una câte una (partea germană apare bold, albastru, și poate fi ascultată separat cu 🔊); poți dicta vocal (cu un mic buton RO/DE, doar pentru ce ascultă microfonul); rezultatul se poate descărca ca text sau ca PDF (prin funcția de printare a telefonului).</p>
       <p><b>Imagine — „Lipește" din clipboard:</b> pe majoritatea telefoanelor Android, un screenshot <b>nu</b> ajunge automat în clipboard — trebuie deschis din galerie și copiat manual (Distribuie → Copiază) înainte să poți apăsa „Lipește" aici. Dacă nu funcționează, folosește „Din galerie" în schimb, merge întotdeauna. Pe calculator, funcționează direct — orice copiezi poate fi lipit imediat.</p>
@@ -603,7 +606,7 @@
       <p><b>✓ Corectură germană</b> — mod separat de traducere, ales din chip-urile de sus ale panoului: scrii (sau dictezi, sau fotografiezi) propriul tău text în germană, Claude corectează doar greșelile reale (ortografie, acorduri, conjugări, topică, cratime), fără să-ți reformuleze stilul. Sub textul corectat apare o listă cu explicații, în română, pentru fiecare greșeală găsită — sau o confirmare, dacă textul era deja corect.</p>
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — cu traducere română alături și ascultare disponibilă imediat.</p>
-      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generează 3 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
+      <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generează 2 texte scurte, diferite, în care le vezi folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază) — evidențiate cu roșu, cu traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
@@ -622,6 +625,15 @@
   <div id="aiHubView">
     <div class="sheet-section" id="aiNoKeyNotice" style="display:none;">
       <div class="upload-status">Nu ai încă o cheie salvată — deschide „❓ Ajutor — AI" mai sus ca s-o adaugi.</div>
+    </div>
+    <div class="sheet-section">
+      <div class="sheet-label">Calitate răspuns AI</div>
+      <div class="chip-row">
+        <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
+        <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
+        <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
+      </div>
+      <div class="upload-status" id="aiQualityTierNote" style="margin-top:6px;"></div>
     </div>
     <div class="sheet-section">
       <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
@@ -867,10 +879,6 @@
       <div class="sheet-label" style="margin-top:18px;">Text 2</div>
       <div id="aiNewWordsBox2" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <button class="btn-block" id="aiNewWordsSpeakBtn2" style="width:100%; margin-top:8px;"><span>🔊 Ascultă (germană)</span><span>▶</span></button>
-
-      <div class="sheet-label" style="margin-top:18px;">Text 3</div>
-      <div id="aiNewWordsBox3" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
-      <button class="btn-block" id="aiNewWordsSpeakBtn3" style="width:100%; margin-top:8px;"><span>🔊 Ascultă (germană)</span><span>▶</span></button>
     </div>
   </div>
 
@@ -1877,10 +1885,29 @@ document.getElementById('aiHubNewWordsBtn').addEventListener('click', ()=>{
   document.getElementById('aiNewWordsStatus').textContent = '';
 });
 document.getElementById('aiNewWordsBackBtn').addEventListener('click', ()=> showAiView('hub'));
+const AI_QUALITY_TIER_NOTES = {
+  fast: 'Rapid — cel mai ieftin, câteva sutimi de cent per generare. Bun pentru majoritatea situațiilor.',
+  better: 'Calitate îmbunătățită — puțin mai scump decât Rapid, dar diferența rămâne mică (sub un cent per generare, de obicei).',
+  best: 'Calitate superioară — cea mai atentă variantă; costul rămâne tot mic, dar puțin mai mare decât celelalte două.'
+};
+function refreshAiQualityTierUi(){
+  document.querySelectorAll('.ai-quality-tier').forEach(chip=>{
+    chip.classList.toggle('active', chip.dataset.tier === aiQualityTier);
+  });
+  document.getElementById('aiQualityTierNote').textContent = AI_QUALITY_TIER_NOTES[aiQualityTier];
+}
+document.querySelectorAll('.ai-quality-tier').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    aiQualityTier = chip.dataset.tier;
+    saveAiQualityTier(aiQualityTier);
+    refreshAiQualityTierUi();
+  });
+});
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
   showAiView('hub');
   const hasKey = refreshAiHubButtons();
+  refreshAiQualityTierUi();
   document.getElementById('aiHelpDetails').open = !hasKey; // ghidam direct spre Ajutor daca nu ai inca o cheie
 }
 function closeAiSheet(){ aiSheet.classList.remove('show'); sheetOverlay.classList.remove('show'); }
@@ -2808,6 +2835,27 @@ function loadClaudeKey(){
 function saveClaudeKey(key){
   try{ localStorage.setItem('karteikarten_claudeApiKey', key); }catch(e){}
 }
+// nivelul de calitate AI ales de utilizator - 'fast' (Haiku, pipeline complet), 'better'
+// (Sonnet, efort low, un singur apel), 'best' (Sonnet, efort medium, un singur apel).
+// Numele modelelor NU se afiseaza utilizatorului - doar etichetele Rapid/Calitate imbunatatita/superioara.
+function loadAiQualityTier(){
+  try{ return localStorage.getItem('karteikarten_aiQualityTier') || 'fast'; }catch(e){ return 'fast'; }
+}
+function saveAiQualityTier(tier){
+  try{ localStorage.setItem('karteikarten_aiQualityTier', tier); }catch(e){}
+}
+let aiQualityTier = loadAiQualityTier();
+// dispecer central - orice modul care genereaza text tradus/generat trece prin functia asta,
+// nu apeleaza direct callClaude+translateWithReview - astfel toate modulele respecta automat
+// nivelul de calitate ales, fara sa fie nevoie sa se modifice fiecare in parte separat
+async function generateTranslatedContent(systemPrompt, contentBlocks, maxTokens){
+  if(aiQualityTier === 'fast'){
+    const draft = await callClaude(systemPrompt, contentBlocks, maxTokens);
+    return await translateWithReview(draft);
+  }
+  const effort = aiQualityTier === 'better' ? 'low' : 'medium';
+  return await callClaude(systemPrompt, contentBlocks, maxTokens, 'claude-sonnet-5', effort);
+}
 const claudeKeyInput = document.getElementById('claudeApiKeyInput');
 claudeKeyInput.value = loadClaudeKey();
 claudeKeyInput.addEventListener('change', ()=> saveClaudeKey(claudeKeyInput.value.trim()));
@@ -2984,8 +3032,15 @@ Reguli stricte, obligatorii:
 9. Dacă primești o IMAGINE: extrage întâi tot textul vizibil și lizibil din ea (ignoră elemente grafice fără text), apoi aplică exact aceleași reguli de mai sus asupra textului extras — inclusiv regula 5 (perechi [DE]/[RO]). Dacă imaginea nu conține deloc text lizibil, spune asta scurt, în germană, fără etichete.`;
 }
 
-async function callClaude(systemPrompt, contentBlocks, maxTokens, model){
+async function callClaude(systemPrompt, contentBlocks, maxTokens, model, effort){
   const key = loadClaudeKey();
+  const body = {
+    model: model || 'claude-haiku-4-5-20251001',
+    max_tokens: maxTokens,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: contentBlocks }]
+  };
+  if(effort) body.effort = effort; // doar la Sonnet - controleaza bugetul de "gandire" (low/medium/high...)
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -2994,12 +3049,7 @@ async function callClaude(systemPrompt, contentBlocks, maxTokens, model){
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
-    body: JSON.stringify({
-      model: model || 'claude-haiku-4-5-20251001',
-      max_tokens: maxTokens,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: contentBlocks }]
-    })
+    body: JSON.stringify(body)
   });
   if(!res.ok){
     const errData = await res.json().catch(()=>({}));
@@ -3077,19 +3127,120 @@ async function escalateUncertainSegments(reviewedText){
 // modelul a pierdut/contopit o pereche, mai probabil la texte lungi), pastram rezultatul NErevizuit,
 // nu unul trunchiat - mai bine nerevizuit decat corupt.
 // daca Agentul 2 marcheaza bucati [UNCERTAIN], le escaladam catre Sonnet, doar pe acelea, nu tot textul.
+// pragul variantei C - back-translation ruleaza doar la texte "complexe" (peste 3 perechi
+// DE/RO) - la traduceri scurte, riscul de inversare de sens e mai mic, nu justifica costul
+const BACK_TRANSLATE_MIN_PAIRS = 4;
+
+function buildBackTranslatePrompt(){
+  return `Ești un traducător german independent — primești DOAR un text în limba română, numerotat pe propoziții, fără niciun alt context. Tradu-l în germană, propoziție cu propoziție, cât mai fidel ca sens și cât mai natural.
+Format primit:
+1. <propoziția română 1>
+2. <propoziția română 2>
+...
+Răspunde STRICT cu traducerea, păstrând exact aceeași numerotare, un rând per linie, fără introducere, fără explicații:
+1. <traducerea liniei 1>
+2. <traducerea liniei 2>
+...`;
+}
+function buildFidelityComparePrompt(){
+  return `Ești un verificator de fidelitate a traducerii, expert germană-română. Primești DOUĂ seturi de propoziții, numerotate identic: SET A (originalul german) și SET B (obținut independent, retraducând în germană o traducere română a lui A — deci B ar trebui să transmită exact același sens ca A, chiar dacă formularea diferă).
+Pentru FIECARE număr, compară SENSUL (nu formularea) dintre A și B. Verifică în special: sentiment/polaritate, cauzalitate (cauză vs. consecință — nu inversate), timp/aspect, și dacă informația esențială s-a păstrat.
+Dacă sensul se potrivește, scrie:
+N. [MATCH]
+Dacă sensul DIFERĂ vizibil, scrie:
+N. [DIVERGENT] <ce anume diferă, pe scurt, în română>
+Format primit:
+SET A:
+1. ...
+SET B:
+1. ...
+Răspunde STRICT cu liniile numerotate, nimic altceva.`;
+}
+function buildFidelityFixPrompt(){
+  return `Ești un traducător expert german-română, senior, chemat să corectezi cazuri unde traducerea română nu reda fidel sensul originalului — un verificator automat a detectat o divergență de sens.
+Pentru fiecare caz: propoziția ORIGINALĂ germană (sursa de adevăr), traducerea ROMÂNĂ curentă (suspectată greșită), și motivul divergenței. Corectează STRICT traducerea română, ca să transmită exact sensul originalului — păstrează naturalețea, dar sensul (polaritate, cauzalitate, timp) trebuie să corespundă exact.
+Format primit, per caz:
+N. DE: <propoziția originală>
+   RO curent: <traducerea suspectă>
+   Motiv: <ce a detectat verificatorul>
+Răspunde STRICT cu liniile numerotate, DOAR traducerea corectată:
+N. <traducerea română corectată>`;
+}
+// ATENTIE: [ \t]* (spatiu orizontal), NU \s* - \s* include newline-ul si ar "manca"
+// linia urmatoare intreaga daca eticheta N. n-are continut vizibil imediat dupa ea
+function parseNumberedLines(text, expectedCount){
+  const matches = [...text.matchAll(/^(\d+)\.[ \t]*(.*)$/gm)];
+  if(matches.length !== expectedCount) return null;
+  const sorted = matches.map(m=>({n: parseInt(m[1],10), text: m[2].trim()})).sort((a,b)=>a.n-b.n);
+  return sorted.map(x=>x.text);
+}
+function parseDivergences(text, expectedCount){
+  const matches = [...text.matchAll(/^(\d+)\.[ \t]*\[(MATCH|DIVERGENT)\][ \t]*(.*)$/gm)];
+  const divergences = [];
+  matches.forEach(m=>{
+    const idx = parseInt(m[1],10) - 1;
+    if(m[2] === 'DIVERGENT' && idx >= 0 && idx < expectedCount){
+      divergences.push({ index: idx, reason: m[3].trim() });
+    }
+  });
+  return divergences;
+}
+// verificare de fidelitate prin retraducere oarba + comparare obiectiva - independenta reala,
+// nu auto-evaluare (modelul care retraduce nu vede traducerea curenta, deci nu-i "orbit" de
+// aceeasi linie de gandire care ar fi putut produce greseala). Rulat DOAR la texte cu cel putin
+// BACK_TRANSLATE_MIN_PAIRS perechi (varianta C) - la texte scurte, riscul nu justifica costul.
+async function verifyFidelityViaBackTranslation(text){
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  const srcLines = [], roLines = [], roLineIndices = [];
+  lines.forEach((line, i)=>{
+    const mSrc = line.match(/^\[DE\]\s*(.*)$/);
+    const mRo = line.match(/^\[RO\]\s*(.*)$/);
+    if(mSrc) srcLines.push(mSrc[1]);
+    if(mRo){ roLines.push(mRo[1]); roLineIndices.push(i); }
+  });
+  if(srcLines.length === 0 || srcLines.length !== roLines.length) return text; // structura neasteptata - nu riscam
+  if(srcLines.length < BACK_TRANSLATE_MIN_PAIRS) return text; // text scurt - varianta C, nu rulam
+
+  const roNumbered = roLines.map((l,i)=>`${i+1}. ${l}`).join('\n');
+  const backTranslatedRaw = await callClaude(buildBackTranslatePrompt(), [{type:'text', text: roNumbered}], 4096);
+  const backLines = parseNumberedLines(backTranslatedRaw, roLines.length);
+  if(!backLines) return text; // parsare esuata - sigur, nu riscam
+
+  const setA = srcLines.map((l,i)=>`${i+1}. ${l}`).join('\n');
+  const setB = backLines.map((l,i)=>`${i+1}. ${l}`).join('\n');
+  const compareRaw = await callClaude(buildFidelityComparePrompt(), [{type:'text', text: `SET A:\n${setA}\n\nSET B:\n${setB}`}], 3072);
+  const divergences = parseDivergences(compareRaw, srcLines.length);
+  if(!divergences.length) return text; // totul se potriveste - 0 cost suplimentar
+
+  try{
+    const casesText = divergences.map(d =>
+      `${d.index+1}. DE: ${srcLines[d.index]}\n   RO curent: ${roLines[d.index]}\n   Motiv: ${d.reason}`
+    ).join('\n');
+    const fixRaw = await callClaude(buildFidelityFixPrompt(), [{type:'text', text: casesText}], 3072, 'claude-sonnet-5');
+    const fixes = parseNumberedLines(fixRaw, divergences.length);
+    if(!fixes) return text;
+    const newLines = [...lines];
+    divergences.forEach((d, i)=>{ newLines[roLineIndices[d.index]] = `[RO] ${fixes[i]}`; });
+    return newLines.join('\n');
+  }catch(err){
+    return text; // escaladarea a esuat - pastram varianta dinainte de acest fix
+  }
+}
+
 async function translateWithReview(draftResult){
   const draftPairCount = countTaggedPairs(draftResult);
   if(draftPairCount === 0) return draftResult; // fara etichete (ex. mesaj de redirectionare) - nimic de revizuit
+  let current = draftResult;
   try{
     const reviewPrompt = buildAiReviewPrompt();
-    const reviewed = await callClaude(reviewPrompt, [{type:'text', text: draftResult}], 8192);
-    const reviewedPairCount = countTaggedPairs(reviewed);
-    if(reviewedPairCount !== draftPairCount) return draftResult; // nepotrivire de numar de perechi - pastram varianta nerevizuita, sigura
-    if(reviewed.includes('[UNCERTAIN]')) return await escalateUncertainSegments(reviewed);
-    return reviewed;
-  }catch(err){
-    return draftResult; // revizuirea a esuat (retea etc.) - pastram traducerea initiala, nu blocam utilizatorul
-  }
+    const reviewed = await callClaude(reviewPrompt, [{type:'text', text: current}], 8192);
+    if(countTaggedPairs(reviewed) === draftPairCount) current = reviewed;
+    if(current.includes('[UNCERTAIN]')) current = await escalateUncertainSegments(current);
+  }catch(err){ /* continuam cu draftResult, nu blocam utilizatorul */ }
+  try{
+    current = await verifyFidelityViaBackTranslation(current);
+  }catch(err){ /* pastram ce aveam dupa pasul de revizuire de forma */ }
+  return current;
 }
 
 /* ---------- AI: "Exersează ce ai învățat" ---------- */
@@ -3211,8 +3362,8 @@ Cuvintele ȚINTĂ (elevul le-a văzut abia o dată sau de două ori, nu le știe
 Restul vocabularului pe care elevul îl cunoaște deja bine, de folosit pentru restul textului (păstrează totul ușor de înțeles, nu doar cuvintele țintă): ${knownListTxt}
 
 Sarcina ta:
-1. Generează EXACT 3 texte scurte, INDEPENDENTE, fiecare cu un subiect propriu, diferit clar de celelalte două (nu 3 variații ale aceleiași idei sau situații) — de exemplu, dacă un text e despre o zi la birou, celelalte două nu mai sunt tot despre birou.
-2. FIECARE din cele 3 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar în unele texte. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5, al treilea doar 3 — FIECARE din cele 3 texte trebuie să conțină, separat, TOATE cele 5. Verifică intern, înainte de a preda răspunsul, că fiecare text le conține pe toate — dacă lipsește vreunul dintr-un text, rescrie doar acel text. IMPORTANT: nu include în răspuns nicio verificare, numărătoare, explicație sau comentariu vizibil — doar cele 3 texte, exact în formatul cerut mai jos, nimic altceva.
+1. Generează EXACT 2 texte scurte, INDEPENDENTE, fiecare cu un subiect propriu, diferit clar unul de celălalt (nu 2 variații ale aceleiași idei sau situații) — de exemplu, dacă un text e despre o zi la birou, celălalt nu mai e tot despre birou.
+2. FIECARE din cele 2 texte trebuie să folosească TOATE cuvintele țintă date mai sus, cel puțin o dată fiecare, în acel text — nu doar unele dintre ele, nu doar într-un singur text. Exemplu concret de greșeală de evitat: dacă ai 5 cuvinte țintă, NU e acceptabil ca primul text să folosească doar 1 din ele, al doilea toate 5 — FIECARE din cele 2 texte trebuie să conțină, separat, TOATE cele 5. Verifică intern, înainte de a preda răspunsul, că fiecare text le conține pe toate — dacă lipsește vreunul dintr-un text, rescrie doar acel text. IMPORTANT: nu include în răspuns nicio verificare, numărătoare, explicație sau comentariu vizibil — doar cele 2 texte, exact în formatul cerut mai jos, nimic altceva.
 3. IMPORTANT — cuvintele țintă sunt date la forma de bază DOAR ca referință de sens, NU ca formă obligatorie de folosit. Folosește-le NATURAL, la orice formă gramaticală corectă cere contextul (conjugate, declinate, la plural, la alt caz) — scopul e ca elevul să vadă germana REALĂ, vorbită/scrisă curent, nu propoziții artificiale construite doar ca să păstreze forma de dicționar. NU forța forma de bază dacă gramatica sau naturalețea cer altă formă — corectitudinea gramaticală și naturalețea au prioritate absolută asupra păstrării formei exacte din listă.
 4. Restul cuvintelor din text (în afara celor țintă) vino din lista de cuvinte cunoscute de mai sus, pe cât posibil — conectori gramaticali de bază (articole, pronume, prepoziții comune, "a fi"/"a avea") sunt mereu permiși, chiar dacă nu apar explicit în listă.
 5. Fiecare text: 3-5 propoziții, cu FIR LOGIC CLAR — fiecare propoziție continuă logic din precedenta (cine face ceva, de ce, ce urmează), nu propoziții disparate puse una după alta doar ca să introducă cuvintele țintă.
@@ -3232,11 +3383,7 @@ Format de ieșire EXACT, obligatoriu — respectă-l STRICT, inclusiv etichetele
 [DE] ...
 [RO] ...
 [/TEXT2]
-[TEXT3]
-[DE] ...
-[RO] ...
-[/TEXT3]
-Fără nicio introducere, explicație, sau concluzie în afara acestor 3 blocuri — doar cele 3 texte, în formatul exact de mai sus.`;
+Fără nicio introducere, explicație, sau concluzie în afara acestor 2 blocuri — doar cele 2 texte, în formatul exact de mai sus.`;
 }
 // Agent 3, dedicat: dupa ce textul e deja generat SI revizuit gramatical (deci final), ii cerem
 // sa marcheze EXACT formele pe care chiar le-a folosit pt cuvintele tinta - oricare ar fi ele
@@ -3258,17 +3405,18 @@ Format de ieșire: aceleași linii primite, în aceeași ordine, cu eticheta [DE
 // nu doar l-a marcat, si aruncam marcajele acelei linii, pastram linia originala, simpla
 function stripMarkers(s){ return s.replace(/\{\{|\}\}/g, ''); }
 // separa raspunsul brut in cele 3 blocuri de text, pe baza etichetelor [TEXT1]/[/TEXT1] etc.
-function splitIntoThreeTexts(raw){
+function splitIntoTextBlocks(raw, count){
+  count = count || 2;
   const blocks = [];
-  for(let i=1; i<=3; i++){
+  for(let i=1; i<=count; i++){
     const re = new RegExp(`\\[TEXT${i}\\]([\\s\\S]*?)\\[\\/TEXT${i}\\]`, 'i');
     const m = raw.match(re);
     blocks.push(m ? m[1].trim() : '');
   }
-  // plasa de siguranta: daca NICIUNUL din cele 3 marcaje [TEXT_n] n-a fost gasit (raspunsul
+  // plasa de siguranta: daca NICIUNUL din marcajele [TEXT_n] n-a fost gasit (raspunsul
   // nu a respectat deloc formatul cerut - poate a inclus text in plus, sau alt format usor
   // diferit), recuperam macar liniile [DE]/[RO] existente, flat, si le impartim aproximativ
-  // in 3 grupuri egale - mai bine un rezultat aproximativ decat "text lipsa" la toate 3
+  // egal - mai bine un rezultat aproximativ decat "text lipsa" la toate
   if(blocks.every(b => !b)){
     const flatLines = raw.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
     const pairs = [];
@@ -3277,9 +3425,9 @@ function splitIntoThreeTexts(raw){
         pairs.push([flatLines[i], flatLines[i+1]]);
       }
     }
-    if(pairs.length >= 3){
-      const perText = Math.ceil(pairs.length / 3);
-      for(let i=0; i<3; i++){
+    if(pairs.length >= count){
+      const perText = Math.ceil(pairs.length / count);
+      for(let i=0; i<count; i++){
         const slice = pairs.slice(i*perText, (i+1)*perText);
         blocks[i] = slice.map(p=>p.join('\n')).join('\n');
       }
@@ -3318,9 +3466,7 @@ document.getElementById('aiExerciseGenerateBtn').addEventListener('click', async
     const systemPrompt = buildExercisePrompt(aiExerciseLevel, aiExerciseLang, theme, knownWords, maxWords);
     const wrapped = `"""\n${theme}\n"""`;
     statusEl.textContent = 'Se generează...';
-    const draft = await callClaude(systemPrompt, [{type:'text', text: wrapped}], 4096);
-    statusEl.textContent = 'Se verifică gramatical...';
-    const result = await translateWithReview(draft);
+    const result = await generateTranslatedContent(systemPrompt, [{type:'text', text: wrapped}], 4096);
     const parsed = parseTaggedAiResult(result);
     lastAiExerciseTheme = theme;
     lastAiExerciseRaw = result;
@@ -3443,9 +3589,7 @@ document.getElementById('aiDescribeGenerateBtn').addEventListener('click', async
       { type: 'image', source: { type: 'base64', media_type: aiDescribeImageMediaType, data: aiDescribeImageBase64 } },
       { type: 'text', text: `"""\ndescrie imaginea atașată\n"""` }
     ];
-    const draft = await callClaude(systemPrompt, contentBlocks, 4096);
-    statusEl.textContent = 'Se verifică gramatical...';
-    const result = await translateWithReview(draft);
+    const result = await generateTranslatedContent(systemPrompt, contentBlocks, 4096);
     lastAiDescribeRaw = result;
     const parsed = parseTaggedAiResult(result);
     document.getElementById('aiDescribeResultBox').innerHTML = parsed.html;
@@ -3485,15 +3629,22 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
 
   try{
     const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool, levelGroup);
-    let draft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
-    let draftBlocks = splitIntoThreeTexts(draft);
+    async function generateDraft(){
+      if(aiQualityTier === 'fast'){
+        return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
+      }
+      const effort = aiQualityTier === 'better' ? 'low' : 'medium';
+      return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192, 'claude-sonnet-5', effort);
+    }
+    let draft = await generateDraft();
+    let draftBlocks = splitIntoTextBlocks(draft, 2);
     // plasa de siguranta: daca vreun text nu contine toate cuvintele tinta, incercam O SINGURA
     // data din nou (nu bucla infinita) - daca nici a doua incercare nu e completa, continuam
     // oricum cu ce avem, mai bine un text imperfect decat blocat la nesfarsit
     if(!validateAllWordsInEachText(draftBlocks)){
       statusEl.textContent = 'Un text nu conținea toate cuvintele — se reîncearcă...';
-      const retryDraft = await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
-      const retryBlocks = splitIntoThreeTexts(retryDraft);
+      const retryDraft = await generateDraft();
+      const retryBlocks = splitIntoTextBlocks(retryDraft, 2);
       if(validateAllWordsInEachText(retryBlocks)){ draft = retryDraft; draftBlocks = retryBlocks; }
       // daca nici reincercarea nu trece validarea, continuam cu reincercarea oricum (poate fi
       // totusi mai buna decat originalul, sau macar diferita) - nu blocam utilizatorul la nesfarsit
@@ -3504,8 +3655,13 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
     const blockLineCounts = blockLineArrays.map(a=>a.length);
     const flatText = blockLineArrays.flat().join('\n');
 
+    // la nivelul Rapid, textul mai trece printr-un pas separat de revizuire (Haiku) - la
+    // Calitate imbunatatita/superioara, draftul e deja generat direct pe Sonnet, la efortul
+    // ales, deci NU mai trece printr-un al doilea apel de revizuire (ar fi redundant)
     statusEl.textContent = 'Se verifică gramatical...';
-    const reviewedFlat = flatText ? await translateWithReview(flatText) : '';
+    const reviewedFlat = aiQualityTier === 'fast'
+      ? (flatText ? await translateWithReview(flatText) : '')
+      : flatText;
     const reviewedLines = reviewedFlat.split('\n').map(l=>l.trim()).filter(l => l.startsWith('[DE]') || l.startsWith('[RO]'));
     let useLines = (reviewedLines.length === flatText.split('\n').filter(Boolean).length) ? reviewedLines : blockLineArrays.flat();
 
@@ -3552,7 +3708,7 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
     });
 
     lastAiNewWordsRawBlocks = finalTexts.map(t=>t.cleanText);
-    for(let i=0; i<3; i++){
+    for(let i=0; i<2; i++){
       document.getElementById(`aiNewWordsBox${i+1}`).innerHTML = finalTexts[i].html || '<span class="upload-status">(text lipsă — încearcă din nou)</span>';
       document.getElementById(`aiNewWordsSpeakBtn${i+1}`).dataset.germanText = finalTexts[i].germanOnly;
     }
@@ -3588,7 +3744,7 @@ document.getElementById('aiNewWordsGenerateBtn').addEventListener('click', async
   const knownWords = getKnownWordsForLevelGroup(derivedLevel);
   await generateNewWordsTexts(targetWords, [...knownWords.core, ...knownWords.helpers], derivedLevel);
 });
-[1,2,3].forEach(i=>{
+[1,2].forEach(i=>{
   document.getElementById(`aiNewWordsSpeakBtn${i}`).addEventListener('click', function(){
     speakGerman(this.dataset.germanText || '');
   });
@@ -4048,9 +4204,11 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
     contentBlocks.push({ type: 'text', text: `"""\n${textForPrompt}\n"""` });
 
     if(isCorrectMode){
-      // corectura e deja un singur agent, dedicat verificarii de forma - nu mai trece si prin
-      // Agentul 2 de revizuire (ar fi redundant, si formatul de etichete e diferit oricum)
-      const result = await callClaude(systemPrompt, contentBlocks, 4096);
+      // corectura e deja un singur agent, dedicat verificarii de forma - la nivelul Rapid nu mai
+      // trece si prin Agentul 2 de revizuire (translateWithReview nu gaseste etichete [DE]/[RO]
+      // in formatul de corectura, deci nu face nimic - sigur, doar la Calitate imbunatatita/superioara
+      // apelul merge direct pe Sonnet, la efortul ales)
+      const result = await generateTranslatedContent(systemPrompt, contentBlocks, 4096);
       const parsedCorr = parseCorrectionResult(result);
       lastAiOriginal = inputText || '(imagine)';
       lastAiResult = parsedCorr.corrected;
@@ -4069,10 +4227,8 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
       saveAiHistoryEntry(lastAiOriginal, result, aiImageBase64 ? 'image' : (aiInputWasVoice ? 'voice' : 'text'));
       aiInputWasVoice = false;
     } else {
-      // traducere SI simplificare folosesc acelasi format de iesire ([DE]/[RO]), aceeasi revizuire (Agentul 2)
-      const draft = await callClaude(systemPrompt, contentBlocks, 8192);
-      statusEl.textContent = 'Se verifică gramatical...';
-      const result = await translateWithReview(draft);
+      // traducere SI simplificare folosesc acelasi format de iesire ([DE]/[RO])
+      const result = await generateTranslatedContent(systemPrompt, contentBlocks, 8192);
       const parsed = parseTaggedAiResult(result);
       lastAiOriginal = inputText || '(imagine)';
       lastAiResult = parsed.cleanText;
