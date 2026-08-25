@@ -4,6 +4,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v97 — corecții critice la nivelul de calitate AI, plus mini-player audio**
+- **Eroarea de generare la Calitate îmbunătățită/superioară** (`effort: Extra inputs are not permitted`) — corectată: parametrul de efort trebuia încadrat în `output_config`, nu trimis direct.
+- **Mesaje rămase la "3 texte"** — actualizate peste tot la 2, inclusiv cele trimise efectiv către API.
+- **Butonul flotant de validare** — mutat în afara panoului de listă (era copil al unui element cu `transform`, ceea ce-i rupea poziționarea fixă reală); acum rămâne vizibil corect, indiferent de scroll.
+- **Selectorul de calitate** — mutat din hub, direct lângă fiecare buton „Generează"/„Tradu"/„Descrie", ca alegerea să fie clară, la locul unde se folosește.
+- **Mini-player audio (Redă/Pauză/Oprește)** — la toate rezultatele mai lungi (traducere, exerciții, descriere poză, cuvinte noi în context); fără derulare cu secunde (Web Speech API nu expune nicio poziție de timp în vorbire).
+- Verificat cu DOM real (jsdom): ciclul complet Redă→Pauză→Reia→Oprește, izolare corectă între playere multiple.
+
 **v96 — 3 niveluri de calitate AI, verificare de fidelitate prin retraducere independentă, mini-player audio**
 - **Nivel de calitate ales de utilizator** — ⚡ Rapid / ✨ Calitate îmbunătățită / 💎 Calitate superioară, selectabil direct din panoul AI. Diferențele de cost sunt mici, explicat clar la fiecare alegere și în Ajutor.
 - **Rapid** (implicit) — pipeline complet: traducere, verificare gramaticală, și (doar la texte mai lungi, peste 3 perechi de propoziții) o verificare suplimentară de fidelitate — un model retraduce independent traducerea română înapoi în germană, fără să vadă originalul, apoi se compară obiectiv dacă sensul (cauzalitate, sentiment, timp) s-a păstrat; doar diferențele reale se corectează, țintit.

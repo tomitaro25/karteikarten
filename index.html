@@ -573,12 +573,12 @@
     <div id="wordListRows"></div>
   </div>
 
-  <button class="btn-block paste-highlight" id="wordListFloatingConfirmBtn" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); width:calc(100% - 48px); max-width:420px; display:none; z-index:60; box-shadow:0 4px 18px rgba(0,0,0,0.35);">
-    <span>✓ Validează selecția (<span id="wordListFloatingCount">0</span>/5)</span><span>→</span>
-  </button>
-
   <button class="sheet-close" id="closeWordListSheetBtn">Închide</button>
 </div>
+
+<button class="btn-block paste-highlight" id="wordListFloatingConfirmBtn" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); width:calc(100% - 48px); max-width:420px; display:none; z-index:60; box-shadow:0 4px 18px rgba(0,0,0,0.35);">
+  <span>✓ Validează selecția (<span id="wordListFloatingCount">0</span>/5)</span><span>→</span>
+</button>
 
 <div class="sheet" id="aiSheet">
   <div class="sheet-handle"></div>
@@ -595,7 +595,8 @@
       4. Din meniu, „API keys" → „Create key" → dă-i un nume, alege o valabilitate (recomandat: 30 de zile, nu „Never")<br>
       5. <b>Copiază cheia imediat</b> — se arată o singură dată; începe cu „sk-ant-"<br>
       6. Lipește cheia mai jos → „Testează conexiunea"</p>
-      <p><b>Calitate răspuns AI</b> — poți alege, în orice moment, din trei niveluri: <b>⚡ Rapid</b> (implicit), <b>✨ Calitate îmbunătățită</b>, sau <b>💎 Calitate superioară</b>. Diferențele de cost între ele sunt mici — toate rămân ieftine de folosit, sub un cent per generare de obicei; alegerea contează mai ales pentru cât de atent verifică rezultatul, nu pentru buzunar.</p>
+      <p><b>Calitate răspuns AI</b> — poți alege, direct lângă fiecare buton „Generează"/„Tradu"/„Descrie", din trei niveluri: <b>⚡ Rapid</b> (implicit), <b>✨ Calitate îmbunătățită</b>, sau <b>💎 Calitate superioară</b>. Diferențele de cost între ele sunt mici — toate rămân ieftine de folosit, sub un cent per generare de obicei; alegerea contează mai ales pentru cât de atent verifică rezultatul, nu pentru buzunar. Alegerea se ține minte, aceeași peste tot în aplicație.</p>
+      <p><b>Player audio</b> — la rezultatele mai lungi (traducere, exerciții, descriere poză, cuvinte noi în context), în loc de un singur buton de ascultare, ai Redă/Pauză/Oprește — poți opri ascultarea oricând, nu doar aștepta până la final.</p>
       <p><b>La Rapid:</b> traducerea trece printr-un al doilea pas automat — un "corector" separat, care verifică acordurile complete (gen, număr, participii), cazurile gramaticale, ortografia, expresiile idiomatice. La texte mai lungi (peste câteva propoziții), se adaugă și o verificare de fidelitate prin retraducere independentă — un al treilea model traduce înapoi traducerea ta română, fără să vadă originalul, apoi se compară obiectiv dacă sensul (cauzalitate, sentiment, timp) s-a păstrat corect. Rar, dacă apare o diferență reală, doar acea bucată se trimite către un model mai avansat pentru corectare. Dacă orice pas eșuează tehnic, rămâi cu varianta anterioară, nu cu una trunchiată.</p>
       <p><b>La Calitate îmbunătățită/superioară:</b> un singur model, mai atent, generează direct rezultatul final, fără pașii separați de mai sus.</p>
       <p><b>„Cuvinte noi în context"</b> generează acum <b>2 texte</b> (nu 3), fiecare cu temă proprie — le poți asculta oricând din Istoric, evidențierea cuvintelor rămâne păstrată.</p>
@@ -625,15 +626,6 @@
   <div id="aiHubView">
     <div class="sheet-section" id="aiNoKeyNotice" style="display:none;">
       <div class="upload-status">Nu ai încă o cheie salvată — deschide „❓ Ajutor — AI" mai sus ca s-o adaugi.</div>
-    </div>
-    <div class="sheet-section">
-      <div class="sheet-label">Calitate răspuns AI</div>
-      <div class="chip-row">
-        <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
-        <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
-        <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
-      </div>
-      <div class="upload-status" id="aiQualityTierNote" style="margin-top:6px;"></div>
     </div>
     <div class="sheet-section">
       <button class="btn-block paste-highlight" id="aiHubTranslateBtn" style="width:100%;"><span>🌐 Traducere liberă</span><span>›</span></button>
@@ -752,6 +744,15 @@
       <div class="upload-status">Notă: o imagine consumă mult mai mulți tokeni (deci mai mult din credit) decât text simplu — vezi Ajutor pentru detalii.</div>
     </div>
 
+    <div class="sheet-section ai-quality-tier-block" style="padding-bottom:0;">
+      <div class="sheet-label">Calitate răspuns</div>
+      <div class="chip-row">
+        <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
+        <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
+        <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
+      </div>
+      <div class="upload-status ai-quality-tier-note" style="margin-top:6px;"></div>
+    </div>
     <button class="btn-block paste-highlight" id="aiTranslateBtn" style="width:100%; margin-top:10px;"><span id="aiTranslateBtnLabel">Tradu</span><span>→</span></button>
     <div class="upload-status" id="aiStatus"></div>
   </div>
@@ -760,7 +761,7 @@
     <div class="sheet-label" id="aiResultLabel">Rezultat</div>
     <div id="aiResultBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
     <div id="aiExplanationsBox" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line);"></div>
-    <button class="btn-block" id="aiSpeakResultBtn" style="width:100%; margin-top:8px;"><span>🔊 Ascultă rezultatul</span><span>▶</span></button>
+    <div id="aiSpeakResultPlayerSlot" style="margin-top:8px;"></div>
     <div style="display:flex; gap:6px; margin-top:10px;">
       <select id="aiDownloadFormat" class="btn-block" style="flex:1; appearance:none;">
         <option value="txt">Text (.txt)</option>
@@ -795,6 +796,14 @@
     <div class="sheet-section">
       <div class="sheet-label">Temă (scurtă, în română)</div>
       <input type="text" id="aiExerciseTheme" class="btn-block" style="width:100%;" placeholder="ex. La plimbare prin parc" maxlength="60">
+      <div class="sheet-section ai-quality-tier-block" style="padding-bottom:0; padding-top:0;">
+        <div class="chip-row">
+          <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
+          <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
+          <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
+        </div>
+        <div class="upload-status ai-quality-tier-note" style="margin-top:6px;"></div>
+      </div>
       <button class="btn-block paste-highlight" id="aiExerciseGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează</span><span>→</span></button>
       <div class="upload-status" id="aiExerciseStatus"></div>
     </div>
@@ -811,7 +820,7 @@
       <div id="aiExerciseTranslationSection" style="display:none; margin-top:12px;">
         <div class="sheet-label">Traducere (AI)</div>
         <div id="aiExerciseTranslationBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
-        <button class="btn-block" id="aiExerciseSpeakBtn" style="width:100%; margin-top:8px;" disabled><span>🔊 Ascultă (germană)</span><span>▶</span></button>
+        <div id="aiExerciseSpeakPlayerSlot" style="margin-top:8px;"></div>
       </div>
     </div>
   </div>
@@ -841,6 +850,14 @@
         <img id="aiDescribeImagePreview" style="max-width:100%; max-height:200px; border-radius:10px; border:1px solid var(--line); display:block;">
         <button class="chip" id="aiDescribeImageRemoveBtn" style="margin-top:6px;">✕ Elimină poza</button>
       </div>
+      <div class="sheet-section ai-quality-tier-block" style="padding-bottom:0; padding-top:0;">
+        <div class="chip-row">
+          <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
+          <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
+          <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
+        </div>
+        <div class="upload-status ai-quality-tier-note" style="margin-top:6px;"></div>
+      </div>
       <button class="btn-block paste-highlight" id="aiDescribeGenerateBtn" style="width:100%; margin-top:10px;"><span>Descrie</span><span>→</span></button>
       <div class="upload-status" id="aiDescribeStatus"></div>
     </div>
@@ -848,7 +865,7 @@
     <div class="sheet-section" id="aiDescribeResultSection" style="display:none;">
       <div class="sheet-label">Descriere</div>
       <div id="aiDescribeResultBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
-      <button class="btn-block" id="aiDescribeSpeakBtn" style="width:100%; margin-top:8px;"><span>🔊 Ascultă (germană)</span><span>▶</span></button>
+      <div id="aiDescribeSpeakPlayerSlot" style="margin-top:8px;"></div>
     </div>
   </div>
 
@@ -859,7 +876,15 @@
 
     <div class="sheet-section">
       <div class="sheet-label">Cum funcționează</div>
-      <p class="help-text" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 3 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
+      <p class="help-text" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 2 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
+      <div class="sheet-section ai-quality-tier-block" style="padding-bottom:0; padding-top:0;">
+        <div class="chip-row">
+          <span class="chip ai-quality-tier" data-tier="fast">⚡ Rapid</span>
+          <span class="chip ai-quality-tier" data-tier="better">✨ Calitate îmbunătățită</span>
+          <span class="chip ai-quality-tier" data-tier="best">💎 Calitate superioară</span>
+        </div>
+        <div class="upload-status ai-quality-tier-note" style="margin-top:6px;"></div>
+      </div>
       <button class="btn-block paste-highlight" id="aiNewWordsGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează — Cuvinte alese aleatoriu</span><span>→</span></button>
       <button class="btn-block" id="aiNewWordsManualBtn" style="width:100%; margin-top:8px;"><span>✋ Alege manual cuvintele</span><span>›</span></button>
       <button class="btn-block paste-highlight" id="aiNewWordsManualGenerateBtn" style="width:100%; margin-top:8px; display:none;"><span>Generează — Cuvinte alese manual</span><span>→</span></button>
@@ -874,11 +899,11 @@
     <div class="sheet-section" id="aiNewWordsResultSection" style="display:none;">
       <div class="sheet-label">Text 1</div>
       <div id="aiNewWordsBox1" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
-      <button class="btn-block" id="aiNewWordsSpeakBtn1" style="width:100%; margin-top:8px;"><span>🔊 Ascultă (germană)</span><span>▶</span></button>
+      <div id="aiNewWordsSpeakPlayerSlot1" style="margin-top:8px;"></div>
 
       <div class="sheet-label" style="margin-top:18px;">Text 2</div>
       <div id="aiNewWordsBox2" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
-      <button class="btn-block" id="aiNewWordsSpeakBtn2" style="width:100%; margin-top:8px;"><span>🔊 Ascultă (germană)</span><span>▶</span></button>
+      <div id="aiNewWordsSpeakPlayerSlot2" style="margin-top:8px;"></div>
     </div>
   </div>
 
@@ -1122,7 +1147,7 @@ function populateVoiceList(){
   }
 }
 
-function speakGerman(text){
+function speakGerman(text, onEndCallback){
   try{
     if(!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel(); // opreste orice rostire anterioara
@@ -1131,8 +1156,73 @@ function speakGerman(text){
     utter.rate = 0.9;
     const chosen = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
     if(chosen) utter.voice = chosen;
+    if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
     window.speechSynthesis.speak(utter);
   }catch(e){ /* TTS indisponibil pe acest dispozitiv - esuam silentios */ }
+}
+
+/* ---------- Mini-player audio (Play/Pauza/Stop) - pt sectiuni cu continut mai lung ---------- */
+// scop limitat: doar la rezultate AI mai lungi (traducere, exercitii, descrieri, cuvinte noi in
+// context) - NU la cuvinte singure de pe carduri, acolo un singur tap-ascultare ramane suficient.
+// fara derulare cu +/- secunde: Web Speech API nu expune nicio pozitie de timp in vorbirea
+// sintetizata (spre deosebire de <audio>) - orice aproximare ar fi inconsecventa. Doar Play/Pauza/Stop.
+let ttsCurrentPlayerId = null;
+
+function renderTtsPlayerHtml(playerId){
+  return `<div class="tts-player" data-player-id="${playerId}" style="display:flex; gap:8px; margin-top:8px;">
+    <button class="btn-block tts-play-pause-btn" style="flex:1; min-height:52px;"><span>▶ Redă</span><span></span></button>
+    <button class="btn-block tts-stop-btn" style="flex:1; min-height:52px;" disabled><span>⏹ Oprește</span><span></span></button>
+  </div>`;
+}
+function resetTtsPlayerUi(playerId){
+  const wrap = document.querySelector(`.tts-player[data-player-id="${playerId}"]`);
+  if(!wrap) return;
+  wrap.querySelector('.tts-play-pause-btn span').textContent = '▶ Redă';
+  wrap.querySelector('.tts-stop-btn').disabled = true;
+}
+function initTtsPlayer(playerId, getTextFn){
+  const wrap = document.querySelector(`.tts-player[data-player-id="${playerId}"]`);
+  if(!wrap) return;
+  const playBtn = wrap.querySelector('.tts-play-pause-btn');
+  const stopBtn = wrap.querySelector('.tts-stop-btn');
+
+  playBtn.onclick = ()=>{
+    if(ttsCurrentPlayerId && ttsCurrentPlayerId !== playerId){
+      window.speechSynthesis.cancel();
+      resetTtsPlayerUi(ttsCurrentPlayerId);
+      ttsCurrentPlayerId = null;
+    }
+    if(window.speechSynthesis.speaking && !window.speechSynthesis.paused && ttsCurrentPlayerId === playerId){
+      window.speechSynthesis.pause();
+      playBtn.querySelector('span').textContent = '▶ Continuă';
+      return;
+    }
+    if(window.speechSynthesis.paused && ttsCurrentPlayerId === playerId){
+      window.speechSynthesis.resume();
+      playBtn.querySelector('span').textContent = '⏸ Pauză';
+      return;
+    }
+    const text = getTextFn();
+    if(!text) return;
+    ttsCurrentPlayerId = playerId;
+    speakGerman(text, ()=>{
+      resetTtsPlayerUi(playerId);
+      if(ttsCurrentPlayerId === playerId) ttsCurrentPlayerId = null;
+    });
+    playBtn.querySelector('span').textContent = '⏸ Pauză';
+    stopBtn.disabled = false;
+  };
+  stopBtn.onclick = ()=>{
+    window.speechSynthesis.cancel();
+    resetTtsPlayerUi(playerId);
+    if(ttsCurrentPlayerId === playerId) ttsCurrentPlayerId = null;
+  };
+}
+function setTtsPlayerDisabled(playerId, disabled){
+  const wrap = document.querySelector(`.tts-player[data-player-id="${playerId}"]`);
+  if(!wrap) return;
+  wrap.querySelector('.tts-play-pause-btn').disabled = disabled;
+  if(disabled){ wrap.querySelector('.tts-stop-btn').disabled = true; }
 }
 
 /* ---------- benzi de frecventa (doar A1/A2/B1/B2, in ordinea REALA de frecventa) ---------- */
@@ -1858,6 +1948,7 @@ function showAiView(view){
   document.getElementById('aiDescribeView').style.display = view === 'describe' ? 'block' : 'none';
   document.getElementById('aiNewWordsView').style.display = view === 'newwords' ? 'block' : 'none';
   if(view === 'history'){ populateAiHistFilters(); renderAiHistList(); }
+  refreshAiQualityTierUi(); // sincronizam toate copiile selectorului de calitate, oriunde ar fi in ecranul curent
 }
 // activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
 // centralizat intr-o functie, ca sa poata fi rechemata oricand starea cheii se schimba (nu doar la deschidere)
@@ -1894,7 +1985,9 @@ function refreshAiQualityTierUi(){
   document.querySelectorAll('.ai-quality-tier').forEach(chip=>{
     chip.classList.toggle('active', chip.dataset.tier === aiQualityTier);
   });
-  document.getElementById('aiQualityTierNote').textContent = AI_QUALITY_TIER_NOTES[aiQualityTier];
+  document.querySelectorAll('.ai-quality-tier-note').forEach(note=>{
+    note.textContent = AI_QUALITY_TIER_NOTES[aiQualityTier];
+  });
 }
 document.querySelectorAll('.ai-quality-tier').forEach(chip=>{
   chip.addEventListener('click', ()=>{
@@ -3040,7 +3133,7 @@ async function callClaude(systemPrompt, contentBlocks, maxTokens, model, effort)
     system: systemPrompt,
     messages: [{ role: 'user', content: contentBlocks }]
   };
-  if(effort) body.effort = effort; // doar la Sonnet - controleaza bugetul de "gandire" (low/medium/high...)
+  if(effort) body.output_config = { effort }; // doar la Sonnet - controleaza bugetul de "gandire" (low/medium/high...)
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -3461,7 +3554,9 @@ document.getElementById('aiExerciseGenerateBtn').addEventListener('click', async
   resultSection.style.display = 'none';
   translationSection.style.display = 'none';
   document.getElementById('aiExerciseUserAttempt').value = '';
-  document.getElementById('aiExerciseSpeakBtn').disabled = true;
+  document.getElementById('aiExerciseSpeakPlayerSlot').innerHTML = renderTtsPlayerHtml('exercise');
+  initTtsPlayer('exercise', ()=> parseTaggedAiResult(lastAiExerciseRaw).germanOnly);
+  setTtsPlayerDisabled('exercise', true); // dezactivat pana la "Arata traducerea" - ramane autotestare
   try{
     const systemPrompt = buildExercisePrompt(aiExerciseLevel, aiExerciseLang, theme, knownWords, maxWords);
     const wrapped = `"""\n${theme}\n"""`;
@@ -3492,7 +3587,7 @@ document.getElementById('aiExerciseRevealBtn').addEventListener('click', ()=>{
   const parsed = parseTaggedAiResult(lastAiExerciseRaw);
   document.getElementById('aiExerciseTranslationBox').innerHTML = parsed.html;
   document.getElementById('aiExerciseTranslationSection').style.display = 'block';
-  document.getElementById('aiExerciseSpeakBtn').disabled = false;
+  setTtsPlayerDisabled('exercise', false);
 
   const userAttempt = document.getElementById('aiExerciseUserAttempt').value.trim();
   const entry = { id: Date.now(), originalText: lastAiExerciseTheme, translatedText: lastAiExerciseRaw, source: 'exercitiu' };
@@ -3500,11 +3595,6 @@ document.getElementById('aiExerciseRevealBtn').addEventListener('click', ()=>{
   const hist = loadAiHistory();
   hist.push(entry);
   saveAiHistory(hist);
-});
-
-document.getElementById('aiExerciseSpeakBtn').addEventListener('click', ()=>{
-  const parsed = parseTaggedAiResult(lastAiExerciseRaw);
-  speakGerman(parsed.germanOnly);
 });
 
 /* ---------- AI: "Descrie o poza" ---------- */
@@ -3593,6 +3683,8 @@ document.getElementById('aiDescribeGenerateBtn').addEventListener('click', async
     lastAiDescribeRaw = result;
     const parsed = parseTaggedAiResult(result);
     document.getElementById('aiDescribeResultBox').innerHTML = parsed.html;
+    document.getElementById('aiDescribeSpeakPlayerSlot').innerHTML = renderTtsPlayerHtml('describe');
+    initTtsPlayer('describe', ()=> parseTaggedAiResult(lastAiDescribeRaw).germanOnly);
     resultSection.style.display = 'block';
     statusEl.textContent = '';
     const preview = parsed.cleanText.split('\n')[0] || 'fără text extras';
@@ -3600,10 +3692,6 @@ document.getElementById('aiDescribeGenerateBtn').addEventListener('click', async
   }catch(err){
     statusEl.textContent = `✗ ${err.message}`;
   }
-});
-document.getElementById('aiDescribeSpeakBtn').addEventListener('click', ()=>{
-  const parsed = parseTaggedAiResult(lastAiDescribeRaw);
-  speakGerman(parsed.germanOnly);
 });
 
 /* ---------- AI: "Cuvinte noi in context" - handler principal ---------- */
@@ -3613,7 +3701,7 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
   const resultSection = document.getElementById('aiNewWordsResultSection');
   const targetWordStrings = targetWords.map(w=>extractCoreWord(w.de));
   resultSection.style.display = 'none';
-  statusEl.textContent = 'Se generează 3 texte...';
+  statusEl.textContent = 'Se generează 2 texte...';
 
   // verificare tolerantă (potrivire pe radacina cuvantului, nu exacta - conjugarea schimba
   // sufixul) - fiecare text trebuie sa contina toate cuvintele tinta, nu doar unele
@@ -3631,10 +3719,10 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
     const systemPrompt = buildNewWordsPrompt(targetWords, knownWordsPool, levelGroup);
     async function generateDraft(){
       if(aiQualityTier === 'fast'){
-        return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192);
+        return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 2 texte'}], 8192);
       }
       const effort = aiQualityTier === 'better' ? 'low' : 'medium';
-      return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 3 texte'}], 8192, 'claude-sonnet-5', effort);
+      return await callClaude(systemPrompt, [{type:'text', text: 'generează cele 2 texte'}], 8192, 'claude-sonnet-5', effort);
     }
     let draft = await generateDraft();
     let draftBlocks = splitIntoTextBlocks(draft, 2);
@@ -3710,7 +3798,11 @@ async function generateNewWordsTexts(targetWords, knownWordsPool, levelGroup){
     lastAiNewWordsRawBlocks = finalTexts.map(t=>t.cleanText);
     for(let i=0; i<2; i++){
       document.getElementById(`aiNewWordsBox${i+1}`).innerHTML = finalTexts[i].html || '<span class="upload-status">(text lipsă — încearcă din nou)</span>';
-      document.getElementById(`aiNewWordsSpeakBtn${i+1}`).dataset.germanText = finalTexts[i].germanOnly;
+      const slotId = `aiNewWordsSpeakPlayerSlot${i+1}`;
+      const playerId = `newwords${i+1}`;
+      document.getElementById(slotId).innerHTML = renderTtsPlayerHtml(playerId);
+      const germanText = finalTexts[i].germanOnly;
+      initTtsPlayer(playerId, ()=> germanText);
     }
     resultSection.style.display = 'block';
     statusEl.textContent = '';
@@ -3743,11 +3835,6 @@ document.getElementById('aiNewWordsGenerateBtn').addEventListener('click', async
   const derivedLevel = deriveLevelGroupFromWords(targetWords);
   const knownWords = getKnownWordsForLevelGroup(derivedLevel);
   await generateNewWordsTexts(targetWords, [...knownWords.core, ...knownWords.helpers], derivedLevel);
-});
-[1,2].forEach(i=>{
-  document.getElementById(`aiNewWordsSpeakBtn${i}`).addEventListener('click', function(){
-    speakGerman(this.dataset.germanText || '');
-  });
 });
 
 
@@ -4243,13 +4330,11 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
       saveAiHistoryEntry(historyPreviewText, result, aiImageBase64 ? 'image' : (aiInputWasVoice ? 'voice' : 'text'));
       aiInputWasVoice = false;
     }
+    document.getElementById('aiSpeakResultPlayerSlot').innerHTML = renderTtsPlayerHtml('translateResult');
+    initTtsPlayer('translateResult', ()=> lastAiGermanOnly);
   }catch(err){
     statusEl.textContent = `✗ ${err.message}`;
   }
-});
-
-document.getElementById('aiSpeakResultBtn').addEventListener('click', ()=>{
-  if(lastAiGermanOnly) speakGerman(lastAiGermanOnly);
 });
 
 document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
