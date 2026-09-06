@@ -1421,6 +1421,12 @@ function stopVoicePartnerListening(){
 }
 document.getElementById('aiVoicePartnerUseClaudeBtn').addEventListener('click', startVoicePartnerClaudeMode);
 // functie comuna - vorbit SAU tastat ajung amandoua aici, aceeasi logica de procesare+raspuns
+// browser-ele "pronunta" adesea ciudat emoji-urile (sunet garbled, sau chiar o descriere
+// modelul (persona "prietenoasa") tinde sa adauge emoji la final - le scoatem complet,
+// din text, nu doar din ce se rosteste (nu sunt utile aici, si sunau ciudat la sinteza vocala)
+function stripEmoji(text){
+  return text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\uFE0F]/gu, '').replace(/\s{2,}/g, ' ').trim();
+}
 async function processVoicePartnerInput(rawText){
   try{
     if(vpMode === 'local' && vpBilingualAvailable){
@@ -1430,8 +1436,8 @@ async function processVoicePartnerInput(rawText){
       const germanText = isRomanian ? await vpTranslatorToDE.translate(rawText) : rawText;
       appendVoicePartnerBilingualLine('eu', rawText, isRomanian ? germanText : null);
       setVoicePartnerState('processing');
-      const reply = await vpSession.prompt(germanText);
-      const replyRo = await vpTranslatorToRO.translate(reply);
+      const reply = stripEmoji(await vpSession.prompt(germanText));
+      const replyRo = stripEmoji(await vpTranslatorToRO.translate(reply));
       appendVoicePartnerBilingualLine('partener', reply, replyRo);
       setVoicePartnerState('speaking');
       if(vpMuted) setVoicePartnerState('idle');
@@ -1442,10 +1448,10 @@ async function processVoicePartnerInput(rawText){
       setVoicePartnerState('processing');
       let reply;
       if(vpMode === 'local'){
-        reply = await vpSession.prompt(rawText);
+        reply = stripEmoji(await vpSession.prompt(rawText));
       } else {
         vpClaudeHistory.push({ role: 'user', content: rawText });
-        reply = await callClaudeConversation(buildVoicePartnerSystemPrompt(), vpClaudeHistory, 300);
+        reply = stripEmoji(await callClaudeConversation(buildVoicePartnerSystemPrompt(), vpClaudeHistory, 300));
         vpClaudeHistory.push({ role: 'assistant', content: reply });
       }
       appendVoicePartnerLine('partener', reply);

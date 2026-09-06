@@ -4,6 +4,10 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v104 — emoji eliminate complet din „Exersează vorbitul" (găsit prin testare reală)**
+- Modelul (persona „prietenoasă") adăuga adesea un emoji la finalul răspunsului — browser-ul îl "rostea" ciudat, la sinteza vocală, un sunet nepotrivit, greu de identificat ca fiind chiar asta. Confirmat direct dintr-o conversație reală, salvată și analizată.
+- Eliminate acum complet, o singură dată, la sursă — nu doar din ce se rostește, ci și din text (afișare + salvare), consecvent, în toate modurile (local/Claude, bilingv/simplu).
+
 **v103 — „Exersează vorbitul": conversație bilingvă (RO/DE), text fără sunet, salvare, câmp de scris**
 - **API-uri dedicate, locale** (Translator + Language Detector, separate de „Prompt API") — dacă disponibile, poți scrie sau vorbi în română SAU germană; textul tău și răspunsul partenerului apar traduse 1-la-1, în ambele limbi. Dacă nu-s disponibile, modulul rămâne funcțional în forma simplă (doar germană), fără să blocheze nimic.
 - **Câmp de text**, alături de microfon — utilizabil oricând, nu doar dacă microfonul lipsește.
