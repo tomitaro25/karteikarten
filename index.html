@@ -606,7 +606,7 @@
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Simplificarea și traducerea se fac acum în 2 pași separați (nu într-un singur apel), pentru o traducere mai consecventă. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — descrierea și traducerea se fac în 2 pași separați, cu traducere română alături și ascultare disponibilă imediat.</p>
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
-      <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate.</p>
+      <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
@@ -913,9 +913,21 @@
 
       <div id="aiVoicePartnerConversation" style="max-height:40vh; overflow-y:auto; margin-top:12px; font-family:'Literata',serif; font-size:0.92rem; line-height:1.6;"></div>
 
-      <button class="btn-block paste-highlight" id="aiVoicePartnerTalkBtn" style="width:100%; margin-top:12px; min-height:64px;"><span>🎙️ Apasă pentru a vorbi</span><span></span></button>
+      <div style="display:flex; gap:6px; margin-top:12px;">
+        <button class="btn-block paste-highlight" id="aiVoicePartnerTalkBtn" style="flex:1; min-height:64px;"><span>🎙️ Apasă pentru a vorbi</span><span></span></button>
+        <button class="btn-block" id="aiVoicePartnerMuteBtn" style="flex:0 0 64px; min-height:64px;" aria-label="Oprește/pornește sunetul"><span>🔊</span></button>
+      </div>
       <div class="upload-status" id="aiVoicePartnerStatus" style="text-align:center;"></div>
-      <button class="chip" id="aiVoicePartnerResetBtn" style="margin-top:10px;">↺ Conversație nouă</button>
+
+      <div style="display:flex; gap:6px; margin-top:10px;">
+        <input type="text" id="aiVoicePartnerTextInput" class="btn-block" style="flex:1;" placeholder="Sau scrie aici (română sau germană)...">
+        <button class="btn-block" id="aiVoicePartnerTextSendBtn" style="flex:0 0 auto; padding:0 16px;"><span>Trimite</span></button>
+      </div>
+
+      <div style="display:flex; gap:6px; margin-top:10px;">
+        <button class="chip" id="aiVoicePartnerResetBtn">↺ Conversație nouă</button>
+        <button class="chip" id="aiVoicePartnerSaveBtn">💾 Salvează conversația</button>
+      </div>
     </div>
   </div>
 
@@ -1232,8 +1244,17 @@ let vpSession = null;
 let vpRecognizer = null;
 let vpState = 'idle'; // 'idle' | 'listening' | 'processing' | 'speaking'
 let vpMode = 'local'; // 'local' | 'claude'
+let vpMuted = false;
 let vpClaudeHistory = []; // {role:'user'|'assistant', content:string} - Claude nu tine minte
                           // singur conversatia intre apeluri, ca sesiunea locala - trimitem noi tot istoricul
+let vpConversationLines = []; // {speaker:'eu'|'partener', text} - text curat, pt salvare/export
+// API-uri dedicate, LOCALE, folosite DOAR in modul local (nu la Claude, care se descurca singur):
+// Translator + LanguageDetector - "model expert", separat de Prompt API general, mai fiabil
+// specific pt traducere. Verificate separat de LanguageModel - pot lipsi chiar daca Prompt API exista.
+let vpLanguageDetector = null;
+let vpTranslatorToDE = null;
+let vpTranslatorToRO = null;
+let vpBilingualAvailable = false;
 
 function buildVoicePartnerSystemPrompt(){
   return `Ești un partener de conversație în germană, pentru un elev român de nivel A2-B1.
@@ -1286,17 +1307,59 @@ function setVoicePartnerState(state){
   statusEl.textContent = '';
 }
 function appendVoicePartnerLine(speaker, text){
+  vpConversationLines.push({ speaker, text });
   const box = document.getElementById('aiVoicePartnerConversation');
   const color = speaker === 'eu' ? 'var(--ink)' : 'var(--der)';
   const label = speaker === 'eu' ? 'Tu' : 'Partener';
   box.innerHTML += `<div style="margin-bottom:8px;"><b style="color:${color};">${label}:</b> ${escapeHtml(text)}</div>`;
   box.scrollTop = box.scrollHeight;
 }
+// varianta cu traducere alaturata (1-la-1) - folosita doar in modul local, cand API-urile
+// dedicate (Translator/LanguageDetector) sunt disponibile
+function appendVoicePartnerBilingualLine(speaker, mainText, translatedText){
+  vpConversationLines.push({ speaker, text: translatedText ? `${mainText} (${translatedText})` : mainText });
+  const box = document.getElementById('aiVoicePartnerConversation');
+  const color = speaker === 'eu' ? 'var(--ink)' : 'var(--der)';
+  const label = speaker === 'eu' ? 'Tu' : 'Partener';
+  let html = `<div style="margin-bottom:8px;"><b style="color:${color};">${label}:</b> ${escapeHtml(mainText)}`;
+  if(translatedText){
+    html += `<div style="font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; margin-top:2px;">${escapeHtml(translatedText)}</div>`;
+  }
+  html += `</div>`;
+  box.innerHTML += html;
+  box.scrollTop = box.scrollHeight;
+}
+// configurare API-uri dedicate, o singura data - esec aici nu-i fatal, doar dezactiveaza
+// traducerea bilingva, modulul local ramane functional in forma simpla (doar germana)
+async function setupVoicePartnerBilingual(){
+  if(vpLanguageDetector) return; // deja configurat
+  try{
+    if(!('LanguageDetector' in self) || !('Translator' in self)) return;
+    vpLanguageDetector = await LanguageDetector.create();
+    vpTranslatorToDE = await Translator.create({ sourceLanguage: 'ro', targetLanguage: 'de' });
+    vpTranslatorToRO = await Translator.create({ sourceLanguage: 'de', targetLanguage: 'ro' });
+    vpBilingualAvailable = true;
+  }catch(err){
+    vpLanguageDetector = null; vpTranslatorToDE = null; vpTranslatorToRO = null;
+    vpBilingualAvailable = false;
+  }
+}
+async function detectIsRomanian(text){
+  if(!vpLanguageDetector) return false;
+  try{
+    const results = await vpLanguageDetector.detect(text);
+    return !!(results && results[0] && results[0].detectedLanguage === 'ro');
+  }catch(err){ return false; }
+}
 function updateVoicePartnerModeNote(){
   const note = document.getElementById('aiVoicePartnerModeNote');
-  note.textContent = vpMode === 'local'
-    ? 'Un partener de conversație simplu, la nivel A2-B1, rulează direct pe dispozitiv — fără cheie, fără cost (calitatea poate fi mai simplă). Apasă, vorbește în germană, ascultă răspunsul.'
-    : 'Aceeași conversație, dar prin Claude (cheia ta) — cost mic per schimb, calitate mai bună decât varianta locală. Apasă, vorbește în germană, ascultă răspunsul.';
+  if(vpMode === 'local'){
+    note.textContent = vpBilingualAvailable
+      ? 'Un partener de conversație simplu, la nivel A2-B1, rulează direct pe dispozitiv — fără cheie, fără cost. Poți scrie/vorbi în română SAU germană — se traduce automat, iar răspunsul apare în ambele limbi.'
+      : 'Un partener de conversație simplu, la nivel A2-B1, rulează direct pe dispozitiv — fără cheie, fără cost (calitatea poate fi mai simplă). Apasă, vorbește în germană, ascultă răspunsul.';
+  } else {
+    note.textContent = 'Aceeași conversație, dar prin Claude (cheia ta) — cost mic per schimb, calitate mai bună decât varianta locală. Apasă, vorbește în germană, ascultă răspunsul.';
+  }
 }
 async function initVoicePartnerView(){
   document.getElementById('aiVoicePartnerUnsupported').style.display = 'none';
@@ -1330,6 +1393,7 @@ async function initVoicePartnerView(){
     }
   }
   document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
+  await setupVoicePartnerBilingual();
   updateVoicePartnerModeNote();
   document.getElementById('aiVoicePartnerMain').style.display = 'block';
   setVoicePartnerState('idle');
@@ -1344,6 +1408,7 @@ function startVoicePartnerClaudeMode(){
   }
   vpMode = 'claude';
   vpClaudeHistory = [];
+  vpConversationLines = [];
   document.getElementById('aiVoicePartnerUnsupported').style.display = 'none';
   document.getElementById('aiVoicePartnerConversation').innerHTML = '';
   updateVoicePartnerModeNote();
@@ -1355,12 +1420,55 @@ function stopVoicePartnerListening(){
   if(vpState !== 'idle') setVoicePartnerState('idle');
 }
 document.getElementById('aiVoicePartnerUseClaudeBtn').addEventListener('click', startVoicePartnerClaudeMode);
+// functie comuna - vorbit SAU tastat ajung amandoua aici, aceeasi logica de procesare+raspuns
+async function processVoicePartnerInput(rawText){
+  try{
+    if(vpMode === 'local' && vpBilingualAvailable){
+      // modul local, bilingv: detectam limba, traducem spre germana daca era romana,
+      // trimitem germana la Prompt API, traducem raspunsul inapoi in romana pt afisare 1-la-1
+      const isRomanian = await detectIsRomanian(rawText);
+      const germanText = isRomanian ? await vpTranslatorToDE.translate(rawText) : rawText;
+      appendVoicePartnerBilingualLine('eu', rawText, isRomanian ? germanText : null);
+      setVoicePartnerState('processing');
+      const reply = await vpSession.prompt(germanText);
+      const replyRo = await vpTranslatorToRO.translate(reply);
+      appendVoicePartnerBilingualLine('partener', reply, replyRo);
+      setVoicePartnerState('speaking');
+      if(vpMuted) setVoicePartnerState('idle');
+      else speakGerman(reply, ()=> setVoicePartnerState('idle'));
+    } else {
+      // comportament simplu, neschimbat - Claude, sau local fara API-urile dedicate disponibile
+      appendVoicePartnerLine('eu', rawText);
+      setVoicePartnerState('processing');
+      let reply;
+      if(vpMode === 'local'){
+        reply = await vpSession.prompt(rawText);
+      } else {
+        vpClaudeHistory.push({ role: 'user', content: rawText });
+        reply = await callClaudeConversation(buildVoicePartnerSystemPrompt(), vpClaudeHistory, 300);
+        vpClaudeHistory.push({ role: 'assistant', content: reply });
+      }
+      appendVoicePartnerLine('partener', reply);
+      setVoicePartnerState('speaking');
+      if(vpMuted) setVoicePartnerState('idle');
+      else speakGerman(reply, ()=> setVoicePartnerState('idle'));
+    }
+  }catch(err){
+    document.getElementById('aiVoicePartnerStatus').textContent = `✗ ${err.message || 'Eroare la procesare'}`;
+    setVoicePartnerState('idle');
+  }
+}
+document.getElementById('aiVoicePartnerMuteBtn').addEventListener('click', function(){
+  vpMuted = !vpMuted;
+  this.querySelector('span').textContent = vpMuted ? '🔇' : '🔊';
+  if(vpMuted) window.speechSynthesis.cancel();
+});
 document.getElementById('aiVoicePartnerTalkBtn').addEventListener('click', ()=>{
   if(vpState !== 'idle') return;
   if(vpMode === 'local' && !vpSession) return;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){
-    document.getElementById('aiVoicePartnerStatus').textContent = 'Recunoașterea vocală nu e disponibilă în acest browser.';
+    document.getElementById('aiVoicePartnerStatus').textContent = 'Recunoașterea vocală nu e disponibilă — scrie în câmpul de mai jos, în schimb.';
     return;
   }
   setVoicePartnerState('listening');
@@ -1368,41 +1476,46 @@ document.getElementById('aiVoicePartnerTalkBtn').addEventListener('click', ()=>{
   vpRecognizer.lang = 'de-DE';
   vpRecognizer.maxAlternatives = 1;
   vpRecognizer.interimResults = false;
-  vpRecognizer.onresult = async (e)=>{
-    const transcript = e.results[0][0].transcript;
-    appendVoicePartnerLine('eu', transcript);
-    setVoicePartnerState('processing');
-    try{
-      let reply;
-      if(vpMode === 'local'){
-        reply = await vpSession.prompt(transcript);
-      } else {
-        vpClaudeHistory.push({ role: 'user', content: transcript });
-        reply = await callClaudeConversation(buildVoicePartnerSystemPrompt(), vpClaudeHistory, 300);
-        vpClaudeHistory.push({ role: 'assistant', content: reply });
-      }
-      appendVoicePartnerLine('partener', reply);
-      setVoicePartnerState('speaking');
-      speakGerman(reply, ()=> setVoicePartnerState('idle'));
-    }catch(err){
-      document.getElementById('aiVoicePartnerStatus').textContent = `✗ ${err.message || 'Eroare la procesare'}`;
-      setVoicePartnerState('idle');
-    }
-  };
+  vpRecognizer.onresult = (e)=> processVoicePartnerInput(e.results[0][0].transcript);
   vpRecognizer.onerror = (e)=>{
     if(e.error === 'not-allowed' || e.error === 'permission-denied'){
-      document.getElementById('aiVoicePartnerStatus').textContent = 'Acces la microfon refuzat.';
+      document.getElementById('aiVoicePartnerStatus').textContent = 'Acces la microfon refuzat — scrie în câmpul de mai jos, în schimb.';
     } else if(e.error !== 'aborted'){
-      document.getElementById('aiVoicePartnerStatus').textContent = 'Nu te-am auzit — încearcă din nou.';
+      document.getElementById('aiVoicePartnerStatus').textContent = 'Nu te-am auzit — încearcă din nou, sau scrie mai jos.';
     }
     setVoicePartnerState('idle');
   };
   vpRecognizer.onend = ()=>{ if(vpState === 'listening') setVoicePartnerState('idle'); };
   vpRecognizer.start();
 });
+function sendVoicePartnerTextInput(){
+  if(vpState !== 'idle') return;
+  if(vpMode === 'local' && !vpSession) return;
+  const input = document.getElementById('aiVoicePartnerTextInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  processVoicePartnerInput(text);
+}
+document.getElementById('aiVoicePartnerTextSendBtn').addEventListener('click', sendVoicePartnerTextInput);
+document.getElementById('aiVoicePartnerTextInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); sendVoicePartnerTextInput(); }
+});
+document.getElementById('aiVoicePartnerSaveBtn').addEventListener('click', ()=>{
+  if(!vpConversationLines.length){
+    document.getElementById('aiVoicePartnerStatus').textContent = 'Nimic de salvat încă — începe o conversație întâi.';
+    return;
+  }
+  const dateStr = new Date().toISOString().slice(0,10);
+  const modeLabel = vpMode === 'local' ? 'local (offline)' : 'Claude';
+  const content = `Conversație — Exersează vorbitul (${modeLabel})\n${dateStr}\n\n` +
+    vpConversationLines.map(l => `${l.speaker === 'eu' ? 'Tu' : 'Partener'}: ${l.text}`).join('\n');
+  downloadBlob(content, `conversatie-${dateStr}.txt`, 'text/plain;charset=utf-8');
+});
 document.getElementById('aiVoicePartnerResetBtn').addEventListener('click', async ()=>{
   stopVoicePartnerListening();
   document.getElementById('aiVoicePartnerConversation').innerHTML = '';
+  vpConversationLines = [];
   if(vpMode === 'claude'){
     vpClaudeHistory = []; // ramanem in acelasi mod, doar golim istoricul - fara reverificare locala
     return;

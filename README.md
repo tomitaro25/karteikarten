@@ -4,6 +4,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v103 — „Exersează vorbitul": conversație bilingvă (RO/DE), text fără sunet, salvare, câmp de scris**
+- **API-uri dedicate, locale** (Translator + Language Detector, separate de „Prompt API") — dacă disponibile, poți scrie sau vorbi în română SAU germană; textul tău și răspunsul partenerului apar traduse 1-la-1, în ambele limbi. Dacă nu-s disponibile, modulul rămâne funcțional în forma simplă (doar germană), fără să blocheze nimic.
+- **Câmp de text**, alături de microfon — utilizabil oricând, nu doar dacă microfonul lipsește.
+- **Buton de mut** (🔊/🔇) — conversație complet în text, fără sunet, dacă preferi (util pe calculator).
+- **Salvare conversație** — descarcă tot schimbul, într-un fișier text, cu dată și modul folosit (local/Claude) menționate.
+- Modul prin Claude rămâne neschimbat (simplu, doar germană) — bilingvismul se aplică doar motorului local, cu unelte dedicate.
+- Verificat: pipeline-ul bilingv complet (detectare + traducere + răspuns + traducere înapoi), izolat, cu ambele cazuri (intrare română, intrare germană).
+
 **v102 — mic tutorial pliabil, la „Exersează vorbitul", pentru activarea AI-ului local în Chrome**
 - Dacă detectarea automată nu găsește suport local, apare acum un ghid pas-cu-pas (pliabil, opțional) pentru activarea manuală din `chrome://flags` — cu mențiunea onestă că pe versiuni mai noi de Chrome s-ar putea să nici nu fie nevoie.
 - Activarea flag-urilor **nu** se poate face programatic, din nicio aplicație web — barieră de securitate a browser-ului, nu limitare proprie; tutorialul rămâne singura cale posibilă de-a ajuta utilizatorul.
