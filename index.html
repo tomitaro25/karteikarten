@@ -606,6 +606,7 @@
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Simplificarea și traducerea se fac acum în 2 pași separați (nu într-un singur apel), pentru o traducere mai consecventă. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — descrierea și traducerea se fac în 2 pași separați, cu traducere română alături și ascultare disponibilă imediat.</p>
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
+      <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate.</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
@@ -631,6 +632,10 @@
       <button class="btn-block" id="aiHubDescribeBtn" style="width:100%; margin-top:8px;"><span>📷 Descrie o poză</span><span>›</span></button>
       <button class="btn-block" id="aiHubNewWordsBtn" style="width:100%; margin-top:8px;"><span>🆕 Cuvinte noi în context</span><span>›</span></button>
       <button class="btn-block" id="aiHubHistoryBtn" style="width:100%; margin-top:8px;"><span>📜 Istoric</span><span>›</span></button>
+    </div>
+    <div class="sheet-section">
+      <div class="sheet-label">Fără cheie, fără cost</div>
+      <button class="btn-block" id="aiHubVoicePartnerBtn" style="width:100%;"><span>🗣️ Exersează vorbitul</span><span>›</span></button>
     </div>
   </div>
 
@@ -869,6 +874,48 @@
       <div class="sheet-label" style="margin-top:18px;">Text 2</div>
       <div id="aiNewWordsBox2" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <div id="aiNewWordsSpeakPlayerSlot2" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <div id="aiVoicePartnerView" style="display:none;">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <button class="chip" id="aiVoicePartnerBackBtn">← Înapoi</button>
+    </div>
+
+    <div class="sheet-section" id="aiVoicePartnerUnsupported" style="display:none;">
+      <div class="upload-status">
+        Acest browser nu are (încă) AI local, integrat (Chrome „Prompt API"/Gemini Nano) — funcția asta nu poate rula complet offline aici. Momentan, doar Chrome de pe calculator (nu telefon) îl poate avea.
+      </div>
+      <details style="margin-top:10px;">
+        <summary style="cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);">Cum activez, dacă am Chrome pe calculator?</summary>
+        <div class="upload-status" style="margin-top:8px;">
+          Pe versiuni mai noi de Chrome, s-ar putea să funcționeze deja, fără niciun pas suplimentar — verificarea de mai sus se reface automat de fiecare dată când redeschizi acest ecran. Dacă tot nu merge, încearcă:
+          <ol style="margin:6px 0 0 18px; padding:0;">
+            <li>Scrie <code>chrome://flags</code> în bara de adrese, Enter.</li>
+            <li>Caută (bara de căutare din pagină) după „gemini" sau „prompt api" sau „on-device".</li>
+            <li>La rezultatele găsite, schimbă din „Default" în „Enabled".</li>
+            <li>Apasă „Relaunch" (butonul apare jos, după activare) — Chrome se repornește.</li>
+            <li>Revino aici și redeschide „Exersează vorbitul" — la prima folosire, modelul se descarcă (o singură dată, câteva sute MB).</li>
+          </ol>
+          Denumirile exacte ale flag-urilor se mai schimbă între versiuni Chrome — dacă nu găsești un rezultat exact „gemini nano", caută variantele de mai sus, una câte una.
+        </div>
+      </details>
+      <button class="btn-block paste-highlight" id="aiVoicePartnerUseClaudeBtn" style="width:100%; margin-top:10px;"><span>Folosește prin Claude, în schimb (cheia ta, cost mic)</span><span>→</span></button>
+    </div>
+
+    <div class="sheet-section" id="aiVoicePartnerDownloading" style="display:none;">
+      <div class="upload-status">Se descarcă modelul local (o singură dată, câteva sute MB — la conexiuni mai lente poate dura). Rămâi pe pagina asta până se termină.</div>
+    </div>
+
+    <div class="sheet-section" id="aiVoicePartnerMain" style="display:none;">
+      <div class="sheet-label">Cum funcționează</div>
+      <p class="help-text" id="aiVoicePartnerModeNote" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;"></p>
+
+      <div id="aiVoicePartnerConversation" style="max-height:40vh; overflow-y:auto; margin-top:12px; font-family:'Literata',serif; font-size:0.92rem; line-height:1.6;"></div>
+
+      <button class="btn-block paste-highlight" id="aiVoicePartnerTalkBtn" style="width:100%; margin-top:12px; min-height:64px;"><span>🎙️ Apasă pentru a vorbi</span><span></span></button>
+      <div class="upload-status" id="aiVoicePartnerStatus" style="text-align:center;"></div>
+      <button class="chip" id="aiVoicePartnerResetBtn" style="margin-top:10px;">↺ Conversație nouă</button>
     </div>
   </div>
 
@@ -1172,6 +1219,197 @@ function setTtsPlayerDisabled(playerId, disabled){
   if(!btn) return;
   btn.disabled = disabled;
 }
+
+/* ---------- Modul izolat: partener conversational vocal ---------- */
+// Implicit: 100% local/offline (Chrome Prompt API / LanguageModel), fara cheie, fara cost.
+// Daca local nu-i disponibil (majoritatea telefoanelor, Chrome pt Android exclus explicit din
+// suport, indiferent cat de puternic e telefonul - verificat direct in documentatia oficiala),
+// utilizatorul poate alege sa continue prin Claude (cheia lui, cost mic) - ACEEASI interfata,
+// doar alt "motor" in spate. Refoloseste Web Speech API deja existent (recunoastere + speakGerman).
+// ATENTIE la sintaxa locala: obiectul global e "LanguageModel" (verificat direct, sept. 2026) -
+// NU "window.ai.languageModel", nume vechi, invechit intre timp.
+let vpSession = null;
+let vpRecognizer = null;
+let vpState = 'idle'; // 'idle' | 'listening' | 'processing' | 'speaking'
+let vpMode = 'local'; // 'local' | 'claude'
+let vpClaudeHistory = []; // {role:'user'|'assistant', content:string} - Claude nu tine minte
+                          // singur conversatia intre apeluri, ca sesiunea locala - trimitem noi tot istoricul
+
+function buildVoicePartnerSystemPrompt(){
+  return `Ești un partener de conversație în germană, pentru un elev român de nivel A2-B1.
+1. Răspunsurile tale sunt FOARTE SCURTE - maxim 1-2 propoziții, niciodată mai mult.
+2. Fiecare răspuns se termină cu o întrebare simplă, ca să continue conversația natural.
+3. Dacă elevul face o greșeală gramaticală GRAVĂ (nu una mică), pune o corectură scurtă, ÎN ROMÂNĂ, între paranteze, la ÎNCEPUTUL răspunsului tău - apoi continuă normal conversația, în germană.
+4. Restul răspunsului tău (în afara corecturii, dacă există) e STRICT în germană, niciodată în română sau engleză.
+5. Rămâi natural, prietenos, ca o conversație reală, nu ca un profesor rigid.`;
+}
+// apel dedicat, cu istoric complet - diferit de callClaude (folosit peste tot in restul
+// aplicatiei), care trimite mereu un singur mesaj - aici avem nevoie de o conversatie reala,
+// cu context care creste, deci construim mesajele direct, nu prin functia comuna
+async function callClaudeConversation(systemPrompt, messages, maxTokens){
+  const key = loadClaudeKey();
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: maxTokens,
+      system: systemPrompt,
+      messages: messages
+    })
+  });
+  if(!res.ok){
+    const errData = await res.json().catch(()=>({}));
+    throw new Error(errData?.error?.message || `Eroare HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  return (data.content || []).map(b => b.type === 'text' ? b.text : '').join('');
+}
+// verificarea de disponibilitate locala intoarce 4 stari posibile - nu un simplu da/nu
+async function checkVoicePartnerAvailability(){
+  if(!('LanguageModel' in self)) return 'unsupported';
+  try{ return await LanguageModel.availability(); }
+  catch(err){ return 'unsupported'; }
+}
+function setVoicePartnerState(state){
+  vpState = state;
+  const btn = document.getElementById('aiVoicePartnerTalkBtn');
+  const statusEl = document.getElementById('aiVoicePartnerStatus');
+  const labels = { idle:'🎙️ Apasă pentru a vorbi', listening:'👂 Te ascult...', processing:'🤔 Procesez...', speaking:'🔊 Răspund...' };
+  btn.querySelector('span').textContent = labels[state] || labels.idle;
+  btn.disabled = (state !== 'idle');
+  statusEl.textContent = '';
+}
+function appendVoicePartnerLine(speaker, text){
+  const box = document.getElementById('aiVoicePartnerConversation');
+  const color = speaker === 'eu' ? 'var(--ink)' : 'var(--der)';
+  const label = speaker === 'eu' ? 'Tu' : 'Partener';
+  box.innerHTML += `<div style="margin-bottom:8px;"><b style="color:${color};">${label}:</b> ${escapeHtml(text)}</div>`;
+  box.scrollTop = box.scrollHeight;
+}
+function updateVoicePartnerModeNote(){
+  const note = document.getElementById('aiVoicePartnerModeNote');
+  note.textContent = vpMode === 'local'
+    ? 'Un partener de conversație simplu, la nivel A2-B1, rulează direct pe dispozitiv — fără cheie, fără cost (calitatea poate fi mai simplă). Apasă, vorbește în germană, ascultă răspunsul.'
+    : 'Aceeași conversație, dar prin Claude (cheia ta) — cost mic per schimb, calitate mai bună decât varianta locală. Apasă, vorbește în germană, ascultă răspunsul.';
+}
+async function initVoicePartnerView(){
+  document.getElementById('aiVoicePartnerUnsupported').style.display = 'none';
+  document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
+  document.getElementById('aiVoicePartnerMain').style.display = 'none';
+  vpMode = 'local';
+
+  const availability = await checkVoicePartnerAvailability();
+  if(availability === 'unsupported' || availability === 'unavailable'){
+    document.getElementById('aiVoicePartnerUnsupported').style.display = 'block';
+    return;
+  }
+  if(!vpSession){
+    if(availability === 'downloadable' || availability === 'downloading'){
+      document.getElementById('aiVoicePartnerDownloading').style.display = 'block';
+    }
+    try{
+      vpSession = await LanguageModel.create({
+        initialPrompts: [{ role: 'system', content: buildVoicePartnerSystemPrompt() }],
+        monitor(m){
+          m.addEventListener('downloadprogress', (e)=>{
+            const el = document.querySelector('#aiVoicePartnerDownloading .upload-status');
+            if(el) el.textContent = `Se descarcă modelul local... ${Math.round((e.loaded||0)*100)}%`;
+          });
+        }
+      });
+    }catch(err){
+      document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
+      document.getElementById('aiVoicePartnerUnsupported').style.display = 'block';
+      return;
+    }
+  }
+  document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
+  updateVoicePartnerModeNote();
+  document.getElementById('aiVoicePartnerMain').style.display = 'block';
+  setVoicePartnerState('idle');
+}
+// pornita explicit de utilizator, cand alege sa continue prin Claude (local indisponibil)
+function startVoicePartnerClaudeMode(){
+  const key = loadClaudeKey();
+  if(!key || !key.startsWith('sk-ant-')){
+    document.querySelector('#aiVoicePartnerUnsupported .upload-status').textContent =
+      'Nu ai încă o cheie Claude salvată — deschide „❓ Ajutor — AI" din hub-ul principal AI ca s-o adaugi, apoi revino aici.';
+    return;
+  }
+  vpMode = 'claude';
+  vpClaudeHistory = [];
+  document.getElementById('aiVoicePartnerUnsupported').style.display = 'none';
+  document.getElementById('aiVoicePartnerConversation').innerHTML = '';
+  updateVoicePartnerModeNote();
+  document.getElementById('aiVoicePartnerMain').style.display = 'block';
+  setVoicePartnerState('idle');
+}
+function stopVoicePartnerListening(){
+  if(vpRecognizer){ try{ vpRecognizer.abort(); }catch(e){} vpRecognizer = null; }
+  if(vpState !== 'idle') setVoicePartnerState('idle');
+}
+document.getElementById('aiVoicePartnerUseClaudeBtn').addEventListener('click', startVoicePartnerClaudeMode);
+document.getElementById('aiVoicePartnerTalkBtn').addEventListener('click', ()=>{
+  if(vpState !== 'idle') return;
+  if(vpMode === 'local' && !vpSession) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    document.getElementById('aiVoicePartnerStatus').textContent = 'Recunoașterea vocală nu e disponibilă în acest browser.';
+    return;
+  }
+  setVoicePartnerState('listening');
+  vpRecognizer = new SR();
+  vpRecognizer.lang = 'de-DE';
+  vpRecognizer.maxAlternatives = 1;
+  vpRecognizer.interimResults = false;
+  vpRecognizer.onresult = async (e)=>{
+    const transcript = e.results[0][0].transcript;
+    appendVoicePartnerLine('eu', transcript);
+    setVoicePartnerState('processing');
+    try{
+      let reply;
+      if(vpMode === 'local'){
+        reply = await vpSession.prompt(transcript);
+      } else {
+        vpClaudeHistory.push({ role: 'user', content: transcript });
+        reply = await callClaudeConversation(buildVoicePartnerSystemPrompt(), vpClaudeHistory, 300);
+        vpClaudeHistory.push({ role: 'assistant', content: reply });
+      }
+      appendVoicePartnerLine('partener', reply);
+      setVoicePartnerState('speaking');
+      speakGerman(reply, ()=> setVoicePartnerState('idle'));
+    }catch(err){
+      document.getElementById('aiVoicePartnerStatus').textContent = `✗ ${err.message || 'Eroare la procesare'}`;
+      setVoicePartnerState('idle');
+    }
+  };
+  vpRecognizer.onerror = (e)=>{
+    if(e.error === 'not-allowed' || e.error === 'permission-denied'){
+      document.getElementById('aiVoicePartnerStatus').textContent = 'Acces la microfon refuzat.';
+    } else if(e.error !== 'aborted'){
+      document.getElementById('aiVoicePartnerStatus').textContent = 'Nu te-am auzit — încearcă din nou.';
+    }
+    setVoicePartnerState('idle');
+  };
+  vpRecognizer.onend = ()=>{ if(vpState === 'listening') setVoicePartnerState('idle'); };
+  vpRecognizer.start();
+});
+document.getElementById('aiVoicePartnerResetBtn').addEventListener('click', async ()=>{
+  stopVoicePartnerListening();
+  document.getElementById('aiVoicePartnerConversation').innerHTML = '';
+  if(vpMode === 'claude'){
+    vpClaudeHistory = []; // ramanem in acelasi mod, doar golim istoricul - fara reverificare locala
+    return;
+  }
+  if(vpSession){ try{ vpSession.destroy(); }catch(e){} vpSession = null; }
+  await initVoicePartnerView();
+});
 
 /* ---------- benzi de frecventa (doar A1/A2/B1/B2, in ordinea REALA de frecventa) ---------- */
 // scopul: cuvintele noi apar in ordinea frecventei (cele mai comune primele), nu complet aleator -
@@ -1895,6 +2133,7 @@ function showAiView(view){
   document.getElementById('aiExerciseView').style.display = view === 'exercise' ? 'block' : 'none';
   document.getElementById('aiDescribeView').style.display = view === 'describe' ? 'block' : 'none';
   document.getElementById('aiNewWordsView').style.display = view === 'newwords' ? 'block' : 'none';
+  document.getElementById('aiVoicePartnerView').style.display = view === 'voicepartner' ? 'block' : 'none';
   if(view === 'history'){ populateAiHistFilters(); renderAiHistList(); }
 }
 // activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
@@ -1911,6 +2150,8 @@ function refreshAiHubButtons(){
 }
 document.getElementById('aiHubHistoryBtn').addEventListener('click', ()=> showAiView('history'));
 document.getElementById('aiHistoryBackBtn').addEventListener('click', ()=> showAiView('hub'));
+document.getElementById('aiHubVoicePartnerBtn').addEventListener('click', ()=> { showAiView('voicepartner'); initVoicePartnerView(); });
+document.getElementById('aiVoicePartnerBackBtn').addEventListener('click', ()=> { stopVoicePartnerListening(); showAiView('hub'); });
 document.getElementById('aiHubExerciseBtn').addEventListener('click', ()=> showAiView('exercise'));
 document.getElementById('aiExerciseBackBtn').addEventListener('click', ()=> showAiView('hub'));
 document.getElementById('aiHubDescribeBtn').addEventListener('click', ()=> showAiView('describe'));

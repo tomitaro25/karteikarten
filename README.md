@@ -4,6 +4,17 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v102 — mic tutorial pliabil, la „Exersează vorbitul", pentru activarea AI-ului local în Chrome**
+- Dacă detectarea automată nu găsește suport local, apare acum un ghid pas-cu-pas (pliabil, opțional) pentru activarea manuală din `chrome://flags` — cu mențiunea onestă că pe versiuni mai noi de Chrome s-ar putea să nici nu fie nevoie.
+- Activarea flag-urilor **nu** se poate face programatic, din nicio aplicație web — barieră de securitate a browser-ului, nu limitare proprie; tutorialul rămâne singura cale posibilă de-a ajuta utilizatorul.
+
+**v101 — modul nou: „🗣️ Exersează vorbitul" (partener de conversație vocală)**
+- **Implicit, 100% local/offline** — rulează direct pe dispozitiv, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"), fără cheie, fără cost. Vorbești în germană, un partener simplu (nivel A2-B1) răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — cu o corectură scurtă, în română, între paranteze, dacă apare o greșeală gravă.
+- **Doar Chrome de pe calculator** — pe Android, Google exclude explicit suportul, indiferent de performanța telefonului (limitare de software, nu de putere — verificat direct în documentația oficială).
+- **Opțiune de rezervă, prin Claude** — dacă AI-ul local nu-i disponibil (majoritatea cazurilor, mai ales pe telefon), poți alege să continui aceeași conversație prin cheia ta Claude, cost mic per schimb — aceeași interfață, doar alt model în spate.
+- Complet izolat de restul funcțiilor AI — nu atinge pipeline-ul Claude existent, buton propriu, exclus din verificarea de cheie (rămâne mereu accesibil).
+- Verificat: sintaxa API curentă (nu cea învechită, `window.ai.languageModel`), construcția istoricului de conversație pentru Claude (alternanță corectă user/assistant, necesară dat fiind că API-ul Claude nu ține minte singur conversația, spre deosebire de sesiunea locală).
+
 **v100 — arhitectura în 2 pași (generare + traducere separate) extinsă la încă 3 module**
 - **Descrie o poză**, **Simplifică**, și **Exersează ce ai învățat** trec de la generare combinată (germană + română, într-un singur apel) la **2 pași dedicați** — aceeași abordare aplicată deja la „Cuvinte noi în context", care a arătat, prin testare extinsă, o traducere mai consecventă și mai fidelă.
 - La „Exersează ce ai învățat" (singurul modul bidirecțional — poate genera în germană SAU română), traducerea Pasului 2 se adaptează automat la direcția corectă, oricare-ar fi ea.
