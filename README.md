@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v106 — corecții găsite prin testare: viteză, buton, layout, lizibilitate**
+- **Viteza de rostire** (0.9→0.8) — mai lentă, mai clară, la toate funcțiile de ascultare din aplicație, nu doar la modulul nou.
+- **„Cuvinte în pereche" — butonul ascuns** — doar 🔊 (fără text), apăsare scurtă rămâne comportamentul obișnuit; ținut apăsat peste ~350ms arată temporar și textul cuvântului, ca hint, dispare la eliberare.
+- **Layout centrat, pe ecrane late** — panourile ȚI ecranul principal (bară de sus, zona de card) au acum o lățime maximă (640px), centrate — spațiul gol rămâne pe margini, nu mai lungește butoanele pe tot ecranul. Fără efect pe telefon (limita nu se activează sub 640px).
+- **Lizibilitate** — o umbră simetrică, foarte subtilă, pe tot textul din aplicație, care „îngroașă" ușor literele fără să schimbe dimensiunea sau greutățile deja setate — ajută pe fundalul cu textură fină.
+
 **v105 — modul nou: „🔗 Cuvinte în pereche" (exersare de consolidare, fără AI)**
 - 10 cuvinte, într-o coloană ascunse (doar ascultate, text-to-speech), în cealaltă traducerile lor, amestecate — apeși un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul; corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Fără scor.
 - **Sinteză vocală și pentru română** — adăugată separat de cea germană (voci diferite pe dispozitiv), cu detectare reală de disponibilitate, nu presupusă.

@@ -35,7 +35,11 @@
       repeating-linear-gradient(0deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 26px),
       var(--paper);
     color:var(--ink); font-family:'Literata', serif;
-    display:flex; flex-direction:column;
+    /* umbra simetrica, foarte subtire, cu aceeasi culoare ca textul - "ingroasa" usor
+       literele, fara sa schimbe dimensiunea sau sa suprascrie greutatile explicite deja
+       setate pe diverse elemente - ajuta la lizibilitate pe fundalul cu textura fina */
+    text-shadow: 0.3px 0 0 currentColor, -0.3px 0 0 currentColor;
+    display:flex; flex-direction:column; align-items:center;
     padding-top:calc(var(--safe-top) + 10px);
     overflow:hidden;
   }
@@ -52,6 +56,7 @@
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
+    width:100%; max-width:640px;
   }
   .brand{ font-family:'Special Elite', monospace; font-size:18.4px; line-height:1.1; flex:1 1 auto; min-width:0; }
   .brand-title{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -91,7 +96,7 @@
   }
 
   /* ---------- main scroll area ---------- */
-  .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; }
+  .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; width:100%; max-width:640px; }
 
   .card{
     position:relative; background:#fbf7ee; border:1px solid var(--line); border-radius:14px;
@@ -183,6 +188,7 @@
   .bottombar{
     flex-shrink:0; padding:10px 16px calc(12px + var(--safe-bottom));
     background:linear-gradient(to top, var(--paper) 60%, transparent);
+    width:100%; max-width:640px;
   }
   .progress-track{ height:4px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:10px; }
   .progress-fill{ height:100%; background:var(--ink); width:0%; transition:width 0.25s ease; }
@@ -219,6 +225,7 @@
   .sheet-overlay.show{ opacity:1; pointer-events:auto; }
   .sheet{
     position:fixed; left:0; right:0; bottom:0; z-index:51;
+    max-width:640px; margin:0 auto; /* pe ecrane largi, panoul ramane centrat, nu se-ntinde pe tot latul */
     background:var(--paper); border-radius:20px 20px 0 0;
     box-shadow:0 -8px 30px rgba(0,0,0,0.25);
     padding:10px 18px calc(20px + var(--safe-bottom));
@@ -651,7 +658,7 @@
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
-      <p><b>🔗 Cuvinte în pereche</b> — modul de exersare, în Setări: 10 cuvinte, într-o coloană ascunse (doar ascultate, nu văzute), în cealaltă traducerile lor, amestecate. Apeși un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
+      <p><b>🔗 Cuvinte în pereche</b> — modul de exersare, în Setări: 10 cuvinte, într-o coloană ascunse (buton doar cu 🔊, nu văzute), în cealaltă traducerile lor, amestecate. Apeși scurt un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Ții apăsat (nu doar apeși scurt) un cuvânt ascuns ca să vezi și textul lui, temporar, cât timp ții — dispare la eliberare, ca hint, fără să conteze drept "dezvăluit". Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -1221,7 +1228,7 @@ function speakGerman(text, onEndCallback){
     window.speechSynthesis.cancel(); // opreste orice rostire anterioara
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'de-DE';
-    utter.rate = 0.9;
+    utter.rate = 0.8;
     const chosen = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
     if(chosen) utter.voice = chosen;
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
@@ -1248,7 +1255,7 @@ function speakRomanian(text, onEndCallback){
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'ro-RO';
-    utter.rate = 0.9;
+    utter.rate = 0.8;
     const networkVoice = availableRomanianVoices.find(v => !v.localService);
     utter.voice = networkVoice || availableRomanianVoices[0];
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
@@ -3191,6 +3198,7 @@ let pmSelectedLeftId = null;
 let pmMissedIds = new Set(); // doar in memorie (nu localStorage) - cuvinte gresite cel putin o
                               // data, care nu s-au "absolvit" inca (nimerite fara greseala,
                               // la o reaparitie) - au prioritate la rundele urmatoare
+let pmHoldTimer = null; // cronometrul de "tinut apasat" pt afisarea hint-ului temporar
 
 function buildPairMatchRound(){
   const eligible = pmSource === 'learned'
@@ -3235,15 +3243,32 @@ function renderPairMatch(){
   const rightCol = document.getElementById('pairMatchRightCol');
   leftCol.innerHTML = pmPairs.map(p=>{
     const isSelected = pmSelectedLeftId === p.id && !p.solved;
-    const label = p.solved ? escapeHtml(p.hidden) : '🔊 ascultă';
+    const label = p.solved ? escapeHtml(p.hidden) : '🔊';
     return `<button class="btn-block pm-left-box" data-id="${escapeAttr(p.id)}" style="width:100%; ${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${label}</span><span></span></button>`;
   }).join('');
   rightCol.innerHTML = pmRightOrder.map(id=>{
     const p = pmPairs.find(pp=>pp.id===id);
     return `<button class="btn-block pm-right-box" data-id="${escapeAttr(id)}" style="width:100%; ${p.solved?'opacity:0.4;':''}" ${p.solved?'disabled':''}><span>${escapeHtml(p.visible)}</span><span></span></button>`;
   }).join('');
+  // apasare scurta = comportamentul existent (rosteste, selecteaza); tinut apasat peste
+  // ~350ms = arata si textul, ca hint temporar, cat tine apasat - dispare la eliberare.
+  // ascultatorii de "up"/"cancel" sunt GLOBALI (inregistrati o singura data, mai jos, nu aici)
+  // ca sa functioneze corect chiar daca re-randarea din onPairMatchLeftClick reconstruieste
+  // DOM-ul in timpul apasarii (referinta locala la buton ar deveni altfel invalida)
   leftCol.querySelectorAll('.pm-left-box').forEach(btn=>{
-    btn.addEventListener('click', ()=> onPairMatchLeftClick(btn.dataset.id));
+    const id = btn.dataset.id;
+    btn.addEventListener('pointerdown', ()=>{
+      if(btn.disabled) return;
+      onPairMatchLeftClick(id);
+      pmHoldTimer = setTimeout(()=>{
+        const freshBtn = document.querySelector(`.pm-left-box[data-id="${id}"]`);
+        const p = pmPairs.find(pp=>pp.id===id);
+        if(freshBtn && p && !p.solved){
+          const span = freshBtn.querySelector('span');
+          if(span) span.textContent = p.hidden;
+        }
+      }, 350);
+    });
   });
   rightCol.querySelectorAll('.pm-right-box').forEach(btn=>{
     btn.addEventListener('click', ()=> onPairMatchRightClick(btn.dataset.id));
@@ -3313,6 +3338,20 @@ function closePairMatchSheet(){
 }
 document.getElementById('closePairMatchSheetBtn').addEventListener('click', closePairMatchSheet);
 document.getElementById('pairMatchContinueBtn').addEventListener('click', buildPairMatchRound);
+// global, o singura data (nu la fiecare randare) - functioneaza corect chiar daca DOM-ul s-a
+// reconstruit intre apasare si eliberare (re-randarea din onPairMatchLeftClick face exact asta)
+function clearPairMatchHoldHint(){
+  if(pmHoldTimer){ clearTimeout(pmHoldTimer); pmHoldTimer = null; }
+  document.querySelectorAll('.pm-left-box').forEach(btn=>{
+    const p = pmPairs.find(pp=>pp.id===btn.dataset.id);
+    if(p && !p.solved){
+      const span = btn.querySelector('span');
+      if(span) span.textContent = '🔊';
+    }
+  });
+}
+document.addEventListener('pointerup', clearPairMatchHoldHint);
+document.addEventListener('pointercancel', clearPairMatchHoldHint);
 
 document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', ()=>{
   document.getElementById('wordListConfirmBtn').click(); // reutilizam exact acelasi handler de confirmare
