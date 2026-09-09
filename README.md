@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v107 — ajustări fine, după testare directă: viteză, paranteze, umbră, lățime**
+- **Viteza de rostire** — redusă din nou (0.8→0.5), mai lentă, mai clară.
+- **„Cuvinte în pereche" — explicațiile din paranteze eliminate complet** (ex. "dank (Präposition)" → "dank"), atât din rostire cât și din text afișat — nu doar parantezele, tot conținutul lor.
+- **Umbra de lizibilitate, dublată** (0.3→0.6px) — la text mic (butoane, ~13px), aceeași umbră mică se vedea mult mai puțin decât la textul mare — nu era efect placebo, avea o cauză reală de dimensiune.
+- **Lățimea maximă a conținutului, crescută** (640→760px) — 640px era gândit pentru text dens de citit, nu pentru-o interfață cu butoane, care are nevoie de puțin mai mult spațiu. Fără efect pe telefon (limita nu se activează sub 760px CSS, mult sub lățimea tipică a unui telefon).
+
 **v106 — corecții găsite prin testare: viteză, buton, layout, lizibilitate**
 - **Viteza de rostire** (0.9→0.8) — mai lentă, mai clară, la toate funcțiile de ascultare din aplicație, nu doar la modulul nou.
 - **„Cuvinte în pereche" — butonul ascuns** — doar 🔊 (fără text), apăsare scurtă rămâne comportamentul obișnuit; ținut apăsat peste ~350ms arată temporar și textul cuvântului, ca hint, dispare la eliberare.
