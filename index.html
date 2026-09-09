@@ -38,7 +38,7 @@
     /* umbra simetrica, foarte subtire, cu aceeasi culoare ca textul - "ingroasa" usor
        literele, fara sa schimbe dimensiunea sau sa suprascrie greutatile explicite deja
        setate pe diverse elemente - ajuta la lizibilitate pe fundalul cu textura fina */
-    text-shadow: 0.6px 0 0 currentColor, -0.6px 0 0 currentColor;
+    text-shadow: 0.4px 0 0 currentColor, -0.4px 0 0 currentColor;
     display:flex; flex-direction:column; align-items:center;
     padding-top:calc(var(--safe-top) + 10px);
     overflow:hidden;
@@ -171,6 +171,11 @@
   .opt:disabled{ cursor:default; }
   .opt.correct{ background:rgba(63,125,83,0.18); border-color:var(--green); }
   .opt.wrong{ background:rgba(178,58,46,0.16); border-color:var(--red); }
+
+  /* "Cuvinte in pereche" - aceleasi font/dimensiune ca la butoanele de raspuns din
+     flashcard-uri (.opt), nu monospace-ul mic implicit de la .btn-block - consecventa
+     vizuala, si raspunde corect la zoom (rem, nu px) */
+  .pm-left-box, .pm-right-box{ font-family:'Literata', serif; font-size:1rem; }
 
   .stamp{
     position:absolute; top:38%; right:16px; font-family:'Special Elite', monospace; font-size:1.15rem;
@@ -357,6 +362,11 @@
       <p>Butoanele <b>A− / A+</b> din bara de sus (sau din secțiunea „Mărime font" de aici, din setări) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺ / Resetează</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
+      <div class="sheet-label">Voce și viteza de rostire</div>
+      <p>În secțiunea „Voce & legendă" (din setări), poți alege <b>separat</b> vocea germană și vocea română — dacă ai mai multe pachete lingvistice instalate pe dispozitiv (ex. mai multe voci Microsoft, plus una Google), apar toate în listă, alegi care-ți place. Butonul „Testează vocea" redă un cuvânt scurt, ca să auzi diferența înainte de-a alege.</p>
+      <p><b>Viteza de rostire</b> — reglabilă cu un cursor, între 0.5x (foarte lent) și 1.5x (mai rapid decât normal), valabilă la ambele voci, peste tot în aplicație. Utilă mai ales dacă vocea aleasă sună grăbită — depinde mult de motorul de sinteză (unele voci sună natural mai repezite decât altele, indiferent de setarea aplicației).</p>
+    </div>
+    <div class="sheet-section help-text">
       <div class="sheet-label">Ce înseamnă stelele ⭐ de pe card</div>
       <p>Numărul de stele arată <b>a câta oară apare cuvântul</b>, discret lângă numărul întrebării:</p>
       <p><span class="stage-star gold">★</span> / <span class="stage-star gold">★★</span> / <span class="stage-star gold">★★★</span> — aurii, pentru primele 3 apariții (dacă toate au fost răspunsuri corecte).</p>
@@ -523,11 +533,24 @@
   <details class="sheet-group">
     <summary>Voce &amp; legendă</summary>
     <div class="sheet-section">
-      <div class="sheet-label">Voce (pronunție 🔊)</div>
+      <div class="sheet-label">Voce germană (pronunție 🔊)</div>
       <select id="voiceSelect" class="btn-block" style="width:100%; appearance:none;">
         <option value="">Se caută voci germane...</option>
       </select>
       <button class="btn-block" id="testVoiceBtn" style="margin-top:8px;"><span>Testează vocea (spune „Tisch")</span><span>▶</span></button>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Voce română (pronunție 🔊)</div>
+      <select id="voiceSelectRo" class="btn-block" style="width:100%; appearance:none;">
+        <option value="">Se caută voci române...</option>
+      </select>
+      <button class="btn-block" id="testVoiceRoBtn" style="margin-top:8px;"><span>Testează vocea (spune „casă")</span><span>▶</span></button>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Viteza vorbirii (<span id="speechRateDisplay">1.0</span>x) — valabilă la ambele voci, peste tot în aplicație</div>
+      <input type="range" id="speechRateSlider" min="0.5" max="1.5" step="0.1" value="1.0" style="width:100%;">
     </div>
 
     <div class="sheet-section">
@@ -1222,13 +1245,24 @@ function populateVoiceList(){
   }
 }
 
+let speechRate = 1.0; // reglabila din Setari (0.5-1.5), valabila la ambele voci
+function loadSpeechRate(){
+  try{
+    const raw = localStorage.getItem('karteikarten_speechRate');
+    speechRate = raw ? parseFloat(raw) : 1.0;
+    if(!speechRate || isNaN(speechRate)) speechRate = 1.0;
+  }catch(e){ speechRate = 1.0; }
+}
+function saveSpeechRate(rate){
+  try{ localStorage.setItem('karteikarten_speechRate', String(rate)); }catch(e){}
+}
 function speakGerman(text, onEndCallback){
   try{
     if(!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel(); // opreste orice rostire anterioara
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'de-DE';
-    utter.rate = 0.5;
+    utter.rate = speechRate;
     const chosen = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
     if(chosen) utter.voice = chosen;
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
@@ -1236,13 +1270,39 @@ function speakGerman(text, onEndCallback){
   }catch(e){ /* TTS indisponibil pe acest dispozitiv - esuam silentios */ }
 }
 
-/* ---------- Sinteza vocala romana - separata de cea germana (voci diferite, fara preferinta
-   salvata in Setari, doar cea mai buna voce romana gasita automat pe dispozitiv) ---------- */
+/* ---------- Sinteza vocala romana - separata de cea germana (voci diferite), cu propria
+   preferinta salvata in Setari, la fel ca la germana ---------- */
 let availableRomanianVoices = [];
+let selectedVoiceURIRo = '';
+function loadVoicePrefRo(){
+  try{ selectedVoiceURIRo = localStorage.getItem('karteikarten_voiceURIRo') || ''; }
+  catch(e){ selectedVoiceURIRo = ''; }
+}
+function saveVoicePrefRo(uri){
+  try{ localStorage.setItem('karteikarten_voiceURIRo', uri); }catch(e){}
+}
 function refreshRomanianVoices(){
   if(!('speechSynthesis' in window)) return;
   const all = window.speechSynthesis.getVoices();
   availableRomanianVoices = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('ro'));
+  const select = document.getElementById('voiceSelectRo');
+  if(!select) return;
+  if(availableRomanianVoices.length === 0){
+    select.innerHTML = '<option value="">Nicio voce română găsită pe acest dispozitiv</option>';
+    return;
+  }
+  select.innerHTML = availableRomanianVoices.map(v =>
+    `<option value="${v.voiceURI}">${v.name} (${v.lang})${v.localService ? '' : ' · rețea'}</option>`
+  ).join('');
+  const savedExists = availableRomanianVoices.some(v => v.voiceURI === selectedVoiceURIRo);
+  if(savedExists){
+    select.value = selectedVoiceURIRo;
+  } else {
+    const networkVoice = availableRomanianVoices.find(v => !v.localService);
+    selectedVoiceURIRo = (networkVoice || availableRomanianVoices[0]).voiceURI;
+    select.value = selectedVoiceURIRo;
+    saveVoicePrefRo(selectedVoiceURIRo);
+  }
 }
 function hasRomanianVoice(){
   return availableRomanianVoices.length > 0;
@@ -1255,9 +1315,9 @@ function speakRomanian(text, onEndCallback){
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'ro-RO';
-    utter.rate = 0.5;
-    const networkVoice = availableRomanianVoices.find(v => !v.localService);
-    utter.voice = networkVoice || availableRomanianVoices[0];
+    utter.rate = speechRate;
+    const chosen = availableRomanianVoices.find(v => v.voiceURI === selectedVoiceURIRo);
+    utter.voice = chosen || availableRomanianVoices[0];
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
     window.speechSynthesis.speak(utter);
     return true;
@@ -5165,6 +5225,8 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
   await loadMistakes();
   await loadMyWords();
   await loadVoicePref();
+  loadVoicePrefRo();
+  loadSpeechRate();
   loadPreferences();
   currentStreak = updateStreak();
   updateMistakesChipLabel();
@@ -5193,6 +5255,27 @@ if(voiceSelect){
 const testVoiceBtn = document.getElementById('testVoiceBtn');
 if(testVoiceBtn){
   testVoiceBtn.addEventListener('click', () => speakGerman('Tisch'));
+}
+const voiceSelectRo = document.getElementById('voiceSelectRo');
+if(voiceSelectRo){
+  voiceSelectRo.addEventListener('change', () => {
+    selectedVoiceURIRo = voiceSelectRo.value;
+    saveVoicePrefRo(selectedVoiceURIRo);
+  });
+}
+const testVoiceRoBtn = document.getElementById('testVoiceRoBtn');
+if(testVoiceRoBtn){
+  testVoiceRoBtn.addEventListener('click', () => speakRomanian('casă'));
+}
+const speechRateSlider = document.getElementById('speechRateSlider');
+if(speechRateSlider){
+  speechRateSlider.value = speechRate;
+  document.getElementById('speechRateDisplay').textContent = speechRate.toFixed(1);
+  speechRateSlider.addEventListener('input', () => {
+    speechRate = parseFloat(speechRateSlider.value);
+    document.getElementById('speechRateDisplay').textContent = speechRate.toFixed(1);
+    saveSpeechRate(speechRate);
+  });
 }
 
 /* ---------- service worker registration (enables offline + installability) ---------- */

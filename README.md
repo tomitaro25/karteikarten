@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v108 — voce română selectabilă, viteză reglabilă, corecție reală la „Cuvinte în pereche"**
+- **Selector de voce română** — nou, în Setări, alături de cel german deja existent: alegi dintre toate vocile românești instalate pe dispozitiv (ex. mai multe Microsoft + Google), cu testare și preselectare inteligentă. Persistă separat de germană.
+- **Viteză de rostire reglabilă** (cursor, 0.5x-1.5x) — valabilă la ambele voci, peste tot în aplicație. Utilă mai ales pentru că unele motoare de sinteză (ex. unele voci Microsoft) sună natural mai grăbite decât altele, indiferent de setarea implicită.
+- **„Cuvinte în pereche" — cauza reală a afișării/zoom-ului corectată**: modulul folosea dimensiune de font fixă (`px`), nu relativă (`rem`) — de-aia zoom-ul din bara de sus nu se aplica acolo. Corectat, aliniat exact la fontul/dimensiunea din flashcard-uri (`.opt`), acum răspunde corect la zoom.
+- **Umbra de lizibilitate**, ajustată din nou (0.6→0.4px) — echilibrată, după corectarea dimensiunii reale a fontului la modulul nou.
+- Verificat cu DOM real (jsdom): popularea listei de voci române, filtrare corectă, preselectare, persistență — scenariu realist, cu mai multe voci instalate simultan.
+
 **v107 — ajustări fine, după testare directă: viteză, paranteze, umbră, lățime**
 - **Viteza de rostire** — redusă din nou (0.8→0.5), mai lentă, mai clară.
 - **„Cuvinte în pereche" — explicațiile din paranteze eliminate complet** (ex. "dank (Präposition)" → "dank"), atât din rostire cât și din text afișat — nu doar parantezele, tot conținutul lor.
