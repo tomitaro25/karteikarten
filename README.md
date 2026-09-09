@@ -4,6 +4,15 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v105 — modul nou: „🔗 Cuvinte în pereche" (exersare de consolidare, fără AI)**
+- 10 cuvinte, într-o coloană ascunse (doar ascultate, text-to-speech), în cealaltă traducerile lor, amestecate — apeși un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul; corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Fără scor.
+- **Sinteză vocală și pentru română** — adăugată separat de cea germană (voci diferite pe dispozitiv), cu detectare reală de disponibilitate, nu presupusă.
+- **Comutator de direcție** — alegi ce limbă e ascunsă (germană sau română).
+- **Comutator de sursă** — cuvinte deja exersate (favorizează pe cele mai puțin consolidate, folosind mecanismul de ponderare deja existent, strict citire) sau complet aleator (fără ponderare, ca să difere real).
+- **Cuvintele ratate reapar** — orice cuvânt nenimerit din prima are prioritate la runda următoare, până-l nimerești fără greșeală o singură dată; urmărire doar în memorie, pe durata sesiunii, fără nicio scriere pe stelute sau progres.
+- Complet separat de restul aplicației — panou propriu, nu-n interiorul secțiunii AI, nicio legătură cu Claude sau costuri.
+- Verificat cu DOM real (jsdom): mecanismul complet de potrivire (selecție, greșeală, succes, completare rundă) și logica de prioritizare a cuvintelor ratate, pe scenariul exact descris în cerere.
+
 **v104 — emoji eliminate complet din „Exersează vorbitul" (găsit prin testare reală)**
 - Modelul (persona „prietenoasă") adăuga adesea un emoji la finalul răspunsului — browser-ul îl "rostea" ciudat, la sinteza vocală, un sunet nepotrivit, greu de identificat ca fiind chiar asta. Confirmat direct dintr-o conversație reală, salvată și analizată.
 - Eliminate acum complet, o singură dată, la sursă — nu doar din ce se rostește, ci și din text (afișare + salvare), consecvent, în toate modurile (local/Claude, bilingv/simplu).

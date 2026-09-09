@@ -440,6 +440,10 @@
       <div id="levelProgress"></div>
       <button class="btn-block" id="openWordListBrowseBtn" style="width:100%; margin-top:8px;"><span>📋 Cuvintele mele exersate</span><span>›</span></button>
     </div>
+    <div class="sheet-section">
+      <div class="sheet-label">Exersare</div>
+      <button class="btn-block" id="openPairMatchBtn" style="width:100%;"><span>🔗 Cuvinte în pereche</span><span>›</span></button>
+    </div>
   </details>
 
   <details class="sheet-group">
@@ -580,6 +584,45 @@
   <span>✓ Validează selecția (<span id="wordListFloatingCount">0</span>/5)</span><span>→</span>
 </button>
 
+<div class="sheet" id="pairMatchSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">🔗 Cuvinte în pereche</div>
+
+  <div class="sheet-section" style="padding-bottom:0;">
+    <div class="sheet-label">Ce-i ascuns</div>
+    <div class="chip-row">
+      <span class="chip pm-hidden-lang active" data-lang="de">Germana ascunsă</span>
+      <span class="chip pm-hidden-lang" data-lang="ro">Română ascunsă</span>
+    </div>
+  </div>
+
+  <div class="sheet-section" style="padding-bottom:0; padding-top:0;">
+    <div class="sheet-label">Cuvinte</div>
+    <div class="chip-row">
+      <span class="chip pm-source active" data-source="learned">Deja învățate</span>
+      <span class="chip pm-source" data-source="random">Complet aleator</span>
+    </div>
+  </div>
+
+  <div class="sheet-section" id="pairMatchNoWordsNotice" style="display:none;">
+    <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.</div>
+  </div>
+
+  <div class="sheet-section" id="pairMatchGameArea" style="display:none;">
+    <div style="display:flex; gap:10px;">
+      <div id="pairMatchLeftCol" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
+      <div id="pairMatchRightCol" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+  </div>
+
+  <div class="sheet-section" id="pairMatchCompleteNotice" style="display:none;">
+    <div class="upload-status" style="color:var(--green); text-align:center; font-size:1rem;">✓ Toate perechile găsite!</div>
+    <button class="btn-block paste-highlight" id="pairMatchContinueBtn" style="width:100%; margin-top:10px;"><span>Continuă — rundă nouă</span><span>→</span></button>
+  </div>
+
+  <button class="sheet-close" id="closePairMatchSheetBtn">Închide</button>
+</div>
+
 <div class="sheet" id="aiSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">🤖 AI (Claude)</div>
@@ -608,6 +651,7 @@
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
       <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
+      <p><b>🔗 Cuvinte în pereche</b> — modul de exersare, în Setări: 10 cuvinte, într-o coloană ascunse (doar ascultate, nu văzute), în cealaltă traducerile lor, amestecate. Apeși un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -1183,6 +1227,34 @@ function speakGerman(text, onEndCallback){
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
     window.speechSynthesis.speak(utter);
   }catch(e){ /* TTS indisponibil pe acest dispozitiv - esuam silentios */ }
+}
+
+/* ---------- Sinteza vocala romana - separata de cea germana (voci diferite, fara preferinta
+   salvata in Setari, doar cea mai buna voce romana gasita automat pe dispozitiv) ---------- */
+let availableRomanianVoices = [];
+function refreshRomanianVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const all = window.speechSynthesis.getVoices();
+  availableRomanianVoices = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('ro'));
+}
+function hasRomanianVoice(){
+  return availableRomanianVoices.length > 0;
+}
+// intoarce true/false - util modulelor care trebuie sa reactioneze onest daca vocea romana
+// nu exista deloc pe dispozitiv (nu toate dispozitivele au voci romanesti instalate implicit)
+function speakRomanian(text, onEndCallback){
+  try{
+    if(!('speechSynthesis' in window) || !availableRomanianVoices.length) return false;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ro-RO';
+    utter.rate = 0.9;
+    const networkVoice = availableRomanianVoices.find(v => !v.localService);
+    utter.voice = networkVoice || availableRomanianVoices[0];
+    if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
+    window.speechSynthesis.speak(utter);
+    return true;
+  }catch(e){ return false; }
 }
 
 /* ---------- Mini-player audio (Play/Stop) - pt sectiuni cu continut mai lung ---------- */
@@ -2296,7 +2368,7 @@ document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
 document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
 document.getElementById('aiHubTranslateBtn').addEventListener('click', ()=> showAiView('translate'));
 document.getElementById('aiBackToHubBtn').addEventListener('click', ()=> showAiView('hub'));
-sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); closeWordListSheet(); });
+sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); closeWordListSheet(); closePairMatchSheet(); });
 
 /* ---------- level chips ---------- */
 document.querySelectorAll('.level-chip').forEach(chip=>{
@@ -3107,6 +3179,141 @@ function closeWordListSheet(){
   document.getElementById('wordListFloatingConfirmBtn').style.display = 'none';
   sheetOverlay.classList.remove('show');
 }
+
+/* ---------- Modul "Cuvinte in pereche" - exersare de consolidare, FARA update pe stelute ---------- */
+// Foloseste direct weightedSample()/priorityWeight() deja existente (strict citire din
+// wordStats) - fara mecanism nou de ponderare. Nu scrie niciodata in wordStats.
+let pmHiddenLang = 'de'; // 'de' | 'ro' - care coloana e ascunsa (text-to-speech + text invizibil)
+let pmSource = 'learned'; // 'learned' | 'random'
+let pmPairs = []; // {id, hidden, visible, solved}
+let pmRightOrder = []; // ordinea (amestecata) a id-urilor in coloana din dreapta
+let pmSelectedLeftId = null;
+let pmMissedIds = new Set(); // doar in memorie (nu localStorage) - cuvinte gresite cel putin o
+                              // data, care nu s-au "absolvit" inca (nimerite fara greseala,
+                              // la o reaparitie) - au prioritate la rundele urmatoare
+
+function buildPairMatchRound(){
+  const eligible = pmSource === 'learned'
+    ? getPracticedWords().filter(w => selectedLevels.has(w.level))
+    : BUILTIN.concat(myWords).filter(w => selectedLevels.has(w.level));
+  document.getElementById('pairMatchCompleteNotice').style.display = 'none';
+  if(eligible.length < 10){
+    document.getElementById('pairMatchNoWordsNotice').querySelector('.upload-status').textContent =
+      'Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.';
+    document.getElementById('pairMatchNoWordsNotice').style.display = 'block';
+    document.getElementById('pairMatchGameArea').style.display = 'none';
+    return;
+  }
+  document.getElementById('pairMatchNoWordsNotice').style.display = 'none';
+  document.getElementById('pairMatchGameArea').style.display = 'block';
+
+  // cuvintele ratate anterior (in aceasta sesiune) au prioritate - reapar pana le nimeresti
+  // din prima, la o reaparitie - restul locurilor se completeaza normal
+  const missedEligible = eligible.filter(w => pmMissedIds.has(w.id));
+  const restEligible = eligible.filter(w => !pmMissedIds.has(w.id));
+  const missedChosen = shuffle(missedEligible).slice(0, 10);
+  const remainingSlots = 10 - missedChosen.length;
+  // "invatate" - favorizeaza cuvinte mai putin consolidate (ponderare deja existenta, doar
+  // citire); "complet aleator" - fara nicio ponderare, pur aleator, ca sa difere real de cealalta
+  const restChosen = remainingSlots > 0
+    ? (pmSource === 'learned' ? weightedSample(restEligible, remainingSlots) : shuffle(restEligible).slice(0, remainingSlots))
+    : [];
+  const chosen = shuffle([...missedChosen, ...restChosen]);
+  pmPairs = chosen.map(w => ({
+    id: w.id,
+    hidden: pmHiddenLang === 'de' ? w.de : w.ro,
+    visible: pmHiddenLang === 'de' ? w.ro : w.de,
+    solved: false,
+    hadMistakeThisRound: false
+  }));
+  pmRightOrder = shuffle(pmPairs.map(p => p.id));
+  pmSelectedLeftId = null;
+  renderPairMatch();
+}
+function renderPairMatch(){
+  const leftCol = document.getElementById('pairMatchLeftCol');
+  const rightCol = document.getElementById('pairMatchRightCol');
+  leftCol.innerHTML = pmPairs.map(p=>{
+    const isSelected = pmSelectedLeftId === p.id && !p.solved;
+    const label = p.solved ? escapeHtml(p.hidden) : '🔊 ascultă';
+    return `<button class="btn-block pm-left-box" data-id="${escapeAttr(p.id)}" style="width:100%; ${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${label}</span><span></span></button>`;
+  }).join('');
+  rightCol.innerHTML = pmRightOrder.map(id=>{
+    const p = pmPairs.find(pp=>pp.id===id);
+    return `<button class="btn-block pm-right-box" data-id="${escapeAttr(id)}" style="width:100%; ${p.solved?'opacity:0.4;':''}" ${p.solved?'disabled':''}><span>${escapeHtml(p.visible)}</span><span></span></button>`;
+  }).join('');
+  leftCol.querySelectorAll('.pm-left-box').forEach(btn=>{
+    btn.addEventListener('click', ()=> onPairMatchLeftClick(btn.dataset.id));
+  });
+  rightCol.querySelectorAll('.pm-right-box').forEach(btn=>{
+    btn.addEventListener('click', ()=> onPairMatchRightClick(btn.dataset.id));
+  });
+}
+function onPairMatchLeftClick(id){
+  const p = pmPairs.find(pp=>pp.id===id);
+  if(!p || p.solved) return;
+  pmSelectedLeftId = id;
+  const spoke = pmHiddenLang === 'de' ? (speakGerman(p.hidden, ()=>{}), true) : speakRomanian(p.hidden, ()=>{});
+  if(pmHiddenLang === 'ro' && spoke === false){
+    document.getElementById('pairMatchNoWordsNotice').querySelector('.upload-status').textContent =
+      'Nicio voce română găsită pe acest dispozitiv — sunetul nu poate fi redat pentru cuvinte românești, dar poți continua doar cu textul din dreapta.';
+    document.getElementById('pairMatchNoWordsNotice').style.display = 'block';
+  }
+  renderPairMatch();
+}
+function onPairMatchRightClick(rightId){
+  if(!pmSelectedLeftId) return; // trebuie ascultat un cuvant din stanga, intai
+  const leftPair = pmPairs.find(pp=>pp.id===pmSelectedLeftId);
+  if(!leftPair || leftPair.solved) return;
+  if(rightId === pmSelectedLeftId){
+    leftPair.solved = true;
+    // absolvit doar daca nu a avut nicio greseala la aceasta aparitie - altfel ramane in
+    // lista, ca sa reapara si-n runda viitoare (nu s-a nimerit "din prima")
+    if(leftPair.hadMistakeThisRound) pmMissedIds.add(leftPair.id);
+    else pmMissedIds.delete(leftPair.id);
+    pmSelectedLeftId = null;
+    renderPairMatch();
+    if(pmPairs.every(p=>p.solved)){
+      document.getElementById('pairMatchGameArea').style.display = 'none';
+      document.getElementById('pairMatchCompleteNotice').style.display = 'block';
+    }
+  } else {
+    leftPair.hadMistakeThisRound = true;
+    pmMissedIds.add(leftPair.id);
+    const btn = document.querySelector(`.pm-right-box[data-id="${rightId}"]`);
+    if(btn){ btn.style.background = 'var(--red)'; setTimeout(()=>{ btn.style.background = ''; }, 400); }
+  }
+}
+document.querySelectorAll('.pm-hidden-lang').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.pm-hidden-lang').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    pmHiddenLang = chip.dataset.lang;
+    buildPairMatchRound();
+  });
+});
+document.querySelectorAll('.pm-source').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.pm-source').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    pmSource = chip.dataset.source;
+    buildPairMatchRound();
+  });
+});
+document.getElementById('openPairMatchBtn').addEventListener('click', ()=>{
+  document.getElementById('pairMatchSheet').classList.add('show');
+  sheetOverlay.classList.add('show');
+  buildPairMatchRound();
+});
+function closePairMatchSheet(){
+  document.getElementById('pairMatchSheet').classList.remove('show');
+  sheetOverlay.classList.remove('show');
+  window.speechSynthesis.cancel();
+  pmSelectedLeftId = null;
+}
+document.getElementById('closePairMatchSheetBtn').addEventListener('click', closePairMatchSheet);
+document.getElementById('pairMatchContinueBtn').addEventListener('click', buildPairMatchRound);
+
 document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', ()=>{
   document.getElementById('wordListConfirmBtn').click(); // reutilizam exact acelasi handler de confirmare
 });
@@ -4929,8 +5136,10 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
 /* ---------- voice picker wiring ---------- */
 if('speechSynthesis' in window){
   populateVoiceList();
+  refreshRomanianVoices();
   // vocile se incarca adesea asincron pe Android/Chrome
   window.speechSynthesis.onvoiceschanged = populateVoiceList;
+  window.speechSynthesis.addEventListener('voiceschanged', refreshRomanianVoices);
 }
 const voiceSelect = document.getElementById('voiceSelect');
 if(voiceSelect){
