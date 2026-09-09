@@ -4,6 +4,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v109 — zoom funcțional în toată aplicația (bug sistemic real, găsit prin testare directă)**
+- **Cauza reală**: `.chip` și `.btn-block` — cele mai folosite clase din toată aplicația (butoane, etichete de nivel, presetări, module, submeniuri) — aveau dimensiunea de font fixă, în `px`, nu relativă (`rem`). Zoom-ul (A−/A+) modifică doar mărimea rădăcinii, care afectează doar `rem` — de-aia funcționa doar întâmplător, pe puținele elemente care se-ntâmplau să folosească deja `rem`.
+- **Corectat: toate cele 27 de declarații** găsite, convertite la `rem`, cu matematică exactă (păstrează dimensiunea vizuală identică la zoom 100%, doar acum răspunde corect la orice nivel).
+- Verificat cu cascadă CSS reală (nu doar citire de cod): calculat efectiv dimensiunea la 70%, 100%, 130% zoom, într-o structură identică cu un submeniu real (`<details>`) — scalare exactă, proporțională, confirmată matematic.
+- **Umbra de lizibilitate**, redusă din nou (0.4→0.3px) — echilibrată corect, după rezolvarea cauzei reale (fontul, nu umbra, era problema de fond).
+- **Cursorul de viteză**, recolorat — paleta aplicației (negru + gri deschis), nu albastrul implicit al browser-ului.
+- Confirmat, separat: litera „a" lipsă la unele voci Microsoft românești e o limitare a motorului de sinteză, nu ceva reparabil din cod.
+
 **v108 — voce română selectabilă, viteză reglabilă, corecție reală la „Cuvinte în pereche"**
 - **Selector de voce română** — nou, în Setări, alături de cel german deja existent: alegi dintre toate vocile românești instalate pe dispozitiv (ex. mai multe Microsoft + Google), cu testare și preselectare inteligentă. Persistă separat de germană.
 - **Viteză de rostire reglabilă** (cursor, 0.5x-1.5x) — valabilă la ambele voci, peste tot în aplicație. Utilă mai ales pentru că unele motoare de sinteză (ex. unele voci Microsoft) sună natural mai grăbite decât altele, indiferent de setarea implicită.

@@ -38,7 +38,7 @@
     /* umbra simetrica, foarte subtire, cu aceeasi culoare ca textul - "ingroasa" usor
        literele, fara sa schimbe dimensiunea sau sa suprascrie greutatile explicite deja
        setate pe diverse elemente - ajuta la lizibilitate pe fundalul cu textura fina */
-    text-shadow: 0.4px 0 0 currentColor, -0.4px 0 0 currentColor;
+    text-shadow: 0.3px 0 0 currentColor, -0.3px 0 0 currentColor;
     display:flex; flex-direction:column; align-items:center;
     padding-top:calc(var(--safe-top) + 10px);
     overflow:hidden;
@@ -58,41 +58,41 @@
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
     width:100%; max-width:760px;
   }
-  .brand{ font-family:'Special Elite', monospace; font-size:18.4px; line-height:1.1; flex:1 1 auto; min-width:0; }
+  .brand{ font-family:'Special Elite', monospace; font-size:1.15rem; line-height:1.1; flex:1 1 auto; min-width:0; }
   .brand-title{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:1.5px;
+  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.5625rem; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:nowrap; flex-shrink:0; justify-content:flex-end; }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
-  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); min-width:32px; text-align:center; }
+  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
-    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:12.5px;
+    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:0.78125rem;
     width:30px; height:30px; border-radius:8px; border:1.5px solid var(--ink); background:var(--paper);
     cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink);
   }
   .zoom-btn:active{ background:var(--paper-dark); }
-  .stats{ font-family:'IBM Plex Mono', monospace; font-size:11px; text-align:right; color:var(--ink-soft); line-height:1.4; }
-  .stats b{ color:var(--ink); font-size:13.6px; }
+  .stats{ font-family:'IBM Plex Mono', monospace; font-size:0.6875rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
+  .stats b{ color:var(--ink); font-size:0.85rem; }
   .gear-btn{
     width:40px; height:40px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper);
-    font-size:18.4px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    font-size:1.15rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
   .gear-btn:active{ background:var(--paper-dark); }
   .summary-line{
-    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft);
+    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft);
     text-align:center; flex-shrink:0;
   }
   .install-banner{
     display:flex; align-items:center; gap:8px; margin:8px 16px 0; padding:10px 12px;
     background:var(--paper-dark); border:1.5px solid var(--ink); border-radius:10px; flex-shrink:0;
   }
-  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:13.1px; line-height:1.3; }
+  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:0.81875rem; line-height:1.3; }
   .install-banner-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:11.5px; font-weight:600; background:var(--ink);
+    font-family:'IBM Plex Mono', monospace; font-size:0.71875rem; font-weight:600; background:var(--ink);
     color:var(--paper); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; flex-shrink:0;
   }
   .install-banner-close{
-    background:none; border:none; font-size:16px; color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:4px;
+    background:none; border:none; font-size:1rem; color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:4px;
   }
 
   /* ---------- main scroll area ---------- */
@@ -239,39 +239,55 @@
   }
   .sheet.show{ transform:translateY(0); }
   .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
-  .sheet-title{ font-family:'Special Elite', monospace; font-size:16px; margin-bottom:14px; }
+  .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
   .sheet-section{ margin-bottom:20px; }
   .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
   .sheet-group[open]{ padding-bottom:6px; }
   .sheet-group summary{
-    font-family:'Special Elite', monospace; font-size:14.7px; padding:14px 0; cursor:pointer;
+    font-family:'Special Elite', monospace; font-size:0.91875rem; padding:14px 0; cursor:pointer;
     list-style:none; display:flex; align-items:center; justify-content:space-between; color:var(--ink);
   }
   .sheet-group summary::-webkit-details-marker{ display:none; }
   .sheet-group summary::after{ content:'▾'; font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); transition:transform 0.2s ease; }
   .sheet-group[open] summary::after{ transform:rotate(180deg); }
   .sheet-group .sheet-section:last-child{ margin-bottom:12px; }
-  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; letter-spacing:1.5px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:10px; }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
   .chip{
-    font-family:'IBM Plex Mono', monospace; font-size:13.1px; border:1.5px solid var(--ink); border-radius:20px;
+    font-family:'IBM Plex Mono', monospace; font-size:0.81875rem; border:1.5px solid var(--ink); border-radius:20px;
     padding:9px 16px; background:var(--paper); user-select:none; min-height:40px; display:flex; align-items:center;
   }
   .chip.active{ background:var(--ink); color:var(--paper); }
   .chip.disabled{ opacity:0.4; }
+
+  /* cursor de tip "range" (ex. viteza de rostire) - paleta aplicatiei, nu albastrul implicit */
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:6px; border-radius:3px; background:var(--line); outline:none; margin:8px 0;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--ink); cursor:pointer; border:2px solid var(--paper);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:20px; height:20px; border-radius:50%;
+    background:var(--ink); cursor:pointer; border:2px solid var(--paper);
+  }
+  input[type="range"]::-moz-range-track{ background:var(--line); height:6px; border-radius:3px; }
   .btn-row{ display:flex; flex-direction:column; gap:8px; }
   .btn-block{
-    font-family:'IBM Plex Mono', monospace; font-size:12.8px; background:var(--paper); text-align:left;
+    font-family:'IBM Plex Mono', monospace; font-size:0.8rem; background:var(--paper); text-align:left;
     border:1.5px solid var(--ink-soft); color:var(--ink); border-radius:10px; padding:13px 14px; min-height:48px;
     display:flex; align-items:center; justify-content:space-between;
   }
   .btn-block:active{ background:var(--paper-dark); }
   .btn-block:disabled{ opacity:0.4; }
   .file-input{ display:none; }
-  .legend{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
+  .legend{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
   .legend span.art{ font-weight:600; margin-right:3px; }
-  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:11.2px; color:var(--ink-soft); margin-top:8px; }
+  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft); margin-top:8px; }
   .upload-status.ok{ color:var(--green); }
   .upload-status.err{ color:var(--red); }
   .sheet-close{
@@ -282,8 +298,8 @@
   @media (max-width: 420px){
     .zoom-percent{ display:none; }
     .zoom-reset-btn{ display:none; }
-    .gear-btn{ width:36px; height:36px; font-size:16px; }
-    .brand{ font-size:16px; }
+    .gear-btn{ width:36px; height:36px; font-size:1rem; }
+    .brand{ font-size:1rem; }
   }
   @media print{
     body > *:not(#aiPrintArea){ display:none !important; }
@@ -565,7 +581,7 @@
 
   <button class="sheet-close" id="closeSheetBtn">Închide</button>
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
-  <div style="text-align:center; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-soft); line-height:1.5;">
+  <div style="text-align:center; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:0.625rem; color:var(--ink-soft); line-height:1.5;">
     Aplicația e gratuită și rămâne așa. Dacă vrei totuși să susții întreținerea și dezvoltarea ei în continuare —
     <a href="https://ko-fi.com/tomitaro25" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:underline;">☕ o cafea pe Ko-fi</a>
   </div>
@@ -961,7 +977,7 @@
         Acest browser nu are (încă) AI local, integrat (Chrome „Prompt API"/Gemini Nano) — funcția asta nu poate rula complet offline aici. Momentan, doar Chrome de pe calculator (nu telefon) îl poate avea.
       </div>
       <details style="margin-top:10px;">
-        <summary style="cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);">Cum activez, dacă am Chrome pe calculator?</summary>
+        <summary style="cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--ink-soft);">Cum activez, dacă am Chrome pe calculator?</summary>
         <div class="upload-status" style="margin-top:8px;">
           Pe versiuni mai noi de Chrome, s-ar putea să funcționeze deja, fără niciun pas suplimentar — verificarea de mai sus se reface automat de fiecare dată când redeschizi acest ecran. Dacă tot nu merge, încearcă:
           <ol style="margin:6px 0 0 18px; padding:0;">
@@ -1462,7 +1478,7 @@ function appendVoicePartnerBilingualLine(speaker, mainText, translatedText){
   const label = speaker === 'eu' ? 'Tu' : 'Partener';
   let html = `<div style="margin-bottom:8px;"><b style="color:${color};">${label}:</b> ${escapeHtml(mainText)}`;
   if(translatedText){
-    html += `<div style="font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; margin-top:2px;">${escapeHtml(translatedText)}</div>`;
+    html += `<div style="font-size:0.6875rem; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; margin-top:2px;">${escapeHtml(translatedText)}</div>`;
   }
   html += `</div>`;
   box.innerHTML += html;
@@ -3167,9 +3183,9 @@ function renderWordList(){
     return `<div class="btn-block word-list-row" data-id="${escapeAttr(w.id)}" style="width:100%; margin-bottom:6px; ${isDisabled?'opacity:0.4;':''} ${isPicked?'border-color:var(--red); border-width:2px;':''}">
       <span style="flex:1; overflow:hidden;">
         <span style="font-family:'Literata',serif; font-weight:600;">${escapeHtml(w.artikel ? w.artikel+' '+w.de : w.de)}</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); display:block;">${escapeHtml(w.ro)}</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6875rem; color:var(--ink-soft); display:block;">${escapeHtml(w.ro)}</span>
       </span>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:${stars>=4?'var(--green)':'var(--gold)'};">${'★'.repeat(Math.min(stars,4))}${stars>4?'+':''}</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6875rem; color:${stars>=4?'var(--green)':'var(--gold)'};">${'★'.repeat(Math.min(stars,4))}${stars>4?'+':''}</span>
     </div>`;
   }).join('');
   if(isSelectMode){
@@ -4871,7 +4887,7 @@ function renderAiHistList(){
     return `<div class="btn-block ai-hist-row" data-id="${e.id}" style="width:100%; margin-bottom:6px; cursor:pointer;">
       ${aiHistSelectMode ? `<input type="checkbox" class="ai-hist-checkbox" data-id="${e.id}" ${checked} style="margin-right:8px; width:18px; height:18px; flex-shrink:0;">` : ''}
       <span style="flex:1; overflow:hidden;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); display:block;">${dateStr}</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:0.65625rem; color:var(--ink-soft); display:block;">${dateStr}</span>
         <span style="font-family:'Literata',serif; font-size:0.85rem;"><span style="font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--der); font-weight:600;">${srcTag}</span> ${preview}</span>
       </span>
       ${!aiHistSelectMode ? '<span>›</span>' : ''}
@@ -5053,7 +5069,7 @@ document.getElementById('aiHistFrequentWordsBtn').addEventListener('click', ()=>
   }
   box.innerHTML = sorted.map(([w,c])=>
     `<div class="btn-block ai-freq-word-row" data-word="${escapeAttr(w)}" style="width:100%; margin-bottom:6px;">
-      <span>${escapeHtml(w)} <span style="color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:11px;">(×${c})</span></span>
+      <span>${escapeHtml(w)} <span style="color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:0.6875rem;">(×${c})</span></span>
       <span>+</span>
     </div>`
   ).join('');
