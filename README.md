@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v110 — fontul real al „Cuvinte în pereche" corectat (conflict CSS găsit prin dovadă vizuală)**
+- **Cauza reală, confirmată din capturi de ecran**: butoanele aveau simultan două clase (`btn-block` și `pm-left-box`/`pm-right-box`) — la specificitate CSS egală, regula definită mai jos în foaia de stil câștiga silențios, fără nicio eroare vizibilă. `.btn-block` (monospace) era definit mai jos decât regula mea (Literata), deci acela se aplica de fapt, nu ce credeam eu.
+- **Corectat la sursă** — clasa `btn-block` eliminată complet de pe aceste butoane; rămâne doar stilizarea dedicată, completă (font, padding, aliniere — identică cu `.opt`, butoanele de răspuns din flashcard-uri).
+- **Dezalinierea rândurilor, corectată separat** — restructurare completă din 2 coloane independente (`flex`) într-un singur grid CSS, cu rânduri sincronizate automat în-nălțime — testat programatic, confirmă ordinea corectă stânga/dreapta, cu amestecul din dreapta păstrat intact.
+
 **v109 — zoom funcțional în toată aplicația (bug sistemic real, găsit prin testare directă)**
 - **Cauza reală**: `.chip` și `.btn-block` — cele mai folosite clase din toată aplicația (butoane, etichete de nivel, presetări, module, submeniuri) — aveau dimensiunea de font fixă, în `px`, nu relativă (`rem`). Zoom-ul (A−/A+) modifică doar mărimea rădăcinii, care afectează doar `rem` — de-aia funcționa doar întâmplător, pe puținele elemente care se-ntâmplau să folosească deja `rem`.
 - **Corectat: toate cele 27 de declarații** găsite, convertite la `rem`, cu matematică exactă (păstrează dimensiunea vizuală identică la zoom 100%, doar acum răspunde corect la orice nivel).

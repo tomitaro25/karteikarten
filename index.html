@@ -172,10 +172,14 @@
   .opt.correct{ background:rgba(63,125,83,0.18); border-color:var(--green); }
   .opt.wrong{ background:rgba(178,58,46,0.16); border-color:var(--red); }
 
-  /* "Cuvinte in pereche" - aceleasi font/dimensiune ca la butoanele de raspuns din
-     flashcard-uri (.opt), nu monospace-ul mic implicit de la .btn-block - consecventa
-     vizuala, si raspunde corect la zoom (rem, nu px) */
-  .pm-left-box, .pm-right-box{ font-family:'Literata', serif; font-size:1rem; }
+  /* "Cuvinte in pereche" - aceeasi construcTie COMPLETA ca la butoanele de raspuns din
+     flashcard-uri (.opt) - font, padding, inaltime minima, aliniere - nu doar fontul */
+  .pm-left-box, .pm-right-box{
+    font-family:'Literata', serif; font-size:1rem; text-align:left; background:var(--paper);
+    border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
+    display:flex; gap:10px; align-items:flex-start; min-height:52px; width:100%;
+    overflow-wrap:break-word; word-break:break-word;
+  }
 
   .stamp{
     position:absolute; top:38%; right:16px; font-family:'Special Elite', monospace; font-size:1.15rem;
@@ -655,10 +659,7 @@
   </div>
 
   <div class="sheet-section" id="pairMatchGameArea" style="display:none;">
-    <div style="display:flex; gap:10px;">
-      <div id="pairMatchLeftCol" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
-      <div id="pairMatchRightCol" style="flex:1; display:flex; flex-direction:column; gap:8px;"></div>
-    </div>
+    <div id="pairMatchGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
   </div>
 
   <div class="sheet-section" id="pairMatchCompleteNotice" style="display:none;">
@@ -3318,23 +3319,26 @@ function buildPairMatchRound(){
   renderPairMatch();
 }
 function renderPairMatch(){
-  const leftCol = document.getElementById('pairMatchLeftCol');
-  const rightCol = document.getElementById('pairMatchRightCol');
-  leftCol.innerHTML = pmPairs.map(p=>{
+  const grid = document.getElementById('pairMatchGrid');
+  // intercalat: stanga[i], dreapta[i] - la fiecare rand, ca sa fie in acelasi rand de grid.
+  // ordinea vizuala din dreapta ramane amestecata (pmRightOrder) - doar POZITIA fiecarui
+  // rand se sincronizeaza, potrivirea reala ramane pe ID, neschimbata
+  let rowsHtml = '';
+  pmPairs.forEach((p, i)=>{
     const isSelected = pmSelectedLeftId === p.id && !p.solved;
-    const label = p.solved ? escapeHtml(p.hidden) : '🔊';
-    return `<button class="btn-block pm-left-box" data-id="${escapeAttr(p.id)}" style="width:100%; ${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${label}</span><span></span></button>`;
-  }).join('');
-  rightCol.innerHTML = pmRightOrder.map(id=>{
-    const p = pmPairs.find(pp=>pp.id===id);
-    return `<button class="btn-block pm-right-box" data-id="${escapeAttr(id)}" style="width:100%; ${p.solved?'opacity:0.4;':''}" ${p.solved?'disabled':''}><span>${escapeHtml(p.visible)}</span><span></span></button>`;
-  }).join('');
+    const leftLabel = p.solved ? escapeHtml(p.hidden) : '🔊';
+    rowsHtml += `<button class="pm-left-box" data-id="${escapeAttr(p.id)}" style="${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${leftLabel}</span></button>`;
+    const rightId = pmRightOrder[i];
+    const rightPair = pmPairs.find(pp=>pp.id===rightId);
+    rowsHtml += `<button class="pm-right-box" data-id="${escapeAttr(rightId)}" style="${rightPair.solved?'opacity:0.4;':''}" ${rightPair.solved?'disabled':''}><span>${escapeHtml(rightPair.visible)}</span></button>`;
+  });
+  grid.innerHTML = rowsHtml;
   // apasare scurta = comportamentul existent (rosteste, selecteaza); tinut apasat peste
   // ~350ms = arata si textul, ca hint temporar, cat tine apasat - dispare la eliberare.
   // ascultatorii de "up"/"cancel" sunt GLOBALI (inregistrati o singura data, mai jos, nu aici)
   // ca sa functioneze corect chiar daca re-randarea din onPairMatchLeftClick reconstruieste
   // DOM-ul in timpul apasarii (referinta locala la buton ar deveni altfel invalida)
-  leftCol.querySelectorAll('.pm-left-box').forEach(btn=>{
+  grid.querySelectorAll('.pm-left-box').forEach(btn=>{
     const id = btn.dataset.id;
     btn.addEventListener('pointerdown', ()=>{
       if(btn.disabled) return;
@@ -3349,7 +3353,7 @@ function renderPairMatch(){
       }, 350);
     });
   });
-  rightCol.querySelectorAll('.pm-right-box').forEach(btn=>{
+  grid.querySelectorAll('.pm-right-box').forEach(btn=>{
     btn.addEventListener('click', ()=> onPairMatchRightClick(btn.dataset.id));
   });
 }
