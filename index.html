@@ -76,8 +76,9 @@
   .gear-btn{
     width:40px; height:40px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper);
     font-size:1.15rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    box-shadow:0 1px 2px rgba(0,0,0,0.07), 0 2px 5px rgba(0,0,0,0.05);
   }
-  .gear-btn:active{ background:var(--paper-dark); }
+  .gear-btn:active{ background:var(--paper-dark); box-shadow:0 1px 1px rgba(0,0,0,0.05); }
   .summary-line{
     padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft);
     text-align:center; flex-shrink:0;
@@ -164,6 +165,7 @@
     display:flex; gap:10px; align-items:flex-start; min-height:52px;
     transition:background 0.12s ease, transform 0.06s ease;
     overflow-wrap:break-word; word-break:break-word;
+    box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.05);
   }
   .opt > span:not(.letter){ min-width:0; }
   .opt .letter{ font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink-soft); flex-shrink:0; }
@@ -179,6 +181,7 @@
     border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
     display:flex; gap:10px; align-items:flex-start; min-height:52px; width:100%;
     overflow-wrap:break-word; word-break:break-word;
+    box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.05);
   }
 
   .stamp{
@@ -270,6 +273,7 @@
     background:var(--paper); border:1.5px solid var(--ink); border-radius:8px; color:var(--ink);
     cursor:pointer; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
     flex-shrink:0; padding:0;
+    box-shadow:0 1px 2px rgba(0,0,0,0.07), 0 2px 5px rgba(0,0,0,0.05);
   }
   .sheet-body-scroll{ flex:1; overflow-y:auto; padding:14px 18px calc(20px + var(--safe-bottom)); }
   .sheet-section{ margin-bottom:20px; }
@@ -289,8 +293,9 @@
   .chip{
     font-family:'IBM Plex Mono', monospace; font-size:0.81875rem; border:1.5px solid var(--ink); border-radius:20px;
     padding:9px 16px; background:var(--paper); user-select:none; min-height:40px; display:flex; align-items:center;
+    box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
   }
-  .chip.active{ background:var(--ink); color:var(--paper); }
+  .chip.active{ background:var(--ink); color:var(--paper); box-shadow:inset 0 1px 3px rgba(0,0,0,0.25); }
   .chip.disabled{ opacity:0.4; }
   /* chip-uri mai discrete, pt comutatoarele din "Cuvinte in pereche" - lasa mai mult loc
      pentru cele 10 perechi de dedesubt */
@@ -316,8 +321,9 @@
     font-family:'IBM Plex Mono', monospace; font-size:0.8rem; background:var(--paper); text-align:left;
     border:1.5px solid var(--ink-soft); color:var(--ink); border-radius:10px; padding:13px 14px; min-height:48px;
     display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.05);
   }
-  .btn-block:active{ background:var(--paper-dark); }
+  .btn-block:active{ background:var(--paper-dark); box-shadow:0 1px 1px rgba(0,0,0,0.05); }
   .btn-block:disabled{ opacity:0.4; }
   .file-input{ display:none; }
   .legend{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
@@ -371,7 +377,14 @@
       <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
-    <button class="gear-btn" id="moduleShortcutBtn" aria-label="Module">🧩</button>
+    <button class="gear-btn" id="moduleShortcutBtn" aria-label="Module">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="7" height="7" rx="1.5" fill="var(--ink)"/>
+        <rect x="10" y="1" width="7" height="7" rx="1.5" fill="var(--ink)"/>
+        <rect x="1" y="10" width="7" height="7" rx="1.5" fill="var(--ink)"/>
+        <rect x="10" y="10" width="7" height="7" rx="1.5" fill="var(--ink)"/>
+      </svg>
+    </button>
     <button class="gear-btn" id="aiShortcutBtn" aria-label="AI (Claude)">🤖</button>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
@@ -770,7 +783,7 @@
       <p><b>📖 Simplifică</b> — al treilea mod, tot din chip-urile de sus: lipești (sau fotografiezi) un text german mai greu, alegi nivelul țintă (A1-A2 sau B1-B2), primești o versiune simplificată — vocabular și propoziții tipice acelui nivel general, cu traducerea română alături. Simplificarea și traducerea se fac acum în 2 pași separați (nu într-un singur apel), pentru o traducere mai consecventă. Diferă de „Exersează ce ai învățat": aici simplificarea folosește vocabular tipic nivelului CEFR, nu neapărat doar cuvintele tale personal exersate.</p>
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — descrierea și traducerea se fac în 2 pași separați, cu traducere română alături și ascultare disponibilă imediat.</p>
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
-      <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
+      <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). La deschidere, apare un mesaj scurt de-așteptare, cât timp partenerul se pregătește (câteva secunde, prima dată-n sesiunea curentă). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
       <p><b>🧩 Module</b> — buton nou, în bara de sus (înlocuiește ce era microfonul de căutare) — deschide un panou separat, cu tot ce nu ține strict de setări: „Cuvintele mele exersate", „Cuvinte în pereche" și „Caută un cuvânt".</p>
       <p><b>📋 Cuvintele mele exersate</b> — în panoul „Module" (🧩, bara de sus): listă completă, cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
       <p><b>🔗 Cuvinte în pereche</b> — în panoul „Module": 10 cuvinte, într-o coloană ascunse (buton doar cu 🔊, nu văzute), în cealaltă traducerile lor, amestecate. Apeși scurt un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Ții apăsat (nu doar apeși scurt) un cuvânt ascuns ca să vezi și textul lui, temporar, cât timp ții — dispare la eliberare, ca hint, fără să conteze drept "dezvăluit". Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
@@ -1040,6 +1053,10 @@
         </div>
       </details>
       <button class="btn-block paste-highlight" id="aiVoicePartnerUseClaudeBtn" style="width:100%; margin-top:10px;"><span>Folosește prin Claude, în schimb (cheia ta, cost mic)</span><span>→</span></button>
+    </div>
+
+    <div class="sheet-section" id="aiVoicePartnerInitializing" style="display:none;">
+      <div class="upload-status">Se pregătește partenerul de conversație... (câteva secunde, prima dată în această sesiune)</div>
     </div>
 
     <div class="sheet-section" id="aiVoicePartnerDownloading" style="display:none;">
@@ -1572,15 +1589,18 @@ async function initVoicePartnerView(){
   document.getElementById('aiVoicePartnerUnsupported').style.display = 'none';
   document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
   document.getElementById('aiVoicePartnerMain').style.display = 'none';
+  document.getElementById('aiVoicePartnerInitializing').style.display = 'block';
   vpMode = 'local';
 
   const availability = await checkVoicePartnerAvailability();
   if(availability === 'unsupported' || availability === 'unavailable'){
+    document.getElementById('aiVoicePartnerInitializing').style.display = 'none';
     document.getElementById('aiVoicePartnerUnsupported').style.display = 'block';
     return;
   }
   if(!vpSession){
     if(availability === 'downloadable' || availability === 'downloading'){
+      document.getElementById('aiVoicePartnerInitializing').style.display = 'none';
       document.getElementById('aiVoicePartnerDownloading').style.display = 'block';
     }
     try{
@@ -1594,11 +1614,13 @@ async function initVoicePartnerView(){
         }
       });
     }catch(err){
+      document.getElementById('aiVoicePartnerInitializing').style.display = 'none';
       document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
       document.getElementById('aiVoicePartnerUnsupported').style.display = 'block';
       return;
     }
   }
+  document.getElementById('aiVoicePartnerInitializing').style.display = 'none';
   document.getElementById('aiVoicePartnerDownloading').style.display = 'none';
   await setupVoicePartnerBilingual();
   updateVoicePartnerModeNote();
@@ -3560,7 +3582,13 @@ function closePairMatchSheet(){
   window.speechSynthesis.cancel();
   pmSelectedLeftId = null;
 }
-document.getElementById('closePairMatchSheetBtn').addEventListener('click', closePairMatchSheet);
+document.getElementById('closePairMatchSheetBtn').addEventListener('click', ()=>{
+  document.getElementById('pairMatchSheet').classList.remove('show');
+  window.speechSynthesis.cancel();
+  pmSelectedLeftId = null;
+  document.getElementById('moduleSheet').classList.add('show');
+  sheetOverlay.classList.add('show');
+});
 document.getElementById('pairMatchContinueBtn').addEventListener('click', buildPairMatchRound);
 // global, o singura data (nu la fiecare randare) - functioneaza corect chiar daca DOM-ul s-a
 // reconstruit intre apasare si eliberare (re-randarea din firePairMatchLeftAction face exact asta)

@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v117 — corecție navigare, icon nou, relief 3D pe butoane**
+- **„Cuvinte în pereche" — corectat definitiv**: butonul „← Înapoi" te-ntoarce acum la „Module" (rămăsese, dintr-o implementare mai veche, mereu la ecranul principal). Găsită și eliminată, în trecere, o-nregistrare de eveniment duplicată, rămasă din aceeași implementare veche.
+- **Icon „Module"** — 🧩 (emoji colorat, culoare fixă, necontrolabilă) înlocuit cu un SVG propriu, o grilă simplă de 4 pătrate, colorată corect din tema aplicației.
+- **Indicator de-așteptare la „Exersează vorbitul"** — apare acum imediat la deschidere, cât timp partenerul de conversație se pregătește (înainte, în cazul comun — model deja descărcat — nu se arăta nimic în acel interval).
+- **Relief 3D, subtil, pe toate butoanele** — umbră ușoară, consecventă pe `.btn-block`, `.opt` (răspunsuri flashcard), chip-uri, butoane rotunde din bara de sus, butonul „Înapoi" — plus o reducere a umbrei la apăsare (efect tactil) și o umbră interioară la chip-urile active (par „apăsate", nu „ridicate").
+
 **v116 — navigare standardizată, în toată aplicația (5 panouri, toate consecvente acum)**
 - **„Cuvintele mele exersate"** — ecran complet, antet fix, ca restul. Butonul „← Înapoi" te-ntoarce exact de unde ai plecat — la „Module" dacă de-acolo ai deschis lista, sau înapoi la „Cuvinte noi în context" (AI) dacă de-acolo ai ales cuvinte manual — nu mereu la ecranul principal.
 - **Secțiunea AI, complet unificată** — un singur antet fix, sus, cu titlu care se schimbă automat după ecranul activ (Traducere, Exersează ce ai învățat, Istoric, etc.) și un singur buton „Înapoi", cu destinația corectă: din orice modul revii la hub-ul AI (nu ieși din tot panoul); din hub, revii la ecranul principal; din „Detaliu istoric" revii la „Istoric" (nu la hub, cum e firesc). Cele 7 butoane vechi, separate (funcționau corect, aveau doar stil vechi) — eliminate, înlocuite cu sistemul nou, unificat. Testat exact aceste 4 cazuri, inclusiv efectul secundar de la „Exersează vorbitul" (oprește ascultarea la ieșire).
