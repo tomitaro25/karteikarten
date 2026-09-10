@@ -4,10 +4,15 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v116 — navigare standardizată, în toată aplicația (5 panouri, toate consecvente acum)**
+- **„Cuvintele mele exersate"** — ecran complet, antet fix, ca restul. Butonul „← Înapoi" te-ntoarce exact de unde ai plecat — la „Module" dacă de-acolo ai deschis lista, sau înapoi la „Cuvinte noi în context" (AI) dacă de-acolo ai ales cuvinte manual — nu mereu la ecranul principal.
+- **Secțiunea AI, complet unificată** — un singur antet fix, sus, cu titlu care se schimbă automat după ecranul activ (Traducere, Exersează ce ai învățat, Istoric, etc.) și un singur buton „Înapoi", cu destinația corectă: din orice modul revii la hub-ul AI (nu ieși din tot panoul); din hub, revii la ecranul principal; din „Detaliu istoric" revii la „Istoric" (nu la hub, cum e firesc). Cele 7 butoane vechi, separate (funcționau corect, aveau doar stil vechi) — eliminate, înlocuite cu sistemul nou, unificat. Testat exact aceste 4 cazuri, inclusiv efectul secundar de la „Exersează vorbitul" (oprește ascultarea la ieșire).
+- Corectată, în trecere: o eroare de sintaxă introdusă chiar în timpul acestei restructurări (un fragment orfan, rămas dintr-o-nlocuire imprecisă) — prinsă la validare, înainte de livrare.
+
 **v115 — restructurare completă: „Setări" pe tot ecranul + panou nou „Module"**
 - **„Setări listă" redenumit „Setări"**, panou pe (aproape) tot ecranul, cu antet fix — titlul „Setări" și zoom-ul, împreună, mereu vizibile, indiferent cât deruleziîn jos. Secțiunea „Mărime font" (dublura zoom-ului) eliminată, redundantă acum.
 - **Panou nou, „Module"** — mutate acolo: „Cuvintele mele exersate", „Cuvinte în pereche" și „Caută un cuvânt" (cu tot ce ține de căutare — comutator RO/DE, câmp, buton de vorbit). Rămân în Setări doar nivelurile, presetările, modulul de-ngrijire și restul secțiunilor generale.
-- **Butonul din bara principală**, 🎤 → 🧩 — deschide acum panoul „Module" direct, nu mai deschide căutarea din Setări; vizibil mereu (nu doar quando recunoașterea vocală e suportată, dat fiind că „Module" conține și lucruri fără legătură cu vocea).
+- **Butonul din bara principală**, 🎤 → 🧩 — deschide acum panoul „Module" direct, nu mai deschide căutarea din Setări; vizibil mereu (nu doar când recunoașterea vocală e suportată, dat fiind că „Module" conține și lucruri fără legătură cu vocea).
 - Corectat, în trecere: un bug real de suprapunere — deschiderea „Cuvinte în pereche" sau „Cuvintele mele" din interiorul „Module" lăsa ambele panouri „deschise" simultan, suprapuse; acum panoul „Module" se-nchide corect înainte.
 
 **v114 — comutare rapidă Vocab/Verbe/Ant-Sin, icon nou la „Cuvinte în pereche"**

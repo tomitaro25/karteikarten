@@ -649,9 +649,18 @@
   </div>
 </div>
 
-<div class="sheet" id="wordListSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title" id="wordListTitle">📋 Cuvintele mele exersate</div>
+<div class="sheet sheet-fullscreen" id="wordListSheet">
+  <div class="sheet-header-sticky" style="flex-wrap:wrap; row-gap:8px;">
+    <button class="sheet-back-btn-icon" id="closeWordListSheetBtn" aria-label="Înapoi">←</button>
+    <div class="sheet-title" id="wordListTitle" style="margin:0;">📋 Cuvintele mele exersate</div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:6px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
+    </div>
+  </div>
+  <div class="sheet-body-scroll">
 
   <div class="sheet-section" style="padding-bottom:0;">
     <input type="text" id="wordListSearchInput" class="btn-block" style="width:100%;" placeholder="Caută (română sau germană)...">
@@ -685,7 +694,7 @@
     <div id="wordListRows"></div>
   </div>
 
-  <button class="sheet-close" id="closeWordListSheetBtn">Închide</button>
+  </div>
 </div>
 
 <button class="btn-block paste-highlight" id="wordListFloatingConfirmBtn" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); width:calc(100% - 48px); max-width:420px; display:none; z-index:60; box-shadow:0 4px 18px rgba(0,0,0,0.35);">
@@ -726,9 +735,18 @@
   </div>
 </div>
 
-<div class="sheet" id="aiSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">🤖 AI (Claude)</div>
+<div class="sheet sheet-fullscreen" id="aiSheet">
+  <div class="sheet-header-sticky" style="flex-wrap:wrap; row-gap:8px;">
+    <button class="sheet-back-btn-icon" id="aiHeaderBackBtn" aria-label="Înapoi">←</button>
+    <div class="sheet-title" id="aiHeaderTitle" style="margin:0;">🤖 AI (Claude)</div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:6px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
+    </div>
+  </div>
+  <div class="sheet-body-scroll">
 
   <details class="sheet-group" id="aiHelpDetails">
     <summary>❓ Ajutor — AI</summary>
@@ -788,11 +806,7 @@
   </div>
 
   <div id="aiHistoryView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiHistoryBackBtn">← Înapoi</button>
-    </div>
-
-    <div class="sheet-section">
+<div class="sheet-section">
       <div class="sheet-label">Filtrează</div>
       <div style="display:flex; gap:6px;">
         <select id="aiHistYearFilter" class="btn-block" style="flex:1; appearance:none;"><option value="">An: toate</option></select>
@@ -837,10 +851,7 @@
   </div>
 
   <div id="aiHistDetailView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiHistDetailBackBtn">← Înapoi la istoric</button>
-    </div>
-    <div class="sheet-section">
+<div class="sheet-section">
       <div class="sheet-label">Din istoric</div>
       <div id="aiHistDetailBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <button class="btn-block" id="aiHistDetailSpeakBtn" style="width:100%; margin-top:8px;"><span>🔊 Ascultă</span><span>▶</span></button>
@@ -855,11 +866,7 @@
   </div>
 
   <div id="aiTranslateView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiBackToHubBtn">← Înapoi</button>
-    </div>
-
-  <div class="chip-row" id="aiModeRow" style="margin:0 20px 14px;">
+<div class="chip-row" id="aiModeRow" style="margin:0 20px 14px;">
     <span class="chip ai-mode-chip active" data-mode="translate">🔄 Traducere</span>
     <span class="chip ai-mode-chip" data-mode="correct">✓ Corectură germană</span>
     <span class="chip ai-mode-chip" data-mode="simplify">📖 Simplifică</span>
@@ -915,11 +922,7 @@
   </div>
 
   <div id="aiExerciseView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiExerciseBackBtn">← Înapoi</button>
-    </div>
-
-    <div class="sheet-section">
+<div class="sheet-section">
       <div class="sheet-label">Nivel</div>
       <div class="chip-row">
         <span class="chip ai-ex-level active" data-level="a1a2">A1-A2</span>
@@ -960,11 +963,7 @@
   </div>
 
   <div id="aiDescribeView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiDescribeBackBtn">← Înapoi</button>
-    </div>
-
-    <div class="sheet-section">
+<div class="sheet-section">
       <div class="sheet-label">Nivel</div>
       <div class="chip-row">
         <span class="chip ai-desc-level active" data-level="a1a2">A1-A2</span>
@@ -996,11 +995,7 @@
   </div>
 
   <div id="aiNewWordsView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiNewWordsBackBtn">← Înapoi</button>
-    </div>
-
-    <div class="sheet-section">
+<div class="sheet-section">
       <div class="sheet-label">Cum funcționează</div>
       <p class="help-text" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 2 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
       <button class="btn-block paste-highlight" id="aiNewWordsGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează — Cuvinte alese aleatoriu</span><span>→</span></button>
@@ -1026,11 +1021,7 @@
   </div>
 
   <div id="aiVoicePartnerView" style="display:none;">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <button class="chip" id="aiVoicePartnerBackBtn">← Înapoi</button>
-    </div>
-
-    <div class="sheet-section" id="aiVoicePartnerUnsupported" style="display:none;">
+<div class="sheet-section" id="aiVoicePartnerUnsupported" style="display:none;">
       <div class="upload-status">
         Acest browser nu are (încă) AI local, integrat (Chrome „Prompt API"/Gemini Nano) — funcția asta nu poate rula complet offline aici. Momentan, doar Chrome de pe calculator (nu telefon) îl poate avea.
       </div>
@@ -1079,7 +1070,7 @@
     </div>
   </div>
 
-  <button class="sheet-close" id="closeAiSheetBtn">Închide</button>
+  </div>
 </div>
 
 <div id="aiPrintArea"></div>
@@ -2470,7 +2461,30 @@ function showAiView(view){
   document.getElementById('aiNewWordsView').style.display = view === 'newwords' ? 'block' : 'none';
   document.getElementById('aiVoicePartnerView').style.display = view === 'voicepartner' ? 'block' : 'none';
   if(view === 'history'){ populateAiHistFilters(); renderAiHistList(); }
+  currentAiView = view;
+  document.getElementById('aiHeaderTitle').textContent = (AI_VIEW_INFO[view] || AI_VIEW_INFO.hub).title;
 }
+// antet unic, dinamic - un singur buton "Inapoi", destinatia se schimba dupa ecranul curent
+// (majoritatea merg la hub; "Detaliu istoric" merge la "Istoric"; hub-ul insusi inchide tot
+// panoul AI). Inlocuieste cele 7 butoane separate de dinainte (fiecare mergea corect la locul
+// lui, doar stilul era vechi - comportamentul de destinatie ramane identic, doar unificat)
+const AI_VIEW_INFO = {
+  hub:          { title: '🤖 AI (Claude)', back: 'CLOSE' },
+  history:      { title: '📜 Istoric', back: 'hub' },
+  histdetail:   { title: '📜 Detaliu istoric', back: 'history' },
+  translate:    { title: '🌐 Traducere liberă', back: 'hub' },
+  exercise:     { title: '📝 Exersează ce ai învățat', back: 'hub' },
+  describe:     { title: '📷 Descrie o poză', back: 'hub' },
+  newwords:     { title: '🆕 Cuvinte noi în context', back: 'hub' },
+  voicepartner: { title: '🗣️ Exersează vorbitul', back: 'hub' }
+};
+let currentAiView = 'hub';
+document.getElementById('aiHeaderBackBtn').addEventListener('click', ()=>{
+  if(currentAiView === 'voicepartner') stopVoicePartnerListening(); // pastram efectul secundar de dinainte
+  const target = (AI_VIEW_INFO[currentAiView] || AI_VIEW_INFO.hub).back;
+  if(target === 'CLOSE') closeAiSheet();
+  else showAiView(target);
+});
 // activeaza/dezactiveaza butoanele de actiune din hub, dupa daca exista o cheie salvata -
 // centralizat intr-o functie, ca sa poata fi rechemata oricand starea cheii se schimba (nu doar la deschidere)
 function refreshAiHubButtons(){
@@ -2484,13 +2498,9 @@ function refreshAiHubButtons(){
   return hasKey;
 }
 document.getElementById('aiHubHistoryBtn').addEventListener('click', ()=> showAiView('history'));
-document.getElementById('aiHistoryBackBtn').addEventListener('click', ()=> showAiView('hub'));
 document.getElementById('aiHubVoicePartnerBtn').addEventListener('click', ()=> { showAiView('voicepartner'); initVoicePartnerView(); });
-document.getElementById('aiVoicePartnerBackBtn').addEventListener('click', ()=> { stopVoicePartnerListening(); showAiView('hub'); });
 document.getElementById('aiHubExerciseBtn').addEventListener('click', ()=> showAiView('exercise'));
-document.getElementById('aiExerciseBackBtn').addEventListener('click', ()=> showAiView('hub'));
 document.getElementById('aiHubDescribeBtn').addEventListener('click', ()=> showAiView('describe'));
-document.getElementById('aiDescribeBackBtn').addEventListener('click', ()=> showAiView('hub'));
 document.getElementById('aiHubNewWordsBtn').addEventListener('click', ()=>{
   showAiView('newwords');
   document.getElementById('aiNewWordsManualGenerateBtn').style.display = 'none';
@@ -2498,7 +2508,6 @@ document.getElementById('aiHubNewWordsBtn').addEventListener('click', ()=>{
   document.getElementById('aiNewWordsResultSection').style.display = 'none';
   document.getElementById('aiNewWordsStatus').textContent = '';
 });
-document.getElementById('aiNewWordsBackBtn').addEventListener('click', ()=> showAiView('hub'));
 function openAiSheet(){
   aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
   showAiView('hub');
@@ -2509,9 +2518,7 @@ function closeAiSheet(){ aiSheet.classList.remove('show'); sheetOverlay.classLis
 document.getElementById('openSheetBtn').addEventListener('click', openSheet);
 document.getElementById('closeSheetBtn').addEventListener('click', closeSheet);
 document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
-document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
 document.getElementById('aiHubTranslateBtn').addEventListener('click', ()=> showAiView('translate'));
-document.getElementById('aiBackToHubBtn').addEventListener('click', ()=> showAiView('hub'));
 function closeModuleSheet(){
   document.getElementById('moduleSheet').classList.remove('show');
   sheetOverlay.classList.remove('show');
@@ -3235,6 +3242,7 @@ let currentStreak = {count:0, lastDate:null};
 
 /* ---------- Panoul "Cuvintele mele exersate" - listare, sortare, selectie ---------- */
 let wordListMode = 'browse'; // 'browse' | 'select'
+let wordListReturnTo = 'main'; // 'module' | 'ai-newwords' | 'main' - unde revenim la Inapoi
 let wordListSort = 'stars-desc';
 let wordListSelected = []; // array de cuvinte alese, in modul 'select', max 5
 let wordListLevel = 'a1a2';
@@ -3358,7 +3366,15 @@ function openWordListSheet(mode){
 function closeWordListSheet(){
   document.getElementById('wordListSheet').classList.remove('show');
   document.getElementById('wordListFloatingConfirmBtn').style.display = 'none';
-  sheetOverlay.classList.remove('show');
+  if(wordListReturnTo === 'module'){
+    document.getElementById('moduleSheet').classList.add('show');
+    sheetOverlay.classList.add('show');
+  } else if(wordListReturnTo === 'ai-newwords'){
+    aiSheet.classList.add('show'); sheetOverlay.classList.add('show');
+    showAiView('newwords');
+  } else {
+    sheetOverlay.classList.remove('show');
+  }
 }
 
 /* ---------- Modul "Cuvinte in pereche" - exersare de consolidare, FARA update pe stelute ---------- */
@@ -3585,12 +3601,14 @@ document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', 
 });
 document.getElementById('openWordListBrowseBtn').addEventListener('click', ()=>{
   closeModuleSheet();
+  wordListReturnTo = 'module';
   openWordListSheet('browse');
 });
 document.getElementById('closeWordListSheetBtn').addEventListener('click', closeWordListSheet);
 document.getElementById('aiNewWordsManualBtn').addEventListener('click', ()=>{
   // inchidem panoul AI (doar pe el, overlay-ul ramane, aceeasi continuitate ca la sensul invers)
   aiSheet.classList.remove('show');
+  wordListReturnTo = 'ai-newwords';
   setTimeout(()=> openWordListSheet('select'), 260);
 });
 let pendingManualWords = [], pendingManualLevel = 'a1a2';
@@ -5106,7 +5124,6 @@ function openAiHistDetail(id){
   document.getElementById('aiHistDetailBox').innerHTML = html;
   showAiView('histdetail');
 }
-document.getElementById('aiHistDetailBackBtn').addEventListener('click', ()=> showAiView('history'));
 document.getElementById('aiHistDetailSpeakBtn').addEventListener('click', ()=>{
   const entry = loadAiHistory().find(e => e.id === currentAiHistEntryId);
   if(!entry) return;
