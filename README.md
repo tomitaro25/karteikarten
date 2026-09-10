@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v114 — comutare rapidă Vocab/Verbe/Ant-Sin, icon nou la „Cuvinte în pereche"**
+- **Subtitlul static** de sub „Karteikarten" (`DE ⇄ RO · A1–B2`, decorativ, fără legătură cu selecția reală) — înlocuit cu 3 butoane-icon, radio-button: 📖 Vocab, ⚡ Verbe, 🔄↔️ Ant/Sin. Comutare instant-ntre moduri, fără să intri-n Setări. „Vocab" ține minte exact ultima ta selecție normală de niveluri, nu un implicit fix — testat, inclusiv trecerea prin ambele moduri speciale-nainte de revenire.
+- Sincronizat complet cu Setările — schimbarea manuală de niveluri (chip-uri sau presetări) resetează automat radio-ul-napoi la „Vocab".
+- **Icon-ul de la „Cuvinte în pereche"**, refăcut din nou — renunțat la-ncercarea custom (cap + unde, prea abstractă) -n favoarea formei standard, universal recunoscute (difuzor + unde sonore), plus 3 puncte de mărime crescândă, ca să umple mai bine spațiul butonului.
+- Evaluate, dar **neimplementate** — o serie de propuneri externe de optimizare (cache pentru cuvinte, restructurare localStorage, strategie service worker) — găsit un bug real-ntr-una din ele (nume de cheie greșit, ar fi șters aparent toate statisticile la actualizare), documentat separat, în conversație.
+
 **v113 — curățare directă a vocabularului (nu doar afișare) + antet complet consolidat**
 - **1045 de intrări curățate în `vocab-data.js`** (nu doar la afișare, în date) — eliminate avertismentele de tip „atenție, NU X" (17, unde erau confuzii reale-ntre română și germană, inutile dat fiind că modulele arată deja direcția exercițiului) și, separat, sensurile secundare de la cuvintele cu mai multe variante (1028, păstrat doar sensul principal/cel mai comun). Excluse explicit, neatinse: perechile masculin/feminin (`Chef`/`Chefin` etc.) și un idiom special unde `/` face parte din construcție, nu dintr-o alegere-ntre sensuri.
 - **Antetul „Cuvinte în pereche", complet consolidat** — „Ce-i ascuns" și „Cuvinte" nu mai sunt secțiuni separate, în corpul derulabil; toate comutatoarele (DE/RO, Învățate/Aleator) s-au mutat sus, pe același rând cu „← Înapoi" și zoom-ul — mai mult loc pentru cele 10 perechi.

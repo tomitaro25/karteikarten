@@ -355,7 +355,14 @@
 
 <div class="flag-banner"></div>
 <div class="topbar">
-  <div class="brand"><span class="brand-title">Karteikarten</span><small>DE ⇄ RO · A1–B2</small></div>
+  <div class="brand">
+    <span class="brand-title">Karteikarten</span>
+    <div class="chip-row" id="modeRadioRow" style="gap:4px; margin-top:2px;">
+      <span class="chip mode-radio active" data-mode="vocab" style="padding:3px 8px; min-height:24px; font-size:0.9rem;">📖</span>
+      <span class="chip mode-radio" data-mode="verbe" style="padding:3px 8px; min-height:24px; font-size:0.9rem;">⚡</span>
+      <span class="chip mode-radio" data-mode="antsin" style="padding:3px 8px; min-height:24px; font-size:0.9rem;">🔄↔️</span>
+    </div>
+  </div>
   <div class="top-right">
     <div class="zoom-controls">
       <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
@@ -410,6 +417,7 @@
     <div class="sheet-section help-text">
       <div class="sheet-label">Cum funcționează aplicația</div>
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
+      <p><b>📖 / ⚡ / 🔄↔️</b>, sub titlul „Karteikarten" — comutare rapidă-ntre moduri, fără să intri-n Setări: <b>📖 Vocab</b> (vocabularul normal, exact ce aveai selectat înainte de-a schimba), <b>⚡ Verbe</b> (exersare conjugare), <b>🔄↔️ Ant/Sin</b> (antonime și sinonime). Funcționează ca-ntr-un grup radio — mereu unul singur activ. „Vocab" ține minte ultima ta selecție normală de niveluri, nu un implicit fix.</p>
       <p>Butoanele <b>A− / A+</b> din bara de sus (sau din secțiunea „Mărime font" de aici, din setări) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺ / Resetează</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
@@ -1064,6 +1072,9 @@ const BUILTIN = VOCAB_DATA.map(r => ({id:r[0], de:r[1], ro:r[2], artikel:r[3], l
 
 let customWords = [];
 let selectedLevels = new Set(["A1"]);
+let modeRadio = 'vocab'; // 'vocab' | 'verbe' | 'antsin' - butoanele rapide de sus, radio-button
+let lastNormalLevels = new Set(selectedLevels); // memoram ultima selectie normala, ca sa
+                                                  // stim la ce sa revenim cand apesi "Vocab"
 let customActive = false;
 let selectedDirection = 'mixed'; // 'mixed' | 'de-ro' | 'ro-de'
 let practiceMode = 'smart'; // 'smart' (repetitie spatiata) | 'random'
@@ -2493,6 +2504,12 @@ document.querySelectorAll('.level-chip').forEach(chip=>{
     } else {
       selectedLevels.add(lvl); chip.classList.add('active');
     }
+    // schimbare manuala de niveluri, prin Setari - consideram asta "normal", sincronizam
+    // butoanele radio de sus (revin la "Vocab") si memoram ca ultima selectie normala
+    modeRadio = 'vocab';
+    lastNormalLevels = new Set(selectedLevels);
+    document.querySelectorAll('.mode-radio').forEach(c=> c.classList.toggle('active', c.dataset.mode === 'vocab'));
+    savePreferences();
     roundNumber = 1;
     buildRound();
   });
@@ -2506,9 +2523,38 @@ document.querySelectorAll('.preset-chip').forEach(chip=>{
     document.querySelectorAll('.level-chip').forEach(c=>{
       c.classList.toggle('active', selectedLevels.has(c.dataset.level));
     });
+    modeRadio = 'vocab';
+    lastNormalLevels = new Set(selectedLevels);
+    document.querySelectorAll('.mode-radio').forEach(c=> c.classList.toggle('active', c.dataset.mode === 'vocab'));
+    savePreferences();
     roundNumber = 1;
     buildRound();
   });
+});
+
+/* ---------- butoane radio rapide (Vocab / Verbe / Ant-Sin), langa titlu ---------- */
+function setModeRadio(mode){
+  if(mode === modeRadio) return;
+  if(modeRadio === 'vocab'){
+    lastNormalLevels = new Set(selectedLevels); // memoram inainte sa parasim modul normal
+  }
+  modeRadio = mode;
+  if(mode === 'vocab') selectedLevels = new Set(lastNormalLevels);
+  else if(mode === 'verbe') selectedLevels = new Set(['VERBS']);
+  else if(mode === 'antsin') selectedLevels = new Set(['ANTSYN']);
+  document.querySelectorAll('.mode-radio').forEach(chip=>{
+    chip.classList.toggle('active', chip.dataset.mode === mode);
+  });
+  // sincronizam si chip-urile de niveluri din Setari, daca utilizatorul deschide panoul
+  document.querySelectorAll('.level-chip').forEach(c=>{
+    c.classList.toggle('active', selectedLevels.has(c.dataset.level));
+  });
+  savePreferences();
+  roundNumber = 1;
+  buildRound();
+}
+document.querySelectorAll('.mode-radio').forEach(chip=>{
+  chip.addEventListener('click', ()=> setModeRadio(chip.dataset.mode));
 });
 
 const customChip = document.getElementById('customChip');
@@ -3309,10 +3355,14 @@ let pmHoldTimer = null; // cronometrul de "tinut apasat" pt afisarea hint-ului t
 // prin CSS (culoarea li-i fixata de sistemul de operare) - SVG-ul garanteaza culorile temei,
 // consecvent, pe orice dispozitiv
 function pmSpeakerIconHtml(){
-  return `<svg width="26" height="22" viewBox="0 0 28 24" fill="none" style="flex-shrink:0;">
-    <circle cx="9" cy="12" r="6" fill="var(--ink)"/>
-    <path d="M17 8c1.3 1.1 2 2.5 2 4s-.7 2.9-2 4" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-    <path d="M20.5 5.5c2.2 1.9 3.3 4 3.3 6.5s-1.1 4.6-3.3 6.5" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  // icon standard (difuzor), plus 3 puncte de marime crescanda - "pulsuri" de sunet care ies
+  // din el - umple mai mult din buton, ramane un singur concept vizual coerent, nu iconite
+  // amestecate fara legatura
+  return `<svg width="50" height="24" viewBox="0 0 50 24" fill="none" style="flex-shrink:0;">
+    <path d="M3 8v6h4l5 5V3L7 8H3z" fill="var(--ink)"/>
+    <circle cx="19" cy="11" r="1.4" fill="var(--ink-soft)"/>
+    <circle cx="25" cy="11" r="2" fill="var(--ink-soft)"/>
+    <circle cx="32" cy="11" r="2.6" fill="var(--ink-soft)"/>
   </svg>`;
 }
 let pmPressState = null; // {id, startX, startY, moved, actionFired} - starea apasarii curente,
