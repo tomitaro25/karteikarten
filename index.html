@@ -371,7 +371,7 @@
       <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
     </div>
     <div class="stats">rundă <b id="roundNo">1</b><br>scor: <b id="sessionScore">0</b>/<span id="sessionTotal">0</span></div>
-    <button class="gear-btn" id="micShortcutBtn" style="display:none;" aria-label="Căutare vocală">🎤</button>
+    <button class="gear-btn" id="moduleShortcutBtn" aria-label="Module">🧩</button>
     <button class="gear-btn" id="aiShortcutBtn" aria-label="AI (Claude)">🤖</button>
     <button class="gear-btn" id="openSheetBtn" aria-label="Setări">⚙</button>
   </div>
@@ -393,24 +393,24 @@
 </div>
 
 <div class="sheet-overlay" id="sheetOverlay"></div>
-<div class="sheet" id="settingsSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">Setări listă</div>
+<div class="sheet sheet-fullscreen" id="settingsSheet">
+  <div class="sheet-header-sticky" style="flex-wrap:wrap; row-gap:8px;">
+    <button class="sheet-back-btn-icon" id="closeSheetBtn" aria-label="Înapoi">←</button>
+    <div class="sheet-title" style="margin:0;">Setări</div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:6px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
+    </div>
+  </div>
+  <div class="sheet-body-scroll">
 
   <div class="sheet-section" id="installSection" style="display:none;">
     <div class="sheet-label">Instalare</div>
     <div id="installContent"></div>
   </div>
 
-  <div class="sheet-section">
-    <div class="sheet-label">Mărime font</div>
-    <div class="zoom-controls" style="justify-content:flex-start; gap:8px;">
-      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
-      <span class="zoom-percent"></span>
-      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
-      <button class="chip zoom-reset-btn" style="min-height:30px; padding:6px 14px;">Resetează la 100%</button>
-    </div>
-  </div>
 
   <details class="sheet-group">
     <summary>❓ Ajutor</summary>
@@ -418,7 +418,7 @@
       <div class="sheet-label">Cum funcționează aplicația</div>
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
       <p><b>📖 / ⚡ / 🔄↔️</b>, sub titlul „Karteikarten" — comutare rapidă-ntre moduri, fără să intri-n Setări: <b>📖 Vocab</b> (vocabularul normal, exact ce aveai selectat înainte de-a schimba), <b>⚡ Verbe</b> (exersare conjugare), <b>🔄↔️ Ant/Sin</b> (antonime și sinonime). Funcționează ca-ntr-un grup radio — mereu unul singur activ. „Vocab" ține minte ultima ta selecție normală de niveluri, nu un implicit fix.</p>
-      <p>Butoanele <b>A− / A+</b> din bara de sus (sau din secțiunea „Mărime font" de aici, din setări) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺ / Resetează</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
+      <p>Butoanele <b>A− / A+</b> din bara de sus (sau din antetul acestui panou de Setări, mereu vizibil sus) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Voce și viteza de rostire</div>
@@ -514,11 +514,6 @@
     <div class="sheet-section">
       <div class="sheet-label">Progres pe niveluri</div>
       <div id="levelProgress"></div>
-      <button class="btn-block" id="openWordListBrowseBtn" style="width:100%; margin-top:8px;"><span>📋 Cuvintele mele exersate</span><span>›</span></button>
-    </div>
-    <div class="sheet-section">
-      <div class="sheet-label">Exersare</div>
-      <button class="btn-block" id="openPairMatchBtn" style="width:100%;"><span>🔗 Cuvinte în pereche</span><span>›</span></button>
     </div>
   </details>
 
@@ -562,20 +557,6 @@
         <button class="btn-block" id="exportStatsBtn"><span>Exportă statisticile</span><span>›</span></button>
         <button class="btn-block" id="exportMyWordsBtn"><span>Exportă „Cuvintele mele"</span><span>›</span></button>
       </div>
-    </div>
-
-    <div class="sheet-section" id="searchSection">
-      <div class="sheet-label">Caută un cuvânt</div>
-      <div class="chip-row" id="voiceLangRow" style="margin-bottom:8px;">
-        <span class="chip voice-lang-chip active" data-lang="ro">🇷🇴 caut din română</span>
-        <span class="chip voice-lang-chip" data-lang="de">🇩🇪 caut din germană</span>
-      </div>
-      <div class="btn-row">
-        <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
-      </div>
-      <button class="btn-block" id="voiceRecordBtn" style="display:none; margin-top:8px;"><span>🎤 Apasă și vorbește</span><span>●</span></button>
-      <div class="upload-status" id="voiceSearchStatus"></div>
-      <div id="wordSearchResults"></div>
     </div>
 
     <div class="sheet-section">
@@ -622,11 +603,49 @@
     </div>
   </details>
 
-  <button class="sheet-close" id="closeSheetBtn">Închide</button>
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
   <div style="text-align:center; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:0.625rem; color:var(--ink-soft); line-height:1.5;">
     Aplicația e gratuită și rămâne așa. Dacă vrei totuși să susții întreținerea și dezvoltarea ei în continuare —
     <a href="https://ko-fi.com/tomitaro25" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:underline;">☕ o cafea pe Ko-fi</a>
+  </div>
+  </div>
+</div>
+
+<div class="sheet sheet-fullscreen" id="moduleSheet">
+  <div class="sheet-header-sticky" style="flex-wrap:wrap; row-gap:8px;">
+    <button class="sheet-back-btn-icon" id="closeModuleSheetBtn" aria-label="Înapoi">←</button>
+    <div class="sheet-title" style="margin:0;">Module</div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:6px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
+    </div>
+  </div>
+  <div class="sheet-body-scroll">
+
+    <div class="sheet-section">
+      <button class="btn-block" id="openWordListBrowseBtn" style="width:100%;"><span>📋 Cuvintele mele exersate</span><span>›</span></button>
+    </div>
+
+    <div class="sheet-section">
+      <button class="btn-block" id="openPairMatchBtn" style="width:100%;"><span>🔗 Cuvinte în pereche</span><span>›</span></button>
+    </div>
+
+    <div class="sheet-section" id="searchSection">
+      <div class="sheet-label">Caută un cuvânt</div>
+      <div class="chip-row" id="voiceLangRow" style="margin-bottom:8px;">
+        <span class="chip voice-lang-chip active" data-lang="ro">🇷🇴 caut din română</span>
+        <span class="chip voice-lang-chip" data-lang="de">🇩🇪 caut din germană</span>
+      </div>
+      <div class="btn-row">
+        <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
+      </div>
+      <button class="btn-block" id="voiceRecordBtn" style="display:none; margin-top:8px;"><span>🎤 Apasă și vorbește</span><span>●</span></button>
+      <div class="upload-status" id="voiceSearchStatus"></div>
+      <div id="wordSearchResults"></div>
+    </div>
+
   </div>
 </div>
 
@@ -734,8 +753,9 @@
       <p><b>📷 Descrie o poză</b> — modul separat, din hub (nu din chip-urile de traducere): încarci o poză personală (nu text de tradus), alegi nivelul, Claude descrie ce vede în imagine, în germană, strict din cuvintele tale exersate cu succes la acel nivel (ca la „Exersează ce ai învățat") — descrierea și traducerea se fac în 2 pași separați, cu traducere română alături și ascultare disponibilă imediat.</p>
       <p><b>🆕 Cuvinte noi în context</b> — modul separat, din hub: „Generează — Cuvinte alese aleatoriu" alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — nivelul textului se deduce automat din nivelul acelor cuvinte. Generarea se face acum în 2 pași separați (mai întâi textul german, apoi traducerea lui dedicat, nu amestecate — găsit, prin testare, că dă o traducere română mai consecventă și mai fidelă) — cu cuvintele folosite natural (conjugate/declinate cum cere gramatica, nu forțat la forma de bază), evidențiate cu roșu, traducere română vizibilă direct, păstrată și la redeschiderea din Istoric. Poți alege și tu cuvintele — „✋ Alege manual cuvintele" deschide lista ta completă de cuvinte exersate, apoi „Generează — Cuvinte alese manual" pornește generarea abia după ce confirmi alegerea.</p>
       <p><b>🗣️ Exersează vorbitul</b> — complet separat de restul funcțiilor AI: implicit, rulează 100% pe dispozitiv, gratuit, fără cheie, prin AI-ul integrat în Chrome (Gemini Nano, „Prompt API"). Vorbești în germană, un partener simplu răspunde scurt (1-2 propoziții) și pune o întrebare, ca să continue conversația — conversația rămâne vizibilă, în text, pe tot parcursul, nu doar rostită. <b>Doar Chrome de pe calculator</b> — pe Android, momentan, Google exclude explicit suportul, indiferent cât de performant e telefonul (nu-i o limită de putere, e o limitare de software). Dacă local nu-i disponibil, poți alege să continui prin Claude (cheia ta, cost mic per schimb) — aceeași interfață, doar alt model în spate. Dacă microfonul nu-i disponibil (sau preferi să scrii), ai un câmp de text alături, cu același rezultat — poți scrie în română SAU germană, iar dacă Chrome are și API-urile dedicate de traducere (Translator/Language Detector, separate de „Prompt API"), textul tău și răspunsul apar traduse 1-la-1, în ambele limbi. Buton de mut (🔊/🔇), dacă preferi doar text, fără sunet — util pe calculator, în conversație "scrisă". Poți salva oricând conversația într-un fișier text, cu „💾 Salvează conversația".</p>
-      <p><b>📋 Cuvintele mele exersate</b> — listă completă, în Setări (lângă Progres pe niveluri), cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
-      <p><b>🔗 Cuvinte în pereche</b> — modul de exersare, în Setări: 10 cuvinte, într-o coloană ascunse (buton doar cu 🔊, nu văzute), în cealaltă traducerile lor, amestecate. Apeși scurt un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Ții apăsat (nu doar apeși scurt) un cuvânt ascuns ca să vezi și textul lui, temporar, cât timp ții — dispare la eliberare, ca hint, fără să conteze drept "dezvăluit". Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
+      <p><b>🧩 Module</b> — buton nou, în bara de sus (înlocuiește ce era microfonul de căutare) — deschide un panou separat, cu tot ce nu ține strict de setări: „Cuvintele mele exersate", „Cuvinte în pereche" și „Caută un cuvânt".</p>
+      <p><b>📋 Cuvintele mele exersate</b> — în panoul „Module" (🧩, bara de sus): listă completă, cu toate cuvintele la care ai răspuns până acum: sortabilă după stelute, alfabetic, sau filtrată doar pe cele cu greșeală activă acum. Are și un câmp de căutare, care răspunde atât la cuvinte germane cât și românești. La selecția manuală de cuvinte (pentru „Cuvinte noi în context"), apare un buton flotant de validare, vizibil oricât ai derulat lista — nu mai trebuie să revii sus.</p>
+      <p><b>🔗 Cuvinte în pereche</b> — în panoul „Module": 10 cuvinte, într-o coloană ascunse (buton doar cu 🔊, nu văzute), în cealaltă traducerile lor, amestecate. Apeși scurt un cuvânt ascuns ca să-l asculți, apoi alegi corespondentul din partea cealaltă — corect, se dezvăluie și rămâne marcat; greșit, butonul apăsat se-nroșește scurt, poți încerca din nou. Ții apăsat (nu doar apeși scurt) un cuvânt ascuns ca să vezi și textul lui, temporar, cât timp ții — dispare la eliberare, ca hint, fără să conteze drept "dezvăluit". Fără scor, fără limită de-ncercări. Cuvintele pe care nu le nimerești din prima reapar, cu prioritate, în rundele următoare — până le nimerești fără nicio greșeală, o singură dată. Alegi ce limbă e ascunsă (germană sau română), și dacă cuvintele vin din cele deja exersate (favorizează pe cele mai puțin consolidate, fără să afecteze stelutele) sau complet aleator. Nu influențează progresul/statisticile — e doar consolidare suplimentară.</p>
       <p><b>Rămâne strict pe teme de germană</b> — dacă scrii altceva decât text de tradus (o întrebare generală, o cerere nelegată), primești un răspuns scurt, în germană, care te redirecționează spre exercițiu.</p>
       <p><b>Confidențialitate:</b> cheia ta rămâne salvată doar pe acest dispozitiv (nu trece niciodată prin noi) — costul folosirii se plătește direct către Anthropic, separat de acest proiect.</p>
     </div>
@@ -2492,7 +2512,12 @@ document.getElementById('aiShortcutBtn').addEventListener('click', openAiSheet);
 document.getElementById('closeAiSheetBtn').addEventListener('click', closeAiSheet);
 document.getElementById('aiHubTranslateBtn').addEventListener('click', ()=> showAiView('translate'));
 document.getElementById('aiBackToHubBtn').addEventListener('click', ()=> showAiView('hub'));
-sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); closeWordListSheet(); closePairMatchSheet(); });
+function closeModuleSheet(){
+  document.getElementById('moduleSheet').classList.remove('show');
+  sheetOverlay.classList.remove('show');
+}
+document.getElementById('closeModuleSheetBtn').addEventListener('click', closeModuleSheet);
+sheetOverlay.addEventListener('click', ()=>{ closeSheet(); closeAiSheet(); closeWordListSheet(); closePairMatchSheet(); closeModuleSheet(); });
 
 /* ---------- level chips ---------- */
 document.querySelectorAll('.level-chip').forEach(chip=>{
@@ -3095,7 +3120,6 @@ function startVoiceSearch(){
 
 if(supportsSpeechRecognition()){
   document.getElementById('voiceRecordBtn').style.display = 'flex';
-  document.getElementById('micShortcutBtn').style.display = 'flex';
 }
 document.querySelectorAll('.voice-lang-chip').forEach(chip=>{
   chip.addEventListener('click', ()=>{
@@ -3105,12 +3129,10 @@ document.querySelectorAll('.voice-lang-chip').forEach(chip=>{
   });
 });
 document.getElementById('voiceRecordBtn').addEventListener('click', startVoiceSearch);
-document.getElementById('micShortcutBtn').addEventListener('click', ()=>{
-  openSheet();
-  const group = document.getElementById('dataGroup');
-  group.open = true;
+document.getElementById('moduleShortcutBtn').addEventListener('click', ()=>{
+  document.getElementById('moduleSheet').classList.add('show');
+  sheetOverlay.classList.add('show');
   setTimeout(()=>{
-    document.getElementById('searchSection').scrollIntoView({behavior:'smooth', block:'start'});
     document.getElementById('wordSearchInput').focus();
   }, 150);
 });
@@ -3511,6 +3533,7 @@ document.querySelectorAll('.pm-source').forEach(chip=>{
   });
 });
 document.getElementById('openPairMatchBtn').addEventListener('click', ()=>{
+  closeModuleSheet();
   document.getElementById('pairMatchSheet').classList.add('show');
   sheetOverlay.classList.add('show');
   buildPairMatchRound();
@@ -3560,7 +3583,10 @@ document.addEventListener('pointercancel', ()=>{
 document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', ()=>{
   document.getElementById('wordListConfirmBtn').click(); // reutilizam exact acelasi handler de confirmare
 });
-document.getElementById('openWordListBrowseBtn').addEventListener('click', ()=> openWordListSheet('browse'));
+document.getElementById('openWordListBrowseBtn').addEventListener('click', ()=>{
+  closeModuleSheet();
+  openWordListSheet('browse');
+});
 document.getElementById('closeWordListSheetBtn').addEventListener('click', closeWordListSheet);
 document.getElementById('aiNewWordsManualBtn').addEventListener('click', ()=>{
   // inchidem panoul AI (doar pe el, overlay-ul ramane, aceeasi continuitate ca la sensul invers)

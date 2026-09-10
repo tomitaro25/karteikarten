@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v115 — restructurare completă: „Setări" pe tot ecranul + panou nou „Module"**
+- **„Setări listă" redenumit „Setări"**, panou pe (aproape) tot ecranul, cu antet fix — titlul „Setări" și zoom-ul, împreună, mereu vizibile, indiferent cât deruleziîn jos. Secțiunea „Mărime font" (dublura zoom-ului) eliminată, redundantă acum.
+- **Panou nou, „Module"** — mutate acolo: „Cuvintele mele exersate", „Cuvinte în pereche" și „Caută un cuvânt" (cu tot ce ține de căutare — comutator RO/DE, câmp, buton de vorbit). Rămân în Setări doar nivelurile, presetările, modulul de-ngrijire și restul secțiunilor generale.
+- **Butonul din bara principală**, 🎤 → 🧩 — deschide acum panoul „Module" direct, nu mai deschide căutarea din Setări; vizibil mereu (nu doar quando recunoașterea vocală e suportată, dat fiind că „Module" conține și lucruri fără legătură cu vocea).
+- Corectat, în trecere: un bug real de suprapunere — deschiderea „Cuvinte în pereche" sau „Cuvintele mele" din interiorul „Module" lăsa ambele panouri „deschise" simultan, suprapuse; acum panoul „Module" se-nchide corect înainte.
+
 **v114 — comutare rapidă Vocab/Verbe/Ant-Sin, icon nou la „Cuvinte în pereche"**
 - **Subtitlul static** de sub „Karteikarten" (`DE ⇄ RO · A1–B2`, decorativ, fără legătură cu selecția reală) — înlocuit cu 3 butoane-icon, radio-button: 📖 Vocab, ⚡ Verbe, 🔄↔️ Ant/Sin. Comutare instant-ntre moduri, fără să intri-n Setări. „Vocab" ține minte exact ultima ta selecție normală de niveluri, nu un implicit fix — testat, inclusiv trecerea prin ambele moduri speciale-nainte de revenire.
 - Sincronizat complet cu Setările — schimbarea manuală de niveluri (chip-uri sau presetări) resetează automat radio-ul-napoi la „Vocab".
