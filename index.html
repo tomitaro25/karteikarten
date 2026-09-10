@@ -284,6 +284,9 @@
   }
   .chip.active{ background:var(--ink); color:var(--paper); }
   .chip.disabled{ opacity:0.4; }
+  /* chip-uri mai discrete, pt comutatoarele din "Cuvinte in pereche" - lasa mai mult loc
+     pentru cele 10 perechi de dedesubt */
+  .pm-hidden-lang, .pm-source{ padding:5px 12px; min-height:30px; font-size:0.7rem; }
 
   /* cursor de tip "range" (ex. viteza de rostire) - paleta aplicatiei, nu albastrul implicit */
   input[type="range"]{
@@ -657,27 +660,32 @@
 <div class="sheet sheet-fullscreen" id="pairMatchSheet">
   <div class="sheet-header-sticky">
     <button class="sheet-back-btn" id="closePairMatchSheetBtn">← Înapoi</button>
-    <div class="sheet-title">🔗 Cuvinte în pereche</div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:8px;">
+      <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
+      <span class="zoom-percent"></span>
+      <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
+      <button class="zoom-btn zoom-reset-btn" aria-label="Resetează fontul" title="Resetează la 100%">↺</button>
+    </div>
   </div>
   <div class="sheet-body-scroll">
     <div class="sheet-section" style="padding-bottom:0;">
       <div class="sheet-label">Ce-i ascuns</div>
       <div class="chip-row">
-        <span class="chip pm-hidden-lang active" data-lang="de">Germana ascunsă</span>
-        <span class="chip pm-hidden-lang" data-lang="ro">Română ascunsă</span>
+        <span class="chip pm-hidden-lang active" data-lang="de">DE</span>
+        <span class="chip pm-hidden-lang" data-lang="ro">RO</span>
       </div>
     </div>
 
     <div class="sheet-section" style="padding-bottom:0; padding-top:0;">
       <div class="sheet-label">Cuvinte</div>
       <div class="chip-row">
-        <span class="chip pm-source active" data-source="learned">Deja învățate</span>
-        <span class="chip pm-source" data-source="random">Complet aleator</span>
+        <span class="chip pm-source active" data-source="learned">Învățate</span>
+        <span class="chip pm-source" data-source="random">Aleator</span>
       </div>
     </div>
 
     <div class="sheet-section" id="pairMatchNoWordsNotice" style="display:none;">
-      <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.</div>
+      <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Aleator", sau exersează mai întâi câteva runde normale.</div>
     </div>
 
     <div class="sheet-section" id="pairMatchGameArea" style="display:none;">
@@ -3297,6 +3305,8 @@ let pmMissedIds = new Set(); // doar in memorie (nu localStorage) - cuvinte gres
                               // data, care nu s-au "absolvit" inca (nimerite fara greseala,
                               // la o reaparitie) - au prioritate la rundele urmatoare
 let pmHoldTimer = null; // cronometrul de "tinut apasat" pt afisarea hint-ului temporar
+let pmPressState = null; // {id, startX, startY, moved, actionFired} - starea apasarii curente,
+                          // urmarita separat de miscare, ca sa distingem atingere de derulare
 
 function buildPairMatchRound(){
   const eligible = pmSource === 'learned'
@@ -3305,7 +3315,7 @@ function buildPairMatchRound(){
   document.getElementById('pairMatchCompleteNotice').style.display = 'none';
   if(eligible.length < 10){
     document.getElementById('pairMatchNoWordsNotice').querySelector('.upload-status').textContent =
-      'Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.';
+      'Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Aleator", sau exersează mai întâi câteva runde normale.';
     document.getElementById('pairMatchNoWordsNotice').style.display = 'block';
     document.getElementById('pairMatchGameArea').style.display = 'none';
     return;
@@ -3347,30 +3357,31 @@ function renderPairMatch(){
   let rowsHtml = '';
   pmPairs.forEach((p, i)=>{
     const isSelected = pmSelectedLeftId === p.id && !p.solved;
-    const leftLabel = p.solved ? escapeHtml(p.hidden) : '🔊';
-    rowsHtml += `<button class="pm-left-box" data-id="${escapeAttr(p.id)}" style="${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${leftLabel}</span></button>`;
+    // icon centrat cand e doar iconul (nimic de citit) - text aliniat stanga cand e dezvaluit/hint
+    const leftJustify = p.solved ? 'flex-start' : 'center';
+    const leftLabel = p.solved ? escapeHtml(p.hidden) : '🗣️';
+    rowsHtml += `<button class="pm-left-box" data-id="${escapeAttr(p.id)}" style="justify-content:${leftJustify}; ${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${leftLabel}</span></button>`;
     const rightId = pmRightOrder[i];
     const rightPair = pmPairs.find(pp=>pp.id===rightId);
     rowsHtml += `<button class="pm-right-box" data-id="${escapeAttr(rightId)}" style="${rightPair.solved?'opacity:0.4;':''}" ${rightPair.solved?'disabled':''}><span>${escapeHtml(rightPair.visible)}</span></button>`;
   });
   grid.innerHTML = rowsHtml;
-  // apasare scurta = comportamentul existent (rosteste, selecteaza); tinut apasat peste
-  // ~350ms = arata si textul, ca hint temporar, cat tine apasat - dispare la eliberare.
-  // ascultatorii de "up"/"cancel" sunt GLOBALI (inregistrati o singura data, mai jos, nu aici)
-  // ca sa functioneze corect chiar daca re-randarea din onPairMatchLeftClick reconstruieste
-  // DOM-ul in timpul apasarii (referinta locala la buton ar deveni altfel invalida)
+  // interactiune redesenata complet - rezolva 2 probleme deodata, aceeasi cauza de fond:
+  // (1) pe telefon, o derulare care trece peste un buton nu mai trebuie sa-l activeze
+  //     accidental - urmarim miscarea, anulam actiunea daca depaseste un prag mic;
+  // (2) tinut apasat -> hint-ul ramane vizibil CAT TIME e tinut, nu doar o clipa - actiunea
+  //     (rostire+selectie) se declanseaza fie la eliberare (apasare scurta, fara miscare),
+  //     fie la pragul de "tinere" (daca ramane apasat, fara miscare, peste ~350ms) - niciodata
+  //     imediat pe atingere, ca sa lasam browser-ului timp sa recunoasca o eventuala derulare
   grid.querySelectorAll('.pm-left-box').forEach(btn=>{
     const id = btn.dataset.id;
-    btn.addEventListener('pointerdown', ()=>{
+    btn.addEventListener('pointerdown', (e)=>{
       if(btn.disabled) return;
-      onPairMatchLeftClick(id);
+      pmPressState = { id, startX:e.clientX, startY:e.clientY, moved:false, actionFired:false };
       pmHoldTimer = setTimeout(()=>{
-        const freshBtn = document.querySelector(`.pm-left-box[data-id="${id}"]`);
-        const p = pmPairs.find(pp=>pp.id===id);
-        if(freshBtn && p && !p.solved){
-          const span = freshBtn.querySelector('span');
-          if(span) span.textContent = p.hidden;
-        }
+        if(!pmPressState || pmPressState.id !== id || pmPressState.moved) return;
+        firePairMatchLeftAction(id);
+        pmPressState.actionFired = true;
       }, 350);
     });
   });
@@ -3378,7 +3389,9 @@ function renderPairMatch(){
     btn.addEventListener('click', ()=> onPairMatchRightClick(btn.dataset.id));
   });
 }
-function onPairMatchLeftClick(id){
+// actiunea reala (rostire + selectie + re-randare) - separata de evenimentul care o declanseaza,
+// ca s-o putem porni fie la eliberare (tap scurt), fie la pragul de tinere (vezi mai sus)
+function firePairMatchLeftAction(id){
   const p = pmPairs.find(pp=>pp.id===id);
   if(!p || p.solved) return;
   pmSelectedLeftId = id;
@@ -3389,6 +3402,14 @@ function onPairMatchLeftClick(id){
     document.getElementById('pairMatchNoWordsNotice').style.display = 'block';
   }
   renderPairMatch();
+  // dupa re-randare, daca eram in "tinere", aratam imediat hint-ul pe butonul proaspat
+  if(pmPressState && pmPressState.id === id && !pmPressState.moved){
+    const freshBtn = document.querySelector(`.pm-left-box[data-id="${id}"]`);
+    if(freshBtn && !p.solved){
+      const span = freshBtn.querySelector('span');
+      if(span) span.textContent = p.hidden;
+    }
+  }
 }
 function onPairMatchRightClick(rightId){
   if(!pmSelectedLeftId) return; // trebuie ascultat un cuvant din stanga, intai
@@ -3443,19 +3464,38 @@ function closePairMatchSheet(){
 document.getElementById('closePairMatchSheetBtn').addEventListener('click', closePairMatchSheet);
 document.getElementById('pairMatchContinueBtn').addEventListener('click', buildPairMatchRound);
 // global, o singura data (nu la fiecare randare) - functioneaza corect chiar daca DOM-ul s-a
-// reconstruit intre apasare si eliberare (re-randarea din onPairMatchLeftClick face exact asta)
+// reconstruit intre apasare si eliberare (re-randarea din firePairMatchLeftAction face exact asta)
 function clearPairMatchHoldHint(){
   if(pmHoldTimer){ clearTimeout(pmHoldTimer); pmHoldTimer = null; }
   document.querySelectorAll('.pm-left-box').forEach(btn=>{
     const p = pmPairs.find(pp=>pp.id===btn.dataset.id);
     if(p && !p.solved){
       const span = btn.querySelector('span');
-      if(span) span.textContent = '🔊';
+      if(span) span.textContent = '🗣️';
     }
   });
 }
-document.addEventListener('pointerup', clearPairMatchHoldHint);
-document.addEventListener('pointercancel', clearPairMatchHoldHint);
+// urmarim miscarea cat timp un buton e apasat - o miscare peste prag inseamna derulare, nu
+// atingere - anulam actiunea, nu se mai declanseaza nici rostirea, nici hint-ul
+const PM_MOVE_THRESHOLD = 12;
+document.addEventListener('pointermove', (e)=>{
+  if(!pmPressState || pmPressState.moved) return;
+  const dx = e.clientX - pmPressState.startX;
+  const dy = e.clientY - pmPressState.startY;
+  if(Math.sqrt(dx*dx + dy*dy) > PM_MOVE_THRESHOLD) pmPressState.moved = true;
+});
+document.addEventListener('pointerup', ()=>{
+  if(pmPressState && !pmPressState.moved && !pmPressState.actionFired){
+    // apasare scurta, fara miscare, fara sa fi apucat pragul de tinere - declansam actiunea acum
+    firePairMatchLeftAction(pmPressState.id);
+  }
+  clearPairMatchHoldHint();
+  pmPressState = null;
+});
+document.addEventListener('pointercancel', ()=>{
+  clearPairMatchHoldHint();
+  pmPressState = null;
+});
 
 document.getElementById('wordListFloatingConfirmBtn').addEventListener('click', ()=>{
   document.getElementById('wordListConfirmBtn').click(); // reutilizam exact acelasi handler de confirmare

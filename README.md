@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v112 — „Cuvinte în pereche": ajustări ergonomice, după testare directă**
+- **Titlul din antet, înlocuit cu controale de zoom** (A−/A+/procent/reset) — mai practic, poți regla fontul direct din modul, fără să ieși.
+- **Etichete scurtate și mai discrete** — DE/RO (nu „Germana ascunsă"/„Română ascunsă"), Învățate/Aleator (nu „Deja învățate"/„Complet aleator") — mai mult spațiu pentru cele 10 perechi.
+- **Icon nou** (🗣️, nu 🔊), centrat pe buton quando arată doar iconul, aliniat stânga quando arată cuvântul dezvăluit/hint.
+- **Interacțiunea de-apăsare, redesenată complet** — hint-ul (la ținut apăsat) rămâne vizibil cât timp ții, nu doar o clipă; și, pe telefon, o derulare care trece peste un buton nu-l mai activează accidental — urmărim mișcarea, anulăm acțiunea dacă depășește un prag mic. Testat izolat, 4 scenarii (apăsare scurtă, ținere, derulare-anulare, mișcare mică validă).
+
 **v111 — panou pe tot ecranul, cu antet fix (Pasul 1, doar la „Cuvinte în pereche")**
 - Primul pas dintr-o redesenare mai amplă, aplicată deocamdată **doar** la „Cuvinte în pereche" — panoul ocupă acum aproape tot ecranul (nu ~78%, cum era înainte), cu titlul și butonul „← Înapoi" fixe sus, vizibile mereu, indiferent cât deruleziconținutul dedesubt.
 - Celelalte panouri (Setări, Cuvintele mele exersate, AI) rămân **complet neschimbate** — urmează, pe rând, dacă acest prim pas confirmă abordarea corectă.
