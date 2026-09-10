@@ -244,6 +244,26 @@
   .sheet.show{ transform:translateY(0); }
   .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
   .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
+
+  /* Panou "ecran complet", cu antet fix (titlu + buton Inapoi) care nu deruleaza - PAS 1,
+     aplicat doar acolo unde adaugam explicit clasa .sheet-fullscreen, restul panourilor
+     raman neschimbate deocamdata, testam intai pe unul singur */
+  .sheet.sheet-fullscreen{
+    height:calc(100dvh - 24px); max-height:none;
+    display:flex; flex-direction:column; padding:0; overflow:hidden;
+  }
+  .sheet-header-sticky{
+    flex-shrink:0; display:flex; align-items:center; gap:10px;
+    padding:calc(var(--safe-top) + 14px) 18px 14px;
+    border-bottom:1.5px solid var(--line); background:var(--paper);
+  }
+  .sheet-header-sticky .sheet-title{ margin:0; flex:1; }
+  .sheet-back-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:0.875rem;
+    background:none; border:none; color:var(--ink); cursor:pointer;
+    padding:8px 6px 8px 0; display:flex; align-items:center; gap:4px; flex-shrink:0;
+  }
+  .sheet-body-scroll{ flex:1; overflow-y:auto; padding:14px 18px calc(20px + var(--safe-bottom)); }
   .sheet-section{ margin-bottom:20px; }
   .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
   .sheet-group[open]{ padding-bottom:6px; }
@@ -634,40 +654,41 @@
   <span>✓ Validează selecția (<span id="wordListFloatingCount">0</span>/5)</span><span>→</span>
 </button>
 
-<div class="sheet" id="pairMatchSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">🔗 Cuvinte în pereche</div>
+<div class="sheet sheet-fullscreen" id="pairMatchSheet">
+  <div class="sheet-header-sticky">
+    <button class="sheet-back-btn" id="closePairMatchSheetBtn">← Înapoi</button>
+    <div class="sheet-title">🔗 Cuvinte în pereche</div>
+  </div>
+  <div class="sheet-body-scroll">
+    <div class="sheet-section" style="padding-bottom:0;">
+      <div class="sheet-label">Ce-i ascuns</div>
+      <div class="chip-row">
+        <span class="chip pm-hidden-lang active" data-lang="de">Germana ascunsă</span>
+        <span class="chip pm-hidden-lang" data-lang="ro">Română ascunsă</span>
+      </div>
+    </div>
 
-  <div class="sheet-section" style="padding-bottom:0;">
-    <div class="sheet-label">Ce-i ascuns</div>
-    <div class="chip-row">
-      <span class="chip pm-hidden-lang active" data-lang="de">Germana ascunsă</span>
-      <span class="chip pm-hidden-lang" data-lang="ro">Română ascunsă</span>
+    <div class="sheet-section" style="padding-bottom:0; padding-top:0;">
+      <div class="sheet-label">Cuvinte</div>
+      <div class="chip-row">
+        <span class="chip pm-source active" data-source="learned">Deja învățate</span>
+        <span class="chip pm-source" data-source="random">Complet aleator</span>
+      </div>
+    </div>
+
+    <div class="sheet-section" id="pairMatchNoWordsNotice" style="display:none;">
+      <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.</div>
+    </div>
+
+    <div class="sheet-section" id="pairMatchGameArea" style="display:none;">
+      <div id="pairMatchGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
+    </div>
+
+    <div class="sheet-section" id="pairMatchCompleteNotice" style="display:none;">
+      <div class="upload-status" style="color:var(--green); text-align:center; font-size:1rem;">✓ Toate perechile găsite!</div>
+      <button class="btn-block paste-highlight" id="pairMatchContinueBtn" style="width:100%; margin-top:10px;"><span>Continuă — rundă nouă</span><span>→</span></button>
     </div>
   </div>
-
-  <div class="sheet-section" style="padding-bottom:0; padding-top:0;">
-    <div class="sheet-label">Cuvinte</div>
-    <div class="chip-row">
-      <span class="chip pm-source active" data-source="learned">Deja învățate</span>
-      <span class="chip pm-source" data-source="random">Complet aleator</span>
-    </div>
-  </div>
-
-  <div class="sheet-section" id="pairMatchNoWordsNotice" style="display:none;">
-    <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Complet aleator", sau exersează mai întâi câteva runde normale.</div>
-  </div>
-
-  <div class="sheet-section" id="pairMatchGameArea" style="display:none;">
-    <div id="pairMatchGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
-  </div>
-
-  <div class="sheet-section" id="pairMatchCompleteNotice" style="display:none;">
-    <div class="upload-status" style="color:var(--green); text-align:center; font-size:1rem;">✓ Toate perechile găsite!</div>
-    <button class="btn-block paste-highlight" id="pairMatchContinueBtn" style="width:100%; margin-top:10px;"><span>Continuă — rundă nouă</span><span>→</span></button>
-  </div>
-
-  <button class="sheet-close" id="closePairMatchSheetBtn">Închide</button>
 </div>
 
 <div class="sheet" id="aiSheet">

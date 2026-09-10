@@ -4,6 +4,10 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v111 — panou pe tot ecranul, cu antet fix (Pasul 1, doar la „Cuvinte în pereche")**
+- Primul pas dintr-o redesenare mai amplă, aplicată deocamdată **doar** la „Cuvinte în pereche" — panoul ocupă acum aproape tot ecranul (nu ~78%, cum era înainte), cu titlul și butonul „← Înapoi" fixe sus, vizibile mereu, indiferent cât deruleziconținutul dedesubt.
+- Celelalte panouri (Setări, Cuvintele mele exersate, AI) rămân **complet neschimbate** — urmează, pe rând, dacă acest prim pas confirmă abordarea corectă.
+
 **v110 — fontul real al „Cuvinte în pereche" corectat (conflict CSS găsit prin dovadă vizuală)**
 - **Cauza reală, confirmată din capturi de ecran**: butoanele aveau simultan două clase (`btn-block` și `pm-left-box`/`pm-right-box`) — la specificitate CSS egală, regula definită mai jos în foaia de stil câștiga silențios, fără nicio eroare vizibilă. `.btn-block` (monospace) era definit mai jos decât regula mea (Literata), deci acela se aplica de fapt, nu ce credeam eu.
 - **Corectat la sursă** — clasa `btn-block` eliminată complet de pe aceste butoane; rămâne doar stilizarea dedicată, completă (font, padding, aliniere — identică cu `.opt`, butoanele de răspuns din flashcard-uri).
