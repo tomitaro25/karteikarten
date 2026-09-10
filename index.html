@@ -263,6 +263,14 @@
     background:none; border:none; color:var(--ink); cursor:pointer;
     padding:8px 6px 8px 0; display:flex; align-items:center; gap:4px; flex-shrink:0;
   }
+  /* buton "Inapoi" doar-icon, mai clar incadrat/bolduit ca sa se recunoasca imediat ca
+     e o comanda, nu doar text - folosit in antete aglomerate, cu multe alte controale */
+  .sheet-back-btn-icon{
+    font-family:'IBM Plex Mono', monospace; font-size:1.15rem; font-weight:700;
+    background:var(--paper); border:1.5px solid var(--ink); border-radius:8px; color:var(--ink);
+    cursor:pointer; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; padding:0;
+  }
   .sheet-body-scroll{ flex:1; overflow-y:auto; padding:14px 18px calc(20px + var(--safe-bottom)); }
   .sheet-section{ margin-bottom:20px; }
   .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
@@ -658,9 +666,17 @@
 </button>
 
 <div class="sheet sheet-fullscreen" id="pairMatchSheet">
-  <div class="sheet-header-sticky">
-    <button class="sheet-back-btn" id="closePairMatchSheetBtn">← Înapoi</button>
-    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:8px;">
+  <div class="sheet-header-sticky" style="flex-wrap:wrap; row-gap:8px;">
+    <button class="sheet-back-btn-icon" id="closePairMatchSheetBtn" aria-label="Înapoi">←</button>
+    <div class="chip-row" style="gap:4px;">
+      <span class="chip pm-hidden-lang active" data-lang="de">DE</span>
+      <span class="chip pm-hidden-lang" data-lang="ro">RO</span>
+    </div>
+    <div class="chip-row" style="gap:4px;">
+      <span class="chip pm-source active" data-source="learned">Învățate</span>
+      <span class="chip pm-source" data-source="random">Aleator</span>
+    </div>
+    <div class="zoom-controls" style="justify-content:flex-end; flex:1; gap:6px;">
       <button class="zoom-btn zoom-out-btn" aria-label="Micșorează fontul">A−</button>
       <span class="zoom-percent"></span>
       <button class="zoom-btn zoom-in-btn" aria-label="Mărește fontul">A+</button>
@@ -668,22 +684,6 @@
     </div>
   </div>
   <div class="sheet-body-scroll">
-    <div class="sheet-section" style="padding-bottom:0;">
-      <div class="sheet-label">Ce-i ascuns</div>
-      <div class="chip-row">
-        <span class="chip pm-hidden-lang active" data-lang="de">DE</span>
-        <span class="chip pm-hidden-lang" data-lang="ro">RO</span>
-      </div>
-    </div>
-
-    <div class="sheet-section" style="padding-bottom:0; padding-top:0;">
-      <div class="sheet-label">Cuvinte</div>
-      <div class="chip-row">
-        <span class="chip pm-source active" data-source="learned">Învățate</span>
-        <span class="chip pm-source" data-source="random">Aleator</span>
-      </div>
-    </div>
-
     <div class="sheet-section" id="pairMatchNoWordsNotice" style="display:none;">
       <div class="upload-status">Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Aleator", sau exersează mai întâi câteva runde normale.</div>
     </div>
@@ -3305,6 +3305,16 @@ let pmMissedIds = new Set(); // doar in memorie (nu localStorage) - cuvinte gres
                               // data, care nu s-au "absolvit" inca (nimerite fara greseala,
                               // la o reaparitie) - au prioritate la rundele urmatoare
 let pmHoldTimer = null; // cronometrul de "tinut apasat" pt afisarea hint-ului temporar
+// icon SVG propriu (cap + unde sonore) - NU emoji: emoji-urile colorate nu pot fi recolorate
+// prin CSS (culoarea li-i fixata de sistemul de operare) - SVG-ul garanteaza culorile temei,
+// consecvent, pe orice dispozitiv
+function pmSpeakerIconHtml(){
+  return `<svg width="26" height="22" viewBox="0 0 28 24" fill="none" style="flex-shrink:0;">
+    <circle cx="9" cy="12" r="6" fill="var(--ink)"/>
+    <path d="M17 8c1.3 1.1 2 2.5 2 4s-.7 2.9-2 4" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M20.5 5.5c2.2 1.9 3.3 4 3.3 6.5s-1.1 4.6-3.3 6.5" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  </svg>`;
+}
 let pmPressState = null; // {id, startX, startY, moved, actionFired} - starea apasarii curente,
                           // urmarita separat de miscare, ca sa distingem atingere de derulare
 
@@ -3359,7 +3369,7 @@ function renderPairMatch(){
     const isSelected = pmSelectedLeftId === p.id && !p.solved;
     // icon centrat cand e doar iconul (nimic de citit) - text aliniat stanga cand e dezvaluit/hint
     const leftJustify = p.solved ? 'flex-start' : 'center';
-    const leftLabel = p.solved ? escapeHtml(p.hidden) : '🗣️';
+    const leftLabel = p.solved ? escapeHtml(p.hidden) : pmSpeakerIconHtml();
     rowsHtml += `<button class="pm-left-box" data-id="${escapeAttr(p.id)}" style="justify-content:${leftJustify}; ${p.solved?'opacity:0.4;':''} ${isSelected?'border-color:var(--gold); border-width:2px;':''}" ${p.solved?'disabled':''}><span>${leftLabel}</span></button>`;
     const rightId = pmRightOrder[i];
     const rightPair = pmPairs.find(pp=>pp.id===rightId);
@@ -3471,7 +3481,7 @@ function clearPairMatchHoldHint(){
     const p = pmPairs.find(pp=>pp.id===btn.dataset.id);
     if(p && !p.solved){
       const span = btn.querySelector('span');
-      if(span) span.textContent = '🗣️';
+      if(span) span.innerHTML = pmSpeakerIconHtml();
     }
   });
 }
