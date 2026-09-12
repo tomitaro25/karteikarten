@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v118 — Temă întunecată, nouă (comutabilă din Setări)**
+- **Secțiune nouă „Aspect"**, chiar la-nceputul panoului de Setări — ☀️ Deschis / 🌙 Întunecat. Alegerea rămâne salvată, fără „clipici" la reîncărcare.
+- **Paletă calculată, nu ghicită** — culorile cu sens (roșu/verde pentru corect-greșit, albastru/roz/verde pentru genul cuvintelor) rămân aceleași ca semnificație, doar puțin mai deschise-n modul-ntunecat — fiecare verificată să treacă pragul de lizibilitate WCAG (4.5:1), nu doar „inversată" (o inversare simplă ar fi produs culori confuze — roșul ar fi devenit cyan, roz-ul ar fi devenit verde, confundându-se cu sensul opus).
+- **Câteva culori „hardcodate", găsite și corectate în trecere** — cutia principală de flashcard, un text special, stările de-apăsare ale unor butoane — rămâneau fixe, ne-adaptate la-ntuneric, fără asta.
+- Tema actuală (deschisă) **rămâne complet neschimbată** — noua temă se activează doar prin alegere explicită.
+
 **v117 — corecție navigare, icon nou, relief 3D pe butoane**
 - **„Cuvinte în pereche" — corectat definitiv**: butonul „← Înapoi" te-ntoarce acum la „Module" (rămăsese, dintr-o implementare mai veche, mereu la ecranul principal). Găsită și eliminată, în trecere, o-nregistrare de eveniment duplicată, rămasă din aceeași implementare veche.
 - **Icon „Module"** — 🧩 (emoji colorat, culoare fixă, necontrolabilă) înlocuit cu un SVG propriu, o grilă simplă de 4 pătrate, colorată corect din tema aplicației.

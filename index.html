@@ -2,6 +2,14 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
+<script>
+  // aplicat cat mai devreme posibil, ca sa evitam un "clipici" al temei gresite la-ncarcare
+  try{
+    if(localStorage.getItem('karteikarten_theme') === 'dark'){
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }catch(e){}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,10 +27,23 @@
   :root{
     --paper:#F2E9D8; --paper-dark:#E7DAC0; --ink:#242A31; --ink-soft:#57606b;
     --red:#B23A2E; --green:#3F7D53; --gold:#C99A2E; --line:#c9bba0;
-    --der:#2C5F8A; --die:#B23A6A; --das:#3F7D53;
+    --der:#2C5F8A; --die:#B23A6A; --das:#3F7D53; --card-bg:#fbf7ee; --pasted:#1a2b6d; --ink-pressed:#3a4149;
+    --opt-correct-bg:rgba(63,125,83,0.18); --opt-wrong-bg:rgba(178,58,46,0.16);
     --flag-black:#1a1a1a; --flag-red:#D6362A; --flag-gold:#F5B916;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Tema intunecata - activata doar prin atributul de mai jos, pus pe <html> din Setari.
+     Fara atribut, nimic nu se schimba - tema actuala (deschisa) ramane exact cum era.
+     Culorile cu sens (rosu/verde/auriu/der/die/das) sunt marite in luminozitate (nu doar
+     "inversate"), calculat sa treaca pragul WCAG de 4.5:1 pe noul fundal, pastrand nuanta -
+     inversarea directa ar fi produs culori confuze (rosul ar deveni cyan, roz-ul ar deveni
+     verde si s-ar confunda cu sensul de "corect") */
+  [data-theme="dark"]{
+    --paper:#1c1a17; --paper-dark:#262320; --ink:#e8e3d8; --ink-soft:#a39d8f;
+    --red:#d36054; --green:#499161; --gold:#c99a2e; --line:#4a453d; --card-bg:#242018;
+    --der:#4087c2; --die:#cb5e8a; --das:#499161; --pasted:#647dda; --ink-pressed:#d4cec0;
+    --opt-correct-bg:rgba(73,145,97,0.22); --opt-wrong-bg:rgba(211,96,84,0.20);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{ font-size:16px; }
@@ -100,7 +121,7 @@
   .main{ flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; -webkit-overflow-scrolling:touch; width:100%; max-width:760px; }
 
   .card{
-    position:relative; background:#fbf7ee; border:1px solid var(--line); border-radius:14px;
+    position:relative; background:var(--card-bg); border:1px solid var(--line); border-radius:14px;
     box-shadow: 0 14px 30px rgba(36,42,49,0.16), 0 2px 6px rgba(36,42,49,0.1);
     padding:22px 18px 18px; flex:1; display:flex; flex-direction:column; min-height:0;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -131,7 +152,7 @@
     0%, 100%{ box-shadow:0 0 0 0 rgba(201,154,46,0.55); }
     50%{ box-shadow:0 0 0 8px rgba(201,154,46,0); }
   }
-  .pasted-value{ color:#1a2b6d !important; font-weight:700 !important; }
+  .pasted-value{ color:var(--pasted) !important; font-weight:700 !important; }
   .stage-star.gold{ color:var(--gold); }
   .stage-star.green{ color:var(--green); }
   .stage-star.wrong{ color:var(--red); }
@@ -171,8 +192,8 @@
   .opt .letter{ font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink-soft); flex-shrink:0; }
   .opt:active:not(:disabled){ background:var(--paper-dark); transform:scale(0.98); }
   .opt:disabled{ cursor:default; }
-  .opt.correct{ background:rgba(63,125,83,0.18); border-color:var(--green); }
-  .opt.wrong{ background:rgba(178,58,46,0.16); border-color:var(--red); }
+  .opt.correct{ background:var(--opt-correct-bg); border-color:var(--green); }
+  .opt.wrong{ background:var(--opt-wrong-bg); border-color:var(--red); }
 
   /* "Cuvinte in pereche" - aceeasi construcTie COMPLETA ca la butoanele de raspuns din
      flashcard-uri (.opt) - font, padding, inaltime minima, aliniere - nu doar fontul */
@@ -191,8 +212,8 @@
     background:rgba(251,247,238,0.9);
   }
   .stamp.show{ opacity:0.92; transform:rotate(-12deg) scale(1); }
-  .stamp.ok{ color:var(--green); border-color:var(--green); }
-  .stamp.no{ color:var(--red); border-color:var(--red); }
+  .stamp.ok{ color:#3F7D53; border-color:#3F7D53; }
+  .stamp.no{ color:#B23A2E; border-color:#B23A2E; }
 
   .warning{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--red); text-align:center; margin:auto; padding:0 10px; }
 
@@ -210,7 +231,7 @@
     min-height:52px; opacity:0; pointer-events:none; transition:opacity 0.15s ease;
   }
   .next-btn.show{ opacity:1; pointer-events:auto; }
-  .next-btn:active{ background:#3a4149; }
+  .next-btn:active{ background:var(--ink-pressed); }
 
   .end-screen{ text-align:center; margin:auto; padding:10px; }
   .end-screen .stamp-final{
@@ -223,7 +244,7 @@
     font-family:'IBM Plex Mono', monospace; font-size:0.85rem; letter-spacing:1px; background:var(--ink);
     color:var(--paper); border:none; border-radius:10px; padding:14px 24px; min-height:52px; width:100%; max-width:280px;
   }
-  .restart-btn:active{ background:#3a4149; }
+  .restart-btn:active{ background:var(--ink-pressed); }
   .signature{
     font-family:'Special Elite', monospace; font-size:0.8rem; color:var(--ink-soft);
     margin-top:22px; transform:rotate(-2deg); opacity:0.85;
@@ -419,6 +440,14 @@
   </div>
   <div class="sheet-body-scroll">
 
+  <div class="sheet-section">
+    <div class="sheet-label">Aspect</div>
+    <div class="chip-row">
+      <span class="chip theme-chip active" data-theme="light">☀️ Deschis</span>
+      <span class="chip theme-chip" data-theme="dark">🌙 Întunecat</span>
+    </div>
+  </div>
+
   <div class="sheet-section" id="installSection" style="display:none;">
     <div class="sheet-label">Instalare</div>
     <div id="installContent"></div>
@@ -431,6 +460,7 @@
       <div class="sheet-label">Cum funcționează aplicația</div>
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
       <p><b>📖 / ⚡ / 🔄↔️</b>, sub titlul „Karteikarten" — comutare rapidă-ntre moduri, fără să intri-n Setări: <b>📖 Vocab</b> (vocabularul normal, exact ce aveai selectat înainte de-a schimba), <b>⚡ Verbe</b> (exersare conjugare), <b>🔄↔️ Ant/Sin</b> (antonime și sinonime). Funcționează ca-ntr-un grup radio — mereu unul singur activ. „Vocab" ține minte ultima ta selecție normală de niveluri, nu un implicit fix.</p>
+      <p><b>☀️ Deschis / 🌙 Întunecat</b> — chiar la-nceputul acestui panou de Setări (secțiunea „Aspect") — schimbă tema-ntregii aplicații. Culorile cu sens (roșu/verde pentru corect/greșit, albastru/roz/verde pentru genul cuvintelor) rămân aceleași ca semnificație, doar puțin mai deschise-n modul-ntunecat, ca să rămână lizibile. Alegerea rămâne salvată data viitoare.</p>
       <p>Butoanele <b>A− / A+</b> din bara de sus (sau din antetul acestui panou de Setări, mereu vizibil sus) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
@@ -2568,6 +2598,31 @@ document.querySelectorAll('.level-chip').forEach(chip=>{
     buildRound();
   });
 });
+
+/* ---------- tema (deschisa/intunecata) ---------- */
+function applyTheme(theme){
+  if(theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if(metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#1c1a17' : '#F2E9D8');
+  document.querySelectorAll('.theme-chip').forEach(chip=>{
+    chip.classList.toggle('active', chip.dataset.theme === theme);
+  });
+  try{ localStorage.setItem('karteikarten_theme', theme); }catch(e){}
+}
+document.querySelectorAll('.theme-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=> applyTheme(chip.dataset.theme));
+});
+// tema in sine a fost deja aplicata cat mai devreme (script inline, in <head>) - aici doar
+// sincronizam starea vizuala a chip-urilor cu ce s-a incarcat deja
+try{
+  const savedTheme = localStorage.getItem('karteikarten_theme') === 'dark' ? 'dark' : 'light';
+  document.querySelectorAll('.theme-chip').forEach(chip=>{
+    chip.classList.toggle('active', chip.dataset.theme === savedTheme);
+  });
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if(metaTheme && savedTheme === 'dark') metaTheme.setAttribute('content', '#1c1a17');
+}catch(e){}
 
 /* ---------- presetari rapide ---------- */
 document.querySelectorAll('.preset-chip').forEach(chip=>{
