@@ -55,6 +55,9 @@
   [data-theme="dark"] .next-btn:active, [data-theme="dark"] .restart-btn:active{
     background:var(--card-bg);
   }
+  /* "Sari" (skip-btn) foloseste intentionat o culoare mai discreta (--ink-soft), dar pe
+     tema intunecata s-a dovedit prea putin vizibila - il facem alb, ca restul textului */
+  [data-theme="dark"] .skip-btn{ color:var(--ink); }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{ font-size:16px; }
   html, body{ height:100%; overscroll-behavior-y:contain; }
@@ -85,7 +88,7 @@
 
   /* ---------- top bar ---------- */
   .topbar{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
     width:100%; max-width:760px;
   }
@@ -93,7 +96,7 @@
   .brand-title{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.5625rem; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:nowrap; flex-shrink:0; justify-content:flex-end; }
+  .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; flex-shrink:0; justify-content:flex-end; }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
   .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
@@ -3775,6 +3778,10 @@ function applyZoom(){
   document.documentElement.style.fontSize = (16 * fontZoom) + 'px';
   try{ localStorage.setItem('karteikarten_fontZoom', String(fontZoom)); }catch(e){}
   document.querySelectorAll('.zoom-percent').forEach(el => el.textContent = Math.round(fontZoom * 100) + '%');
+  // la zoom mare, nu mai incape titlul alaturi de restul barei de sus - il scoatem de tot,
+  // in loc sa-l lasam trunchiat/ingramadit
+  const brandTitle = document.querySelector('.brand-title');
+  if(brandTitle) brandTitle.style.display = fontZoom > 1.5 ? 'none' : '';
 }
 document.querySelectorAll('.zoom-in-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
