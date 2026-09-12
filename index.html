@@ -41,9 +41,19 @@
      verde si s-ar confunda cu sensul de "corect") */
   [data-theme="dark"]{
     --paper:#1c1a17; --paper-dark:#262320; --ink:#e8e3d8; --ink-soft:#a39d8f;
-    --red:#d36054; --green:#499161; --gold:#c99a2e; --line:#4a453d; --card-bg:#242018;
-    --der:#4087c2; --die:#cb5e8a; --das:#499161; --pasted:#647dda; --ink-pressed:#d4cec0;
-    --opt-correct-bg:rgba(73,145,97,0.22); --opt-wrong-bg:rgba(211,96,84,0.20);
+    --red:#de8a81; --green:#63b07c; --gold:#c99a2e; --line:#4a453d; --card-bg:#242018;
+    --der:#6fa4d1; --die:#d889a9; --das:#63b07c; --pasted:#647dda; --ink-pressed:#d4cec0;
+    --opt-correct-bg:rgba(99,176,124,0.22); --opt-wrong-bg:rgba(222,138,129,0.20);
+  }
+  /* pe tema deschisa, "Urmatoarea"/"Runda noua" se inverseaza intentionat (fundal inchis,
+     text deschis), ca sa iasa in evidenta - dar pe intuneric, aceeasi inversare produce un
+     buton foarte luminos, ca un "flash" - preferat sa ramana intunecat, consecvent, mai
+     linistit pentru ochi */
+  [data-theme="dark"] .next-btn, [data-theme="dark"] .restart-btn{
+    background:var(--paper-dark); color:var(--ink); border:1.5px solid var(--line);
+  }
+  [data-theme="dark"] .next-btn:active, [data-theme="dark"] .restart-btn:active{
+    background:var(--card-bg);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{ font-size:16px; }
