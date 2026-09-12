@@ -58,6 +58,7 @@
   /* "Sari" (skip-btn) foloseste intentionat o culoare mai discreta (--ink-soft), dar pe
      tema intunecata s-a dovedit prea putin vizibila - il facem alb, ca restul textului */
   [data-theme="dark"] .skip-btn{ color:var(--ink); }
+  [data-theme="dark"] .install-banner-close{ color:var(--ink); }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{ font-size:16px; }
   html, body{ height:100%; overscroll-behavior-y:contain; }
@@ -429,6 +430,11 @@
   <button class="install-banner-btn" id="installBannerBtn"></button>
   <button class="install-banner-close" id="installBannerClose" aria-label="Închide">✕</button>
 </div>
+<div class="install-banner" id="updateBanner" style="display:none;">
+  <span>O versiune nouă e gata — reîncarcă pagina ca s-o vezi.</span>
+  <button class="install-banner-btn" id="updateBannerBtn">Reîncarcă</button>
+  <button class="install-banner-close" id="updateBannerClose" aria-label="Închide">✕</button>
+</div>
 
 <div class="main">
   <div class="card" id="card"></div>
@@ -474,6 +480,7 @@
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
       <p><b>📖 / ⚡ / 🔄↔️</b>, sub titlul „Karteikarten" — comutare rapidă-ntre moduri, fără să intri-n Setări: <b>📖 Vocab</b> (vocabularul normal, exact ce aveai selectat înainte de-a schimba), <b>⚡ Verbe</b> (exersare conjugare), <b>🔄↔️ Ant/Sin</b> (antonime și sinonime). Funcționează ca-ntr-un grup radio — mereu unul singur activ. „Vocab" ține minte ultima ta selecție normală de niveluri, nu un implicit fix.</p>
       <p><b>☀️ Deschis / 🌙 Întunecat</b> — chiar la-nceputul acestui panou de Setări (secțiunea „Aspect") — schimbă tema-ntregii aplicații. Culorile cu sens (roșu/verde pentru corect/greșit, albastru/roz/verde pentru genul cuvintelor) rămân aceleași ca semnificație, doar puțin mai deschise-n modul-ntunecat, ca să rămână lizibile. Alegerea rămâne salvată data viitoare.</p>
+      <p><b>„O versiune nouă e gata"</b> — un mesaj mic, sus, apare automat când s-a-ncărcat o versiune nouă a aplicației, în fundal — apasă „Reîncarcă", ca s-o vezi. Poți și ignora mesajul (✕) și continua ce faci — actualizarea rămâne pregătită, se aplică oricum la următoarea reîncărcare/redeschidere.</p>
       <p>Butoanele <b>A− / A+</b> din bara de sus (sau din antetul acestui panou de Setări, mereu vizibil sus) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
@@ -5564,8 +5571,40 @@ if(speechRateSlider){
 
 /* ---------- service worker registration (enables offline + installability) ---------- */
 if ('serviceWorker' in navigator) {
+  let swRefreshing = false;
+  function showUpdateBanner(){
+    document.getElementById('updateBanner').style.display = 'flex';
+  }
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => { /* offline install still works without SW */ });
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      // daca exista deja un worker instalat, care asteapta sa preia controlul, aratam
+      // bannerul direct (poate s-a intamplat intre incarcari, inainte sa apucam sa ascultam)
+      if(reg.waiting) showUpdateBanner();
+      reg.addEventListener('updatefound', ()=>{
+        const newWorker = reg.installing;
+        if(!newWorker) return;
+        newWorker.addEventListener('statechange', ()=>{
+          // 'installed' + exista deja un controller activ = e o ACTUALIZARE, nu prima
+          // instalare (la prima instalare, navigator.serviceWorker.controller e inca null)
+          if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+            showUpdateBanner();
+          }
+        });
+      });
+    }).catch(() => { /* offline install still works without SW */ });
+  });
+  // se declanseaza cand un service worker NOU chiar a preluat controlul (sw-ul nostru
+  // foloseste deja skipWaiting+clients.claim, deci asta se-ntampla curand, automat) -
+  // nu reincarcam fortat, doar confirmam prin acelasi banner, ca sa nu intrerupem un
+  // exercitiu in curs fara voia utilizatorului
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(swRefreshing) return;
+    swRefreshing = true;
+    showUpdateBanner();
+  });
+  document.getElementById('updateBannerBtn').addEventListener('click', ()=> window.location.reload());
+  document.getElementById('updateBannerClose').addEventListener('click', ()=>{
+    document.getElementById('updateBanner').style.display = 'none';
   });
 }
 </script>
