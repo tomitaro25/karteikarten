@@ -657,6 +657,11 @@
     </div>
 
     <div class="sheet-section">
+      <div class="sheet-label">Volum rostire (<span id="ttsVolumeDisplay">100</span>%) — dacă butoanele fizice de volum ale telefonului nu-l modifică pe cel din aplicație (unele telefoane/browsere nu permit asta)</div>
+      <input type="range" id="ttsVolumeSlider" min="0" max="1" step="0.05" value="1" style="width:100%;">
+    </div>
+
+    <div class="sheet-section">
       <div class="sheet-label">Legendă gen</div>
       <div class="legend">
         <span><span class="art art-der">der</span> masc.</span>
@@ -1381,6 +1386,19 @@ function populateVoiceList(){
 }
 
 let speechRate = 1.0; // reglabila din Setari (0.5-1.5), valabila la ambele voci
+let ttsVolume = 1.0; // reglabil din Setari (0-1), valabil la ambele voci - butoanele fizice
+                      // de volum ale telefonului nu pot fi interceptate de o pagina web
+                      // (API-ul nu exista, e o restrictie de sistem), asta-i alternativa
+function loadTtsVolume(){
+  try{
+    const raw = localStorage.getItem('karteikarten_ttsVolume');
+    ttsVolume = raw ? parseFloat(raw) : 1.0;
+    if(isNaN(ttsVolume) || ttsVolume < 0 || ttsVolume > 1) ttsVolume = 1.0;
+  }catch(e){ ttsVolume = 1.0; }
+}
+function saveTtsVolume(vol){
+  try{ localStorage.setItem('karteikarten_ttsVolume', String(vol)); }catch(e){}
+}
 function loadSpeechRate(){
   try{
     const raw = localStorage.getItem('karteikarten_speechRate');
@@ -1398,6 +1416,7 @@ function speakGerman(text, onEndCallback){
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'de-DE';
     utter.rate = speechRate;
+    utter.volume = ttsVolume;
     const chosen = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
     if(chosen) utter.voice = chosen;
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
@@ -1451,6 +1470,7 @@ function speakRomanian(text, onEndCallback){
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'ro-RO';
     utter.rate = speechRate;
+    utter.volume = ttsVolume;
     const chosen = availableRomanianVoices.find(v => v.voiceURI === selectedVoiceURIRo);
     utter.voice = chosen || availableRomanianVoices[0];
     if(onEndCallback){ utter.onend = onEndCallback; utter.onerror = onEndCallback; }
@@ -3236,9 +3256,6 @@ document.getElementById('voiceRecordBtn').addEventListener('click', startVoiceSe
 document.getElementById('moduleShortcutBtn').addEventListener('click', ()=>{
   document.getElementById('moduleSheet').classList.add('show');
   sheetOverlay.classList.add('show');
-  setTimeout(()=>{
-    document.getElementById('wordSearchInput').focus();
-  }, 150);
 });
 
 /* ---------- instalare PWA (Android/desktop nativ + fallback iOS) ---------- */
@@ -5518,6 +5535,7 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
   await loadVoicePref();
   loadVoicePrefRo();
   loadSpeechRate();
+  loadTtsVolume();
   loadPreferences();
   currentStreak = updateStreak();
   updateMistakesChipLabel();
@@ -5566,6 +5584,16 @@ if(speechRateSlider){
     speechRate = parseFloat(speechRateSlider.value);
     document.getElementById('speechRateDisplay').textContent = speechRate.toFixed(1);
     saveSpeechRate(speechRate);
+  });
+}
+const ttsVolumeSlider = document.getElementById('ttsVolumeSlider');
+if(ttsVolumeSlider){
+  ttsVolumeSlider.value = ttsVolume;
+  document.getElementById('ttsVolumeDisplay').textContent = Math.round(ttsVolume * 100);
+  ttsVolumeSlider.addEventListener('input', () => {
+    ttsVolume = parseFloat(ttsVolumeSlider.value);
+    document.getElementById('ttsVolumeDisplay').textContent = Math.round(ttsVolume * 100);
+    saveTtsVolume(ttsVolume);
   });
 }
 

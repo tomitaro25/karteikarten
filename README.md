@@ -4,6 +4,29 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v123 — Modulul nu mai forțează căutarea; volum reglabil pentru rostire**
+- **Butonul 🧩 Module** — deschide panoul neutru, fără să pună automat cursorul-n câmpul de căutare — alegerea următorului pas rămâne complet a utilizatorului.
+- **Volum de rostire, reglabil din Setări** (0-100%) — pentru cazurile în care butoanele fizice de volum ale telefonului nu ajung la sunetul din aplicație (o restricție reală de browser, nu ceva reparabil din cod — nicio pagină web nu poate intercepta butoanele fizice de volum). Persistă între sesiuni, cu-o valoare implicită sigură dacă ceva salvat e corupt.
+
+**v122 — notificare de actualizare, când apare o versiune nouă**
+- **Banner nou, sus** — „O versiune nouă e gata — reîncarcă pagina ca s-o vezi." — apare automat, doar când o actualizare chiar a preluat controlul, nu la prima instalare (testat, ambele cazuri).
+- **Nu reîncarcă forțat** — buton „Reîncarcă" (comoditate, imediat) sau ✕ (ignoră, continuă ce faci) — actualizarea se aplică oricum, garantat, la următoarea deschidere naturală a aplicației.
+- Corectat proactiv, în trecere — butonul „-nchide" al banner-ului de instalare avea-aceeași problemă de vizibilitate pe tema-ntunecată ca „Sari" (aceeași cauză, aceeași corecție).
+
+**v121 — bara de sus, la zoom extrem; "Sari", mai vizibil pe-ntuneric**
+- **Suprapunerea de la zoom minim/maxim, corectată** — bara de sus (titlu, butoane rapide, zoom, scor) nu avea voie să se-mparte pe 2 rânduri; la zoom extrem, conținutul se suprapunea vizual în loc să se rearanjeze. Acum se-mparte corect, pe 2 rânduri, dacă nu-ncape pe unul.
+- **Titlul „Karteikarten" dispare complet** peste 150% zoom, în loc să rămână trunchiat/-nghesuit.
+- **Butonul „Sari"**, mai vizibil pe tema-ntunecată — text alb, ca restul (rămâne neschimbat, discret, pe tema deschisă).
+
+**v120 — ajustări fine ale temei-ntunecate, după testare directă**
+- **„Următoarea"/„Rundă nouă"** — pe tema deschisă rămân neschimbate (fundal-nchis, se inversează intenționat, ca să iasă-n evidență). Pe tema-ntunecată, însă, aceeași inversare producea un buton foarte luminos, ca un flash brusc pe ecran — corectat, rămân acum-ntunecate, consecvente cu restul temei, mai liniștite pentru ochi.
+- **Culorile cu sens** (der/die/das, roșu/verde) — luminate și mai mult (de la contrast 4.5:1 la 6.5:1), mai vizibile clar, la cererea directă după testare. Auriul a rămas neschimbat, era deja suficient de luminos.
+
+**v119 — corecție reală: text invizibil pe tema-ntunecată, la butoane (găsit prin testare directă)**
+- **Cauza reală**: elementele `<button>` nu moștenesc automat culoarea textului de la părinți, cum fac restul elementelor HTML — browserul le aplică propria culoare implicită dacă nu-i specificată explicit. Funcționa "din-ntâmplare" pe tema deschisă, dar se rupea complet pe cea-ntunecată.
+- **5 clase corectate** — răspunsurile din flashcard-uri (`.opt`), casetele din „Cuvinte în pereche" (`.pm-left-box`/`.pm-right-box`), butonul de Setări și restul butoanelor rotunde din bară (`.gear-btn`), plus „chip"-urile folosite ca butoane în secțiunea AI (`.chip` — Selectează, Șterge istoric etc.) — găsite printr-o verificare sistematică a tuturor claselor de buton din aplicație, nu doar cele semnalate direct.
+- Verificat, în plus, restul butoanelor din-ntreaga aplicație (20+ clase) — restul erau corecte deja (combinate cu clase care aveau culoarea specificată).
+
 **v118 — Temă întunecată, nouă (comutabilă din Setări)**
 - **Secțiune nouă „Aspect"**, chiar la-nceputul panoului de Setări — ☀️ Deschis / 🌙 Întunecat. Alegerea rămâne salvată, fără „clipici" la reîncărcare.
 - **Paletă calculată, nu ghicită** — culorile cu sens (roșu/verde pentru corect-greșit, albastru/roz/verde pentru genul cuvintelor) rămân aceleași ca semnificație, doar puțin mai deschise-n modul-ntunecat — fiecare verificată să treacă pragul de lizibilitate WCAG (4.5:1), nu doar „inversată" (o inversare simplă ar fi produs culori confuze — roșul ar fi devenit cyan, roz-ul ar fi devenit verde, confundându-se cu sensul opus).
