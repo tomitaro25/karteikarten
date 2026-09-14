@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v130 — rol opțional pentru „Exersează vorbitul"**
+- **Câmp nou**, chiar deasupra conversației — poți scrie ce rol să joace interlocutorul AI (română sau germană — „vânzător", „profesor", „preot", orice-ți vine-n minte). Dacă AI-ul poate intra natural-n rol, o face (vânzător -ncearcă să vândă, profesor verifică tema etc.); dacă nu se potrivește, continuă conversația generală, fără să forțeze — decizia rămâne la AI, nu la o logică de detectare fragilă.
+- **Se-aplică la „↺ Conversație nouă"**, nu retroactiv mijlocul conversației — pentru modul local, sesiunea se reconstruiește complet (rolul se „coace"-n ea la creare); pentru Claude, promptul se reconstruiește la fiecare mesaj oricum.
+- **Rolul rămâne salvat**-ntre sesiuni, ca sugestie pentru data viitoare — ușor de schimbat.
+
 **v129 — eliminată umbra de lizibilitate, devenită inutilă**
 - **Umbra "-ngroșătoare" de text, eliminată complet** — era-un plasture, adăugat cu multe versiuni-n urmă, pentru text greu de citit pe fundalul texturat. Literata la 600 (v128) rezolvă asta la sursă — umbra nu mai era necesară. Verificat, zero rămase-n tot fișierul.
 
