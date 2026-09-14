@@ -5615,8 +5615,10 @@ document.getElementById('testNeuralTtsBtn').addEventListener('click', async ()=>
     statusEl.textContent = `[DIAGNOSTIC] Eroare la DESCĂRCARE: ${err && err.message ? err.message : String(err)}`;
     return;
   }
+  let storedList = [];
+  try{ storedList = await window.PiperTTS.stored(); }catch(e){ storedList = ['[eroare la verificare]']; }
   try{
-    statusEl.textContent = 'Se sintetizează...';
+    statusEl.textContent = `[DIAGNOSTIC] Stocate-nainte: ${JSON.stringify(storedList)} — sintetizez...`;
     const wav = await window.PiperTTS.predict({
       text: 'Guten Tag, das ist ein Test der neuen neuronalen Stimme.',
       voiceId
@@ -5626,7 +5628,7 @@ document.getElementById('testNeuralTtsBtn').addEventListener('click', async ()=>
     statusEl.textContent = 'Gata — se redă acum.';
     audio.play();
   }catch(err){
-    statusEl.textContent = `[DIAGNOSTIC] Eroare la SINTEZĂ: ${err && err.message ? err.message : String(err)}`;
+    statusEl.textContent = `[DIAGNOSTIC] Stocate: ${JSON.stringify(storedList)} | Eroare SINTEZĂ: ${err && err.message ? err.message : String(err)}`;
   }
 });
 const speechRateSlider = document.getElementById('speechRateSlider');
