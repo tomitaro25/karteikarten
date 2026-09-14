@@ -1,4 +1,4 @@
-const CACHE_NAME = 'karteikarten-v126';
+const CACHE_NAME = 'karteikarten-v123';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
@@ -25,23 +25,6 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// SW_TEST: adauga anteturile de izolare cross-origin (COOP+COEP), necesare pentru
-// SharedArrayBuffer (si deci pt varianta "threaded", mai rapida, a motorului ONNX folosit
-// de vocea neurala offline). GitHub Pages nu poate trimite anteturi personalizate - asta-i
-// o metoda cunoscuta de-a le adauga "artificial", prin service worker, fara server propriu.
-// Aplicat STRICT pe cererea de navigare (pagina principala) - restul raspunsurilor raman
-// exact neschimbate, ca sa limitam cat mai mult riscul asupra restului aplicatiei.
-function addCoiHeaders(response) {
-  const newHeaders = new Headers(response.headers);
-  newHeaders.set('Cross-Origin-Opener-Policy', 'same-origin');
-  newHeaders.set('Cross-Origin-Embedder-Policy', 'require-corp');
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: newHeaders
-  });
-}
-
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
@@ -62,12 +45,7 @@ self.addEventListener('fetch', (event) => {
         .catch(() => cached); // offline fallback to cache if network fails
 
       // Cache-first strategy: serve cached immediately if present, else wait for network
-      return Promise.resolve(cached || networkFetch).then((finalResponse) => {
-        if (req.mode === 'navigate' && finalResponse) {
-          return addCoiHeaders(finalResponse);
-        }
-        return finalResponse;
-      });
+      return cached || networkFetch;
     })
   );
 });
