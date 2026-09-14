@@ -653,7 +653,7 @@
 
     <div class="sheet-section">
       <div class="sheet-label">🧪 Voce neurală offline (experimental) — test „high", germană</div>
-      <div class="upload-status" id="neuralTtsStatus">Neîncercat încă — ~114MB, o singură dată, apoi rămâne pe dispozitiv.</div>
+      <div class="upload-status" id="neuralTtsStatus">[Versiune de depanare] Neîncercat încă — ~114MB, o singură dată.</div>
       <button class="btn-block" id="testNeuralTtsBtn" style="margin-top:8px;"><span>Descarcă și testează</span><span>▶</span></button>
     </div>
 
@@ -5594,16 +5594,21 @@ if(testVoiceRoBtn){
 document.getElementById('testNeuralTtsBtn').addEventListener('click', async ()=>{
   const statusEl = document.getElementById('neuralTtsStatus');
   const voiceId = 'de_DE-thorsten-high';
+  if(!window.PiperTTS){
+    statusEl.textContent = '[DIAGNOSTIC] window.PiperTTS nu există — biblioteca CDN nu s-a-ncărcat.';
+    return;
+  }
   try{
-    if(!window.PiperTTS){
-      statusEl.textContent = 'Funcționalitatea e în curs de revizuire de către dezvoltator.';
-      return;
-    }
     statusEl.textContent = 'Se descarcă (poate dura, ~114MB)... 0%';
     await window.PiperTTS.download(voiceId, (progress)=>{
       const pct = progress.total ? Math.round(progress.loaded * 100 / progress.total) : 0;
       statusEl.textContent = `Se descarcă (poate dura, ~114MB)... ${pct}%`;
     });
+  }catch(err){
+    statusEl.textContent = `[DIAGNOSTIC] Eroare la DESCĂRCARE: ${err && err.message ? err.message : String(err)}`;
+    return;
+  }
+  try{
     statusEl.textContent = 'Se sintetizează...';
     const wav = await window.PiperTTS.predict({
       text: 'Guten Tag, das ist ein Test der neuen neuronalen Stimme.',
@@ -5614,7 +5619,7 @@ document.getElementById('testNeuralTtsBtn').addEventListener('click', async ()=>
     statusEl.textContent = 'Gata — se redă acum.';
     audio.play();
   }catch(err){
-    statusEl.textContent = 'Funcționalitatea e în curs de revizuire de către dezvoltator.';
+    statusEl.textContent = `[DIAGNOSTIC] Eroare la SINTEZĂ: ${err && err.message ? err.message : String(err)}`;
   }
 });
 const speechRateSlider = document.getElementById('speechRateSlider');
