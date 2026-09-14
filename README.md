@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v124 — test experimental: voce neurală offline (Piper), calitate „high", germană**
+- **Buton nou, în Setări** → „Voce & legendă" → secțiune clar marcată 🧪 experimentală. Descarcă (~114MB, direct de la sursa originală — HuggingFace/rhasspy, nu auto-găzduit încă) cu progres afișat în timp real, apoi sintetizează și redă o propoziție de test.
+- **Pornit intenționat cu cel mai complicat caz** (germană „high") — dacă funcționează bine, restul (germană „medium", română „medium") ar trebui să fie mai simplu de-adăugat.
+- **Eșec grațios, peste tot** — dacă biblioteca, descărcarea, sau sinteza pică din orice motiv, apare un mesaj clar („funcționalitatea e în curs de revizuire de către dezvoltator"), nu o eroare tehnică confuză.
+- Confirmat separat, din catalogul oficial Piper: **română nu are deloc variantă „high"** — doar „medium" (mihai) există, la nicio sursă — nu-i o limitare de-a noastră.
+
 **v123 — Modulul nu mai forțează căutarea; volum reglabil pentru rostire**
 - **Butonul 🧩 Module** — deschide panoul neutru, fără să pună automat cursorul-n câmpul de căutare — alegerea următorului pas rămâne complet a utilizatorului.
 - **Volum de rostire, reglabil din Setări** (0-100%) — pentru cazurile în care butoanele fizice de volum ale telefonului nu ajung la sunetul din aplicație (o restricție reală de browser, nu ceva reparabil din cod — nicio pagină web nu poate intercepta butoanele fizice de volum). Persistă între sesiuni, cu-o valoare implicită sigură dacă ceva salvat e corupt.

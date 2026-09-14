@@ -652,6 +652,12 @@
     </div>
 
     <div class="sheet-section">
+      <div class="sheet-label">🧪 Voce neurală offline (experimental) — test „high", germană</div>
+      <div class="upload-status" id="neuralTtsStatus">Neîncercat încă — ~114MB, o singură dată, apoi rămâne pe dispozitiv.</div>
+      <button class="btn-block" id="testNeuralTtsBtn" style="margin-top:8px;"><span>Descarcă și testează</span><span>▶</span></button>
+    </div>
+
+    <div class="sheet-section">
       <div class="sheet-label">Viteza vorbirii (<span id="speechRateDisplay">1.0</span>x) — valabilă la ambele voci, peste tot în aplicație</div>
       <input type="range" id="speechRateSlider" min="0.5" max="1.5" step="0.1" value="1.0" style="width:100%;">
     </div>
@@ -1147,6 +1153,12 @@
 
 <div id="aiPrintArea"></div>
 
+<script type="module">
+  // biblioteca-i doar ESM - o incarcam separat, expusa global, ca scriptul principal
+  // (clasic, nu modul) s-o poata folosi cand utilizatorul apasa butonul de test
+  import * as tts from 'https://cdn.jsdelivr.net/npm/@mintplex-labs/piper-tts-web/+esm';
+  window.PiperTTS = tts;
+</script>
 <script src="vocab-data.js"></script>
 <script>
 
@@ -5576,6 +5588,35 @@ const testVoiceRoBtn = document.getElementById('testVoiceRoBtn');
 if(testVoiceRoBtn){
   testVoiceRoBtn.addEventListener('click', () => speakRomanian('casă'));
 }
+// test experimental - voce neurala offline (Piper), calitate "high", germana - cel mai
+// complicat caz dintre cele 3 planificate (fisier mare, sursa externa) - pornim cu asta
+// intentionat, ca sa vedem daca merita continuat cu restul (germana medium, romana medium)
+document.getElementById('testNeuralTtsBtn').addEventListener('click', async ()=>{
+  const statusEl = document.getElementById('neuralTtsStatus');
+  const voiceId = 'de_DE-thorsten-high';
+  try{
+    if(!window.PiperTTS){
+      statusEl.textContent = 'Funcționalitatea e în curs de revizuire de către dezvoltator.';
+      return;
+    }
+    statusEl.textContent = 'Se descarcă (poate dura, ~114MB)... 0%';
+    await window.PiperTTS.download(voiceId, (progress)=>{
+      const pct = progress.total ? Math.round(progress.loaded * 100 / progress.total) : 0;
+      statusEl.textContent = `Se descarcă (poate dura, ~114MB)... ${pct}%`;
+    });
+    statusEl.textContent = 'Se sintetizează...';
+    const wav = await window.PiperTTS.predict({
+      text: 'Guten Tag, das ist ein Test der neuen neuronalen Stimme.',
+      voiceId
+    });
+    const audio = new Audio();
+    audio.src = URL.createObjectURL(wav);
+    statusEl.textContent = 'Gata — se redă acum.';
+    audio.play();
+  }catch(err){
+    statusEl.textContent = 'Funcționalitatea e în curs de revizuire de către dezvoltator.';
+  }
+});
 const speechRateSlider = document.getElementById('speechRateSlider');
 if(speechRateSlider){
   speechRateSlider.value = speechRate;
