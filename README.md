@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v131 — rol mai ferm, buton mutat, corectat după test real**
+- **Prompt mult mai ferm** — testul real a arătat AI-ul ignorând complet rolul cerut, chiar spunând direct „sunt un model de limbaj". Rescris să-nceapă cu identitatea rolului („EȘTI acea persoană"), cu interdicție explicită de-a se autodescrie ca AI — doar dacă rolul e complet absurd, continuă general.
+- **Aplicare automată, confirmată** — rolul se-aplică acum fără niciun pas suplimentar, dacă-l scrii-nainte să-ncepi conversația.
+- **Butonul „↺ Nouă"** (redenumit, din „Conversație nouă") — mutat chiar lângă câmpul de rol, logic, de-acolo -ncepi.
+- **O limitare onestă, de acceptat** — modelul local (Gemini Nano) rămâne mai puțin capabil decât Claude la ținerea unui rol consecvent; păstrăm intenționat varianta gratuită, locală, ca opțiune principală, accesibilă tuturor, fără cont/cheie API — chiar dacă nu-i perfectă la acest capitol.
+
 **v130 — rol opțional pentru „Exersează vorbitul"**
 - **Câmp nou**, chiar deasupra conversației — poți scrie ce rol să joace interlocutorul AI (română sau germană — „vânzător", „profesor", „preot", orice-ți vine-n minte). Dacă AI-ul poate intra natural-n rol, o face (vânzător -ncearcă să vândă, profesor verifică tema etc.); dacă nu se potrivește, continuă conversația generală, fără să forțeze — decizia rămâne la AI, nu la o logică de detectare fragilă.
 - **Se-aplică la „↺ Conversație nouă"**, nu retroactiv mijlocul conversației — pentru modul local, sesiunea se reconstruiește complet (rolul se „coace"-n ea la creare); pentru Claude, promptul se reconstruiește la fiecare mesaj oricum.
