@@ -4,6 +4,11 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v128 — Literata la 600, plus o corecție importantă de bază**
+- **Literata, grosime 600** peste tot — aleasă direct, prin comparație vizuală, -n locul variantelor sans-serif -ncercate (Inter, IBM Plex Sans, Source Sans 3) și-a altor serife (Lora, Merriweather, Bitter) — Literata a rămas cea mai bună, doar puțin mai groasă acum.
+- **O inconsecvență reală, corectată** — la "Cuvintele mele exersate", traducerea română era-ncă-n monospace, deși cuvântul german de-alături era deja-n Literata; acum ambele-s consecvente.
+- **Corecție de bază, importantă** — versiunile v124-v126 (experimentul cu vocea neurală offline, abandonat) rămăseseră din greșeală ca punct de plecare pentru lucrul de azi. Prins la verificarea finală, -nainte de livrare — pachetul de-acum pornește **corect**, de la v123 (ultima versiune stabilă, confirmată), fără nicio urmă din codul abandonat.
+
 **v123 — Modulul nu mai forțează căutarea; volum reglabil pentru rostire**
 - **Butonul 🧩 Module** — deschide panoul neutru, fără să pună automat cursorul-n câmpul de căutare — alegerea următorului pas rămâne complet a utilizatorului.
 - **Volum de rostire, reglabil din Setări** (0-100%) — pentru cazurile în care butoanele fizice de volum ale telefonului nu ajung la sunetul din aplicație (o restricție reală de browser, nu ceva reparabil din cod — nicio pagină web nu poate intercepta butoanele fizice de volum). Persistă între sesiuni, cu-o valoare implicită sigură dacă ceva salvat e corupt.
