@@ -4,6 +4,9 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v129 — eliminată umbra de lizibilitate, devenită inutilă**
+- **Umbra "-ngroșătoare" de text, eliminată complet** — era-un plasture, adăugat cu multe versiuni-n urmă, pentru text greu de citit pe fundalul texturat. Literata la 600 (v128) rezolvă asta la sursă — umbra nu mai era necesară. Verificat, zero rămase-n tot fișierul.
+
 **v128 — Literata la 600, plus o corecție importantă de bază**
 - **Literata, grosime 600** peste tot — aleasă direct, prin comparație vizuală, -n locul variantelor sans-serif -ncercate (Inter, IBM Plex Sans, Source Sans 3) și-a altor serife (Lora, Merriweather, Bitter) — Literata a rămas cea mai bună, doar puțin mai groasă acum.
 - **O inconsecvență reală, corectată** — la "Cuvintele mele exersate", traducerea română era-ncă-n monospace, deși cuvântul german de-alături era deja-n Literata; acum ambele-s consecvente.
