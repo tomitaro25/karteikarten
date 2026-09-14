@@ -1155,7 +1155,14 @@
 
 <script type="module">
   // biblioteca-i doar ESM - o incarcam separat, expusa global, ca scriptul principal
-  // (clasic, nu modul) s-o poata folosi cand utilizatorul apasa butonul de test
+  // (clasic, nu modul) s-o poata folosi cand utilizatorul apasa butonul de test.
+  // Fortam explicit varianta cu UN SINGUR fir de executie (numThreads=1) a motorului
+  // ONNX Runtime, ca sa evitam cerinta de SharedArrayBuffer (care are nevoie de anteturi
+  // HTTP speciale, COOP/COEP - GitHub Pages nu poate trimite anteturi personalizate,
+  // confirmat). Versiunea (1.18.0) e exact cea vazuta in eroarea de diagnostic anterioara,
+  // ca sa nimerim aceeasi instanta de modul, nu una separata, neconfigurata.
+  import { env } from 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/+esm';
+  env.wasm.numThreads = 1;
   import * as tts from 'https://cdn.jsdelivr.net/npm/@mintplex-labs/piper-tts-web/+esm';
   window.PiperTTS = tts;
 </script>
