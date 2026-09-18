@@ -1,64 +1,50 @@
-// Numele cache-ului include un numar de versiune - cand schimbam shell-ul aplicatiei
-// (index.html, manifest, iconite), crestem numarul, ca telefoanele sa stie sa ia varianta noua.
-const CACHE_NAME = 'stiri-in-nestire-v28';
-
-// "Shell-ul" aplicatiei: fisierele care fac aplicatia sa arate si sa functioneze,
-// spre deosebire de continutul (stirile), care vine mereu proaspat de la Worker.
-const SHELL_FILES = [
-  './',
+const CACHE_NAME = 'karteikarten-v131';
+const APP_SHELL = [
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-192-maskable.png',
+  './icon-512-maskable.png',
+  './vocab-data.js'
 ];
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL_FILES))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
-  // NU mai chemam self.skipWaiting() automat aici - vrem ca noul worker sa
-  // ramana "in asteptare" pana cand utilizatorul confirma reincarcarea.
+  self.skipWaiting();
 });
 
-// Ascultam un mesaj explicit de la pagina ("acum, te rog preia controlul")
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-
-self.addEventListener('activate', event => {
-  // La activarea unei versiuni noi, stergem cache-urile vechi cu alt nume
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(names =>
-      Promise.all(names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name)))
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
 
-  // Cererile catre Worker-ul de stiri (alt domeniu) merg mereu direct la retea -
-  // continutul trebuie sa fie proaspat, nu vrem stiri vechi servite din cache.
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  // Only handle GET requests
+  if (req.method !== 'GET') return;
 
-  // Fisierele shell-ului aplicatiei: incearca cache-ul intai (rapid, merge si offline),
-  // si actualizeaza cache-ul din retea daca e disponibila.
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      const networkFetch = fetch(event.request)
-        .then(response => {
-          if (response && response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+    caches.match(req).then((cached) => {
+      const networkFetch = fetch(req)
+        .then((response) => {
+          // Cache a copy of successful same-origin responses (and opaque cross-origin ones)
+          if (response && (response.ok || response.type === 'opaque')) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           }
           return response;
         })
-        .catch(() => cached);
+        .catch(() => cached); // offline fallback to cache if network fails
+
+      // Cache-first strategy: serve cached immediately if present, else wait for network
       return cached || networkFetch;
     })
   );
