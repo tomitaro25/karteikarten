@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v132 — date protejate, fonturi găzduite local, fonturi centralizate**
+- **Protecția datelor** — aplicația cere browserului să nu șteargă automat progresul (`navigator.storage.persist()`), doar după ce există cuvinte exersate. Starea apare în Setări, lângă backup. Memento discret de backup: doar cu cel puțin 20 de cuvinte exersate și fără backup în ultimele 30 de zile; la ✕ tace încă 30 de zile.
+- **Fonturi găzduite local** — folderul nou `fonts/` (10 fișiere, 548 KB + licențele). Aceleași fonturi, aceleași axe și subseturi ca înainte, dar fără nicio dependență de Google Fonts. Salvate offline de la prima instalare; dacă lipsesc, actualizarea aplicației nu se blochează.
+- **Fonturi centralizate** — cele 66 de declarații scrise manual folosesc acum 3 variabile (`--font-text`, `--font-ui`, `--font-display`); o schimbare viitoare de font se face într-un singur loc.
+- **Biblioteca Excel, încărcată doar la nevoie** — folderul nou `lib/` (SheetJS 0.18.5, aceeași versiune ca înainte, plus licența). Nu se mai descarcă și nu se mai execută la fiecare pornire (înainte: script blocant de pe cdnjs, ~880 KB), ci doar la primul import de `.xlsx`/`.xls`; apoi rămâne salvată pentru offline. Importul CSV nu o folosește deloc. Măsurat în browser real: fără diferență pe un calculator rapid, pornire mai rapidă cu ~0,25 s pe un procesor de nivelul unui telefon obișnuit.
+- **Corectat, găsit la testarea în browser real** — bannerul „O versiune nouă e gata" apărea greșit și la prima vizită a unui utilizator nou (eroare din v122). Acum apare doar la o actualizare reală.
+
 **v131 — rol mai ferm, buton mutat, corectat după test real**
 - **Prompt mult mai ferm** — testul real a arătat AI-ul ignorând complet rolul cerut, chiar spunând direct „sunt un model de limbaj". Rescris să-nceapă cu identitatea rolului („EȘTI acea persoană"), cu interdicție explicită de-a se autodescrie ca AI — doar dacă rolul e complet absurd, continuă general.
 - **Aplicare automată, confirmată** — rolul se-aplică acum fără niciun pas suplimentar, dacă-l scrii-nainte să-ncepi conversația.

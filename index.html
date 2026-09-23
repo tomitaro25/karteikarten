@@ -20,11 +20,32 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Karteikarten — Deutsch ⇄ Română</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
+  /* Fonturi gazduite local (folderul fonts/), fara dependenta de Google Fonts - aceleasi
+     fisiere, aceleasi axe (Literata variabil: opsz 7-72 + wght 200-900), aceleasi subseturi
+     latin + latin-ext ca inainte. Daca lipsesc, textul cade pe fonturile de rezerva, nu se strica. */
+  @font-face{ font-family:'Literata'; font-style:normal; font-weight:200 900; font-display:swap;
+    src:url('fonts/literata-latin-ext-opsz-normal.woff2') format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face{ font-family:'Literata'; font-style:italic; font-weight:200 900; font-display:swap;
+    src:url('fonts/literata-latin-ext-opsz-italic.woff2') format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face{ font-family:'IBM Plex Mono'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('fonts/ibm-plex-mono-latin-ext-400-normal.woff2') format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face{ font-family:'IBM Plex Mono'; font-style:normal; font-weight:600; font-display:swap;
+    src:url('fonts/ibm-plex-mono-latin-ext-600-normal.woff2') format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face{ font-family:'Special Elite'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('fonts/special-elite-latin-ext-400-normal.woff2') format('woff2'); unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face{ font-family:'Literata'; font-style:normal; font-weight:200 900; font-display:swap;
+    src:url('fonts/literata-latin-opsz-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face{ font-family:'Literata'; font-style:italic; font-weight:200 900; font-display:swap;
+    src:url('fonts/literata-latin-opsz-italic.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face{ font-family:'IBM Plex Mono'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face{ font-family:'IBM Plex Mono'; font-style:normal; font-weight:600; font-display:swap;
+    src:url('fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face{ font-family:'Special Elite'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('fonts/special-elite-latin-400-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
   :root{
+    --font-text:'Literata', serif; --font-ui:'IBM Plex Mono', monospace; --font-display:'Special Elite', monospace;
     --paper:#F2E9D8; --paper-dark:#E7DAC0; --ink:#242A31; --ink-soft:#57606b;
     --red:#B23A2E; --green:#3F7D53; --gold:#C99A2E; --line:#c9bba0;
     --der:#2C5F8A; --die:#B23A6A; --das:#3F7D53; --card-bg:#fbf7ee; --pasted:#1a2b6d; --ink-pressed:#3a4149;
@@ -69,7 +90,7 @@
       radial-gradient(circle at 15% 8%, rgba(255,255,255,0.35), transparent 40%),
       repeating-linear-gradient(0deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 26px),
       var(--paper);
-    color:var(--ink); font-family:'Literata', serif; font-weight:600;
+    color:var(--ink); font-family:var(--font-text); font-weight:600;
     display:flex; flex-direction:column; align-items:center;
     padding-top:calc(var(--safe-top) + 10px);
     overflow:hidden;
@@ -89,20 +110,20 @@
     padding:6px 16px 12px; border-bottom:2px solid var(--ink); flex-shrink:0;
     width:100%; max-width:760px;
   }
-  .brand{ font-family:'Special Elite', monospace; font-size:1.15rem; line-height:1.1; flex:1 1 auto; min-width:0; }
+  .brand{ font-family:var(--font-display); font-size:1.15rem; line-height:1.1; flex:1 1 auto; min-width:0; }
   .brand-title{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .brand small{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.5625rem; letter-spacing:1.5px;
+  .brand small{ display:block; font-family:var(--font-ui); font-size:0.5625rem; letter-spacing:1.5px;
     text-transform:uppercase; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .top-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; flex-shrink:0; justify-content:flex-end; }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
-  .zoom-percent{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); min-width:32px; text-align:center; }
+  .zoom-percent{ font-family:var(--font-ui); font-size:0.65625rem; color:var(--ink-soft); min-width:32px; text-align:center; }
   .zoom-btn{
-    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:0.78125rem;
+    font-family:var(--font-ui); font-weight:700; font-size:0.78125rem;
     width:30px; height:30px; border-radius:8px; border:1.5px solid var(--ink); background:var(--paper);
     cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink);
   }
   .zoom-btn:active{ background:var(--paper-dark); }
-  .stats{ font-family:'IBM Plex Mono', monospace; font-size:0.6875rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
+  .stats{ font-family:var(--font-ui); font-size:0.6875rem; text-align:right; color:var(--ink-soft); line-height:1.4; }
   .stats b{ color:var(--ink); font-size:0.85rem; }
   .gear-btn{
     width:40px; height:40px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper); color:var(--ink);
@@ -111,16 +132,16 @@
   }
   .gear-btn:active{ background:var(--paper-dark); box-shadow:0 1px 1px rgba(0,0,0,0.05); }
   .summary-line{
-    padding:4px 16px 0; font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft);
+    padding:4px 16px 0; font-family:var(--font-ui); font-size:0.65625rem; color:var(--ink-soft);
     text-align:center; flex-shrink:0;
   }
   .install-banner{
     display:flex; align-items:center; gap:8px; margin:8px 16px 0; padding:10px 12px;
     background:var(--paper-dark); border:1.5px solid var(--ink); border-radius:10px; flex-shrink:0;
   }
-  .install-banner span{ flex:1; font-family:'Literata', serif; font-size:0.81875rem; line-height:1.3; }
+  .install-banner span{ flex:1; font-family:var(--font-text); font-size:0.81875rem; line-height:1.3; }
   .install-banner-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:0.71875rem; font-weight:600; background:var(--ink);
+    font-family:var(--font-ui); font-size:0.71875rem; font-weight:600; background:var(--ink);
     color:var(--paper); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; flex-shrink:0;
   }
   .install-banner-close{
@@ -145,10 +166,10 @@
     opacity:0.9; border:1px solid rgba(36,42,49,0.35); transform:rotate(-2deg);
     box-shadow: 0 1px 2px rgba(36,42,49,0.2);
   }
-  .tag-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-family:'IBM Plex Mono', monospace;
+  .tag-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-family:var(--font-ui);
     font-size:0.66rem; color:var(--ink-soft); margin-bottom:16px; gap:8px; }
   .skip-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; background:none; border:1px solid var(--line);
+    font-family:var(--font-ui); font-size:0.66rem; background:none; border:1px solid var(--line);
     color:var(--ink-soft); border-radius:14px; padding:4px 10px; cursor:pointer; margin-left:auto;
   }
   .skip-btn:active{ background:var(--paper-dark); }
@@ -166,16 +187,16 @@
   .stage-star.gold{ color:var(--gold); }
   .stage-star.green{ color:var(--green); }
   .stage-star.wrong{ color:var(--red); }
-  .help-text p{ font-family:'Literata', serif; font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
+  .help-text p{ font-family:var(--font-text); font-size:0.82rem; line-height:1.5; margin:0 0 10px; color:var(--ink); }
   .help-text p:last-child{ margin-bottom:0; }
   .tag{ border:1px solid var(--line); border-radius:20px; padding:3px 10px; }
   .direction-tag{ font-weight:600; letter-spacing:1px; color:var(--ink); border-color:var(--ink); }
   .sep-tag{ color:var(--der); border-color:var(--der); }
   .sep-prefix{ color:var(--der); font-weight:700; }
   .new-word-highlight{ color:var(--red); font-weight:700; }
-  .prompt-label{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
+  .prompt-label{ font-family:var(--font-ui); font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:8px; }
-  .verb-person{ font-size:1.05rem; font-weight:700; letter-spacing:0; text-transform:none; color:var(--ink); font-family:'Literata', serif; }
+  .verb-person{ font-size:1.05rem; font-weight:700; letter-spacing:0; text-transform:none; color:var(--ink); font-family:var(--font-text); }
   .prompt-word{ font-size:clamp(1.3rem, 6.5vw, 2rem); font-weight:700; line-height:1.25; margin-bottom:20px;
     overflow-wrap:break-word; word-break:break-word; hyphens:auto; }
   .art{ font-weight:600; }
@@ -191,7 +212,7 @@
 
   .options{ display:flex; flex-direction:column; gap:10px; margin-top:auto; }
   .opt{
-    text-align:left; font-family:'Literata', serif; font-size:1rem; background:var(--paper); color:var(--ink);
+    text-align:left; font-family:var(--font-text); font-size:1rem; background:var(--paper); color:var(--ink);
     border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
     display:flex; gap:10px; align-items:flex-start; min-height:52px;
     transition:background 0.12s ease, transform 0.06s ease;
@@ -199,7 +220,7 @@
     box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.05);
   }
   .opt > span:not(.letter){ min-width:0; }
-  .opt .letter{ font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink-soft); flex-shrink:0; }
+  .opt .letter{ font-family:var(--font-ui); font-weight:600; color:var(--ink-soft); flex-shrink:0; }
   .opt:active:not(:disabled){ background:var(--paper-dark); transform:scale(0.98); }
   .opt:disabled{ cursor:default; }
   .opt.correct{ background:var(--opt-correct-bg); border-color:var(--green); }
@@ -208,7 +229,7 @@
   /* "Cuvinte in pereche" - aceeasi construcTie COMPLETA ca la butoanele de raspuns din
      flashcard-uri (.opt) - font, padding, inaltime minima, aliniere - nu doar fontul */
   .pm-left-box, .pm-right-box{
-    font-family:'Literata', serif; font-size:1rem; text-align:left; background:var(--paper); color:var(--ink);
+    font-family:var(--font-text); font-size:1rem; text-align:left; background:var(--paper); color:var(--ink);
     border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
     display:flex; gap:10px; align-items:flex-start; min-height:52px; width:100%;
     overflow-wrap:break-word; word-break:break-word;
@@ -216,7 +237,7 @@
   }
 
   .stamp{
-    position:absolute; top:38%; right:16px; font-family:'Special Elite', monospace; font-size:1.15rem;
+    position:absolute; top:38%; right:16px; font-family:var(--font-display); font-size:1.15rem;
     padding:6px 14px; border:3px solid; border-radius:6px; transform:rotate(-12deg) scale(0.7); opacity:0;
     pointer-events:none; letter-spacing:1.5px; transition:transform 0.26s cubic-bezier(.36,1.4,.4,1), opacity 0.2s ease;
     background:rgba(251,247,238,0.9);
@@ -225,7 +246,7 @@
   .stamp.ok{ color:#3F7D53; border-color:#3F7D53; }
   .stamp.no{ color:#B23A2E; border-color:#B23A2E; }
 
-  .warning{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--red); text-align:center; margin:auto; padding:0 10px; }
+  .warning{ font-family:var(--font-ui); font-size:0.82rem; color:var(--red); text-align:center; margin:auto; padding:0 10px; }
 
   /* ---------- bottom action bar (sticky) ---------- */
   .bottombar{
@@ -236,7 +257,7 @@
   .progress-track{ height:4px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:10px; }
   .progress-fill{ height:100%; background:var(--ink); width:0%; transition:width 0.25s ease; }
   .next-btn{
-    width:100%; font-family:'IBM Plex Mono', monospace; font-size:0.9rem; letter-spacing:1px;
+    width:100%; font-family:var(--font-ui); font-size:0.9rem; letter-spacing:1px;
     background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:15px 18px;
     min-height:52px; opacity:0; pointer-events:none; transition:opacity 0.15s ease;
   }
@@ -245,18 +266,18 @@
 
   .end-screen{ text-align:center; margin:auto; padding:10px; }
   .end-screen .stamp-final{
-    display:inline-block; font-family:'Special Elite', monospace; font-size:1.15rem;
+    display:inline-block; font-family:var(--font-display); font-size:1.15rem;
     border:3px solid var(--ink); border-radius:8px; padding:8px 20px; transform:rotate(-3deg); margin-bottom:18px; letter-spacing:1.5px;
   }
-  .score-big{ font-family:'IBM Plex Mono', monospace; font-size:2.4rem; font-weight:600; margin-bottom:4px; }
-  .score-sub{ color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:0.78rem; margin-bottom:22px; }
+  .score-big{ font-family:var(--font-ui); font-size:2.4rem; font-weight:600; margin-bottom:4px; }
+  .score-sub{ color:var(--ink-soft); font-family:var(--font-ui); font-size:0.78rem; margin-bottom:22px; }
   .restart-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:0.85rem; letter-spacing:1px; background:var(--ink);
+    font-family:var(--font-ui); font-size:0.85rem; letter-spacing:1px; background:var(--ink);
     color:var(--paper); border:none; border-radius:10px; padding:14px 24px; min-height:52px; width:100%; max-width:280px;
   }
   .restart-btn:active{ background:var(--ink-pressed); }
   .signature{
-    font-family:'Special Elite', monospace; font-size:0.8rem; color:var(--ink-soft);
+    font-family:var(--font-display); font-size:0.8rem; color:var(--ink-soft);
     margin-top:22px; transform:rotate(-2deg); opacity:0.85;
   }
 
@@ -277,7 +298,7 @@
   }
   .sheet.show{ transform:translateY(0); }
   .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:2px; margin:6px auto 14px; }
-  .sheet-title{ font-family:'Special Elite', monospace; font-size:1rem; margin-bottom:14px; }
+  .sheet-title{ font-family:var(--font-display); font-size:1rem; margin-bottom:14px; }
 
   /* Panou "ecran complet", cu antet fix (titlu + buton Inapoi) care nu deruleaza - PAS 1,
      aplicat doar acolo unde adaugam explicit clasa .sheet-fullscreen, restul panourilor
@@ -293,14 +314,14 @@
   }
   .sheet-header-sticky .sheet-title{ margin:0; flex:1; }
   .sheet-back-btn{
-    font-family:'IBM Plex Mono', monospace; font-size:0.875rem;
+    font-family:var(--font-ui); font-size:0.875rem;
     background:none; border:none; color:var(--ink); cursor:pointer;
     padding:8px 6px 8px 0; display:flex; align-items:center; gap:4px; flex-shrink:0;
   }
   /* buton "Inapoi" doar-icon, mai clar incadrat/bolduit ca sa se recunoasca imediat ca
      e o comanda, nu doar text - folosit in antete aglomerate, cu multe alte controale */
   .sheet-back-btn-icon{
-    font-family:'IBM Plex Mono', monospace; font-size:1.15rem; font-weight:700;
+    font-family:var(--font-ui); font-size:1.15rem; font-weight:700;
     background:var(--paper); border:1.5px solid var(--ink); border-radius:8px; color:var(--ink);
     cursor:pointer; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
     flex-shrink:0; padding:0;
@@ -311,18 +332,18 @@
   .sheet-group{ margin-bottom:14px; border:1.5px solid var(--line); border-radius:12px; padding:0 14px; }
   .sheet-group[open]{ padding-bottom:6px; }
   .sheet-group summary{
-    font-family:'Special Elite', monospace; font-size:0.91875rem; padding:14px 0; cursor:pointer;
+    font-family:var(--font-display); font-size:0.91875rem; padding:14px 0; cursor:pointer;
     list-style:none; display:flex; align-items:center; justify-content:space-between; color:var(--ink);
   }
   .sheet-group summary::-webkit-details-marker{ display:none; }
-  .sheet-group summary::after{ content:'▾'; font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); transition:transform 0.2s ease; }
+  .sheet-group summary::after{ content:'▾'; font-family:var(--font-ui); color:var(--ink-soft); transition:transform 0.2s ease; }
   .sheet-group[open] summary::after{ transform:rotate(180deg); }
   .sheet-group .sheet-section:last-child{ margin-bottom:12px; }
-  .sheet-label{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; letter-spacing:1.5px; text-transform:uppercase;
+  .sheet-label{ font-family:var(--font-ui); font-size:0.65625rem; letter-spacing:1.5px; text-transform:uppercase;
     color:var(--ink-soft); margin-bottom:10px; }
   .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
   .chip{
-    font-family:'IBM Plex Mono', monospace; font-size:0.81875rem; border:1.5px solid var(--ink); border-radius:20px;
+    font-family:var(--font-ui); font-size:0.81875rem; border:1.5px solid var(--ink); border-radius:20px;
     padding:9px 16px; background:var(--paper); color:var(--ink); user-select:none; min-height:40px; display:flex; align-items:center;
     box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
   }
@@ -349,7 +370,7 @@
   input[type="range"]::-moz-range-track{ background:var(--line); height:6px; border-radius:3px; }
   .btn-row{ display:flex; flex-direction:column; gap:8px; }
   .btn-block{
-    font-family:'IBM Plex Mono', monospace; font-size:0.8rem; background:var(--paper); text-align:left;
+    font-family:var(--font-ui); font-size:0.8rem; background:var(--paper); text-align:left;
     border:1.5px solid var(--ink-soft); color:var(--ink); border-radius:10px; padding:13px 14px; min-height:48px;
     display:flex; align-items:center; justify-content:space-between;
     box-shadow:0 1px 2px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.05);
@@ -357,13 +378,13 @@
   .btn-block:active{ background:var(--paper-dark); box-shadow:0 1px 1px rgba(0,0,0,0.05); }
   .btn-block:disabled{ opacity:0.4; }
   .file-input{ display:none; }
-  .legend{ font-family:'IBM Plex Mono', monospace; font-size:0.65625rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
+  .legend{ font-family:var(--font-ui); font-size:0.65625rem; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:12px; }
   .legend span.art{ font-weight:600; margin-right:3px; }
-  .upload-status{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft); margin-top:8px; }
+  .upload-status{ font-family:var(--font-ui); font-size:0.7rem; color:var(--ink-soft); margin-top:8px; }
   .upload-status.ok{ color:var(--green); }
   .upload-status.err{ color:var(--red); }
   .sheet-close{
-    width:100%; font-family:'IBM Plex Mono', monospace; font-size:0.85rem; background:var(--ink); color:var(--paper);
+    width:100%; font-family:var(--font-ui); font-size:0.85rem; background:var(--ink); color:var(--paper);
     border:none; border-radius:10px; padding:14px; min-height:50px; margin-top:6px;
   }
   #aiPrintArea{ display:none; }
@@ -377,12 +398,12 @@
     body > *:not(#aiPrintArea){ display:none !important; }
     #aiPrintArea{
       display:block !important;
-      font-family:'Literata', serif; color:#222; padding:20px;
+      font-family:var(--font-text); color:#222; padding:20px;
       max-width:700px; margin:0 auto;
     }
     #aiPrintArea h1{ font-size:1.3rem; margin-bottom:4px; }
     #aiPrintArea .print-date{ font-size:0.8rem; color:#666; margin-bottom:24px; }
-    #aiPrintArea .print-label{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:2px;
+    #aiPrintArea .print-label{ font-family:var(--font-ui); font-size:0.7rem; letter-spacing:2px;
       text-transform:uppercase; color:#666; margin:18px 0 6px; }
     #aiPrintArea .print-text{ font-size:1rem; line-height:1.7; white-space:pre-wrap; }
   }
@@ -430,6 +451,11 @@
   <span>O versiune nouă e gata — reîncarcă pagina ca s-o vezi.</span>
   <button class="install-banner-btn" id="updateBannerBtn">Reîncarcă</button>
   <button class="install-banner-close" id="updateBannerClose" aria-label="Închide">✕</button>
+</div>
+<div class="install-banner" id="backupReminderBanner" style="display:none;">
+  <span id="backupReminderText"></span>
+  <button class="install-banner-btn" id="backupReminderBtn">Salvează acum</button>
+  <button class="install-banner-close" id="backupReminderClose" aria-label="Amână">✕</button>
 </div>
 
 <div class="main">
@@ -626,6 +652,7 @@
         <input type="file" id="backupFileInput" class="file-input" accept=".json">
       </div>
       <div class="upload-status" id="backupStatus"></div>
+      <div class="upload-status" id="storagePersistStatus"></div>
     </div>
   </details>
 
@@ -668,7 +695,7 @@
   </details>
 
   <div class="signature" style="text-align:center; margin-top:14px;">für Symo, viel Erfolg beim Lernen ♥</div>
-  <div style="text-align:center; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:0.625rem; color:var(--ink-soft); line-height:1.5;">
+  <div style="text-align:center; margin-top:8px; font-family:var(--font-ui); font-size:0.625rem; color:var(--ink-soft); line-height:1.5;">
     Aplicația e gratuită și rămâne așa. Dacă vrei totuși să susții întreținerea și dezvoltarea ei în continuare —
     <a href="https://ko-fi.com/tomitaro25" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:underline;">☕ o cafea pe Ko-fi</a>
   </div>
@@ -703,7 +730,7 @@
         <span class="chip voice-lang-chip" data-lang="de">🇩🇪 caut din germană</span>
       </div>
       <div class="btn-row">
-        <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:'Literata',serif;">
+        <input type="text" id="wordSearchInput" class="btn-block" placeholder="caută în germană sau română..." style="width:100%; font-family:var(--font-text);">
       </div>
       <button class="btn-block" id="voiceRecordBtn" style="display:none; margin-top:8px;"><span>🎤 Apasă și vorbește</span><span>●</span></button>
       <div class="upload-status" id="voiceSearchStatus"></div>
@@ -844,7 +871,7 @@
     <div class="sheet-section">
       <div class="sheet-label">Cheia ta API (începe cu „sk-ant-")</div>
       <div style="display:flex; gap:6px;">
-        <input type="password" id="claudeApiKeyInput" class="btn-block" style="flex:1; font-family:'IBM Plex Mono',monospace;" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+        <input type="password" id="claudeApiKeyInput" class="btn-block" style="flex:1; font-family:var(--font-ui);" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
         <button class="zoom-btn" id="toggleKeyVisibilityBtn" type="button" style="width:44px;" aria-label="Arată/ascunde cheia">👁</button>
       </div>
       <button class="btn-block" id="testClaudeBtn" style="margin-top:8px;"><span>Testează conexiunea</span><span>▶</span></button>
@@ -917,7 +944,7 @@
   <div id="aiHistDetailView" style="display:none;">
 <div class="sheet-section">
       <div class="sheet-label">Din istoric</div>
-      <div id="aiHistDetailBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <div id="aiHistDetailBox" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <button class="btn-block" id="aiHistDetailSpeakBtn" style="width:100%; margin-top:8px;"><span>🔊 Ascultă</span><span>▶</span></button>
       <div style="display:flex; gap:6px; margin-top:10px;">
         <select id="aiHistDetailFormat" class="btn-block" style="flex:1; appearance:none;">
@@ -943,7 +970,7 @@
 
   <div class="sheet-section">
     <div class="sheet-label" id="aiInputLabel">Textul tău (o propoziție sau mai multe)</div>
-    <textarea id="aiInputText" class="btn-block" style="width:100%; min-height:110px; font-family:'Literata',serif; resize:vertical;" placeholder="Scrie aici ce vrei să traduci... (sau dictează, sau adaugă o imagine mai jos)"></textarea>
+    <textarea id="aiInputText" class="btn-block" style="width:100%; min-height:110px; font-family:var(--font-text); resize:vertical;" placeholder="Scrie aici ce vrei să traduci... (sau dictează, sau adaugă o imagine mai jos)"></textarea>
 
     <div class="chip-row" id="aiVoiceLangRow" style="display:none; margin-top:8px;">
       <span class="chip ai-voice-lang-chip active" data-lang="ro">🎙️ Dictez română</span>
@@ -972,7 +999,7 @@
 
   <div class="sheet-section" id="aiResultSection" style="display:none;">
     <div class="sheet-label" id="aiResultLabel">Rezultat</div>
-    <div id="aiResultBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+    <div id="aiResultBox" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
     <div id="aiExplanationsBox" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line);"></div>
     <div id="aiSpeakResultPlayerSlot" style="margin-top:8px;"></div>
     <div style="display:flex; gap:6px; margin-top:10px;">
@@ -1011,16 +1038,16 @@
 
     <div class="sheet-section" id="aiExerciseResultSection" style="display:none;">
       <div class="sheet-label">Text</div>
-      <div id="aiExerciseTextBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <div id="aiExerciseTextBox" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
 
       <div class="sheet-label" style="margin-top:16px;">Traducerea ta (opțional)</div>
-      <textarea id="aiExerciseUserAttempt" class="btn-block" style="width:100%; min-height:90px; font-family:'Literata',serif; resize:vertical;" placeholder="Scrie aici încercarea ta de traducere..."></textarea>
+      <textarea id="aiExerciseUserAttempt" class="btn-block" style="width:100%; min-height:90px; font-family:var(--font-text); resize:vertical;" placeholder="Scrie aici încercarea ta de traducere..."></textarea>
 
       <button class="btn-block" id="aiExerciseRevealBtn" style="width:100%; margin-top:10px;"><span>👁 Arată traducerea</span><span>›</span></button>
 
       <div id="aiExerciseTranslationSection" style="display:none; margin-top:12px;">
         <div class="sheet-label">Traducere (AI)</div>
-        <div id="aiExerciseTranslationBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+        <div id="aiExerciseTranslationBox" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
         <div id="aiExerciseSpeakPlayerSlot" style="margin-top:8px;"></div>
       </div>
     </div>
@@ -1053,7 +1080,7 @@
 
     <div class="sheet-section" id="aiDescribeResultSection" style="display:none;">
       <div class="sheet-label">Descriere</div>
-      <div id="aiDescribeResultBox" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <div id="aiDescribeResultBox" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <div id="aiDescribeSpeakPlayerSlot" style="margin-top:8px;"></div>
     </div>
   </div>
@@ -1061,7 +1088,7 @@
   <div id="aiNewWordsView" style="display:none;">
 <div class="sheet-section">
       <div class="sheet-label">Cum funcționează</div>
-      <p class="help-text" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 2 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
+      <p class="help-text" style="font-family:var(--font-text); font-size:0.85rem; margin:0;">Alege automat până la 5 cuvinte pe care le-ai văzut abia o dată sau de două ori (indiferent dacă ai răspuns corect) — și generează 2 texte scurte, diferite, în care le vezi în context, evidențiate.</p>
       <button class="btn-block paste-highlight" id="aiNewWordsGenerateBtn" style="width:100%; margin-top:10px;"><span>Generează — Cuvinte alese aleatoriu</span><span>→</span></button>
       <button class="btn-block" id="aiNewWordsManualBtn" style="width:100%; margin-top:8px;"><span>✋ Alege manual cuvintele</span><span>›</span></button>
       <button class="btn-block paste-highlight" id="aiNewWordsManualGenerateBtn" style="width:100%; margin-top:8px; display:none;"><span>Generează — Cuvinte alese manual</span><span>→</span></button>
@@ -1075,11 +1102,11 @@
 
     <div class="sheet-section" id="aiNewWordsResultSection" style="display:none;">
       <div class="sheet-label">Text 1</div>
-      <div id="aiNewWordsBox1" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <div id="aiNewWordsBox1" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <div id="aiNewWordsSpeakPlayerSlot1" style="margin-top:8px;"></div>
 
       <div class="sheet-label" style="margin-top:18px;">Text 2</div>
-      <div id="aiNewWordsBox2" style="font-family:'Literata',serif; font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
+      <div id="aiNewWordsBox2" style="font-family:var(--font-text); font-size:0.92rem; line-height:1.6; white-space:pre-wrap;"></div>
       <div id="aiNewWordsSpeakPlayerSlot2" style="margin-top:8px;"></div>
     </div>
   </div>
@@ -1090,7 +1117,7 @@
         Acest browser nu are (încă) AI local, integrat (Chrome „Prompt API"/Gemini Nano) — funcția asta nu poate rula complet offline aici. Momentan, doar Chrome de pe calculator (nu telefon) îl poate avea.
       </div>
       <details style="margin-top:10px;">
-        <summary style="cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--ink-soft);">Cum activez, dacă am Chrome pe calculator?</summary>
+        <summary style="cursor:pointer; font-family:var(--font-ui); font-size:0.75rem; color:var(--ink-soft);">Cum activez, dacă am Chrome pe calculator?</summary>
         <div class="upload-status" style="margin-top:8px;">
           Pe versiuni mai noi de Chrome, s-ar putea să funcționeze deja, fără niciun pas suplimentar — verificarea de mai sus se reface automat de fiecare dată când redeschizi acest ecran. Dacă tot nu merge, încearcă:
           <ol style="margin:6px 0 0 18px; padding:0;">
@@ -1116,7 +1143,7 @@
 
     <div class="sheet-section" id="aiVoicePartnerMain" style="display:none;">
       <div class="sheet-label">Cum funcționează</div>
-      <p class="help-text" id="aiVoicePartnerModeNote" style="font-family:'Literata',serif; font-size:0.85rem; margin:0;"></p>
+      <p class="help-text" id="aiVoicePartnerModeNote" style="font-family:var(--font-text); font-size:0.85rem; margin:0;"></p>
 
       <div style="margin-top:12px;">
         <div style="display:flex; gap:6px;">
@@ -1126,7 +1153,7 @@
         <div class="upload-status" id="aiVoicePartnerRoleNote" style="margin-top:4px;">Se aplică automat, dacă-l scrii înainte să-ncepi conversația. Dacă-l schimbi în mijlocul ei, apasă „↺ Nouă".</div>
       </div>
 
-      <div id="aiVoicePartnerConversation" style="max-height:40vh; overflow-y:auto; margin-top:12px; font-family:'Literata',serif; font-size:0.92rem; line-height:1.6;"></div>
+      <div id="aiVoicePartnerConversation" style="max-height:40vh; overflow-y:auto; margin-top:12px; font-family:var(--font-text); font-size:0.92rem; line-height:1.6;"></div>
 
       <div style="display:flex; gap:6px; margin-top:12px;">
         <button class="btn-block paste-highlight" id="aiVoicePartnerTalkBtn" style="flex:1; min-height:64px;"><span>🎙️ Apasă pentru a vorbi</span><span></span></button>
@@ -1631,7 +1658,7 @@ function appendVoicePartnerBilingualLine(speaker, mainText, translatedText){
   const label = speaker === 'eu' ? 'Tu' : 'Partener';
   let html = `<div style="margin-bottom:8px;"><b style="color:${color};">${label}:</b> ${escapeHtml(mainText)}`;
   if(translatedText){
-    html += `<div style="font-size:0.6875rem; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; margin-top:2px;">${escapeHtml(translatedText)}</div>`;
+    html += `<div style="font-size:0.6875rem; color:var(--ink-soft); font-family:var(--font-ui); margin-top:2px;">${escapeHtml(translatedText)}</div>`;
   }
   html += `</div>`;
   box.innerHTML += html;
@@ -2788,6 +2815,28 @@ document.querySelectorAll('.mode-chip').forEach(chip=>{
 /* ---------- file upload ---------- */
 document.getElementById('uploadBtn').addEventListener('click', ()=> document.getElementById('fileInput').click());
 document.getElementById('fileInput').addEventListener('change', handleFile);
+/* Biblioteca Excel (SheetJS 0.18.5, ~880 KB) - gazduita in lib/ si incarcata DOAR la primul
+   import de .xlsx/.xls, nu la fiecare pornire (inainte: script blocant in <head>, de pe cdnjs,
+   citit si executat la fiecare deschidere a aplicatiei). Dupa prima folosire ramane in cache-ul
+   service worker-ului, deci merge si offline. CSV/TSV nu au nevoie deloc de ea. */
+let xlsxLoadPromise = null;
+function loadXlsxLib(){
+  if(window.XLSX) return Promise.resolve(window.XLSX);
+  if(!xlsxLoadPromise){
+    xlsxLoadPromise = new Promise((resolve, reject)=>{
+      const s = document.createElement('script');
+      s.src = 'lib/xlsx.full.min.js';
+      s.onload = ()=> window.XLSX ? resolve(window.XLSX) : reject(new Error('Cititorul Excel nu s-a inițializat corect.'));
+      s.onerror = ()=>{
+        xlsxLoadPromise = null; // permitem o noua incercare (ex. dupa revenirea conexiunii)
+        s.remove();
+        reject(new Error('Cititorul Excel nu s-a putut încărca. Prima dată e nevoie de internet; între timp poți importa fișierul salvat ca CSV.'));
+      };
+      document.head.appendChild(s);
+    });
+  }
+  return xlsxLoadPromise;
+}
 
 function normalizeHeader(h){
   return String(h||'').trim().toLowerCase()
@@ -2863,18 +2912,22 @@ function handleFile(e){
   const fail = (err) => { status.textContent = `Eroare: ${err.message}`; status.className = 'upload-status err'; };
 
   if(name.endsWith('.xlsx') || name.endsWith('.xls')){
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-      try{
-        const data = new Uint8Array(ev.target.result);
-        const wb = XLSX.read(data, {type:'array'});
-        const sheet2 = wb.Sheets[wb.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet2, {header:1});
-        finish(parseRowsToWords(rows));
-      }catch(err){ fail(err); }
-    };
-    reader.onerror = ()=> fail(new Error('Nu s-a putut citi fișierul.'));
-    reader.readAsArrayBuffer(file);
+    status.textContent = 'Se pregătește cititorul Excel...';
+    status.className = 'upload-status';
+    loadXlsxLib().then((XLSX)=>{
+      const reader = new FileReader();
+      reader.onload = (ev)=>{
+        try{
+          const data = new Uint8Array(ev.target.result);
+          const wb = XLSX.read(data, {type:'array'});
+          const sheet2 = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet2, {header:1});
+          finish(parseRowsToWords(rows));
+        }catch(err){ fail(err); }
+      };
+      reader.onerror = ()=> fail(new Error('Nu s-a putut citi fișierul.'));
+      reader.readAsArrayBuffer(file);
+    }).catch(fail);
   } else {
     const delimiter = name.endsWith('.tsv') ? '\t' : ',';
     const reader = new FileReader();
@@ -2977,6 +3030,59 @@ document.getElementById('backupExportBtn').addEventListener('click', ()=>{
   const dateStr = new Date().toISOString().slice(0,10);
   downloadBlob(JSON.stringify(backup, null, 2), `karteikarten-backup-${dateStr}.json`, 'application/json;charset=utf-8');
   document.getElementById('backupStatus').textContent = 'Backup salvat.';
+  try{ localStorage.setItem('karteikarten_lastBackupAt', new Date().toISOString()); }catch(e){}
+  document.getElementById('backupReminderBanner').style.display = 'none';
+});
+
+/* ---------- protectia datelor locale ----------
+   1) navigator.storage.persist() - cere browserului sa NU stearga automat datele aplicatiei
+      cand ramane fara spatiu (implicit, datele unui site pot fi sterse). Cerut doar daca
+      exista deja progres de protejat: Firefox afiseaza o intrebare la aceasta cerere, iar un
+      vizitator nou nu trebuie intampinat cu asa ceva. Chrome decide singur, fara intrebare.
+   2) Memento de backup - doar cu >= 20 de cuvinte exersate si fara backup in ultimele 30 de
+      zile; la inchidere (✕) tace inca 30 de zile. Cheile noi NU intra in BACKUP_KEYS. */
+const BACKUP_REMINDER_MIN_WORDS = 20;
+const BACKUP_REMINDER_DAYS = 30;
+function daysSince(isoStr){
+  const t = Date.parse(isoStr || '');
+  return isNaN(t) ? Infinity : (Date.now() - t) / 86400000;
+}
+async function initStorageProtection(){
+  const statusEl = document.getElementById('storagePersistStatus');
+  const practiced = Object.keys(wordStats || {}).length;
+  try{
+    if(!navigator.storage || !navigator.storage.persist){
+      if(statusEl) statusEl.textContent = 'Protecția automată a datelor nu e disponibilă în acest browser — backup-ul manual rămâne singura siguranță.';
+    } else {
+      let persisted = await navigator.storage.persisted();
+      if(!persisted && practiced > 0) persisted = await navigator.storage.persist();
+      if(statusEl){
+        statusEl.textContent = persisted
+          ? 'Date protejate: browserul nu le va șterge automat.'
+          : (practiced > 0
+              ? 'Browserul n-a acordat protecție automată datelor — un backup din când în când e recomandat.'
+              : 'Protecția datelor se activează după primele cuvinte exersate.');
+      }
+    }
+  }catch(e){ /* nu blocam nimic daca API-ul se comporta neasteptat */ }
+
+  try{
+    if(practiced < BACKUP_REMINDER_MIN_WORDS) return;
+    if(daysSince(localStorage.getItem('karteikarten_lastBackupAt')) < BACKUP_REMINDER_DAYS) return;
+    const snoozeUntil = Date.parse(localStorage.getItem('karteikarten_backupReminderSnooze') || '');
+    if(!isNaN(snoozeUntil) && Date.now() < snoozeUntil) return;
+    document.getElementById('backupReminderText').textContent =
+      `Ai progres pe ${practiced} cuvinte. Un backup durează 2 secunde și te scutește de pierderi.`;
+    document.getElementById('backupReminderBanner').style.display = 'flex';
+  }catch(e){}
+}
+document.getElementById('backupReminderBtn').addEventListener('click', ()=>{
+  document.getElementById('backupExportBtn').click(); // acelasi export ca din Setari
+});
+document.getElementById('backupReminderClose').addEventListener('click', ()=>{
+  const until = new Date(Date.now() + BACKUP_REMINDER_DAYS * 86400000).toISOString();
+  try{ localStorage.setItem('karteikarten_backupReminderSnooze', until); }catch(e){}
+  document.getElementById('backupReminderBanner').style.display = 'none';
 });
 
 document.getElementById('backupImportBtn').addEventListener('click', ()=>{
@@ -3083,8 +3189,8 @@ function renderSearchResults(matches){
   }
   resultsEl.innerHTML = matches.map(w=>{
     const artikelTxt = w.artikel ? `<span class="art art-${w.artikel}">${w.artikel}</span> ` : '';
-    return `<div class="search-result-row" data-de="${encodeURIComponent(w.de)}" style="padding:6px 0; border-bottom:1px solid var(--line); font-family:'Literata',serif; font-size:0.88rem; cursor:pointer;">
-      ${artikelTxt}<b>${w.de}</b> — ${w.ro} <span style="font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--ink-soft);">[${LEVEL_LABELS[w.level]||w.level}]</span>
+    return `<div class="search-result-row" data-de="${encodeURIComponent(w.de)}" style="padding:6px 0; border-bottom:1px solid var(--line); font-family:var(--font-text); font-size:0.88rem; cursor:pointer;">
+      ${artikelTxt}<b>${w.de}</b> — ${w.ro} <span style="font-family:var(--font-ui); font-size:0.62rem; color:var(--ink-soft);">[${LEVEL_LABELS[w.level]||w.level}]</span>
     </div>`;
   }).join('');
   resultsEl.querySelectorAll('.search-result-row').forEach(row=>{
@@ -3450,10 +3556,10 @@ function renderWordList(){
     const isDisabled = isSelectMode && !isPicked && wordListSelected.length >= 5;
     return `<div class="btn-block word-list-row" data-id="${escapeAttr(w.id)}" style="width:100%; margin-bottom:6px; ${isDisabled?'opacity:0.4;':''} ${isPicked?'border-color:var(--red); border-width:2px;':''}">
       <span style="flex:1; overflow:hidden;">
-        <span style="font-family:'Literata',serif; font-weight:600;">${escapeHtml(w.artikel ? w.artikel+' '+w.de : w.de)}</span>
-        <span style="font-family:'Literata',serif; font-size:0.75rem; color:var(--ink-soft); display:block;">${escapeHtml(w.ro)}</span>
+        <span style="font-family:var(--font-text); font-weight:600;">${escapeHtml(w.artikel ? w.artikel+' '+w.de : w.de)}</span>
+        <span style="font-family:var(--font-text); font-size:0.75rem; color:var(--ink-soft); display:block;">${escapeHtml(w.ro)}</span>
       </span>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6875rem; color:${stars>=4?'var(--green)':'var(--gold)'};">${'★'.repeat(Math.min(stars,4))}${stars>4?'+':''}</span>
+      <span style="font-family:var(--font-ui); font-size:0.6875rem; color:${stars>=4?'var(--green)':'var(--gold)'};">${'★'.repeat(Math.min(stars,4))}${stars>4?'+':''}</span>
     </div>`;
   }).join('');
   if(isSelectMode){
@@ -3828,7 +3934,7 @@ function renderLevelProgress(){
     if(!d || !d.total) return;
     const pct = d.attemptSum ? Math.round((d.correctSum/d.attemptSum)*100) : null;
     const coveragePct = Math.round((d.attempted/d.total)*100);
-    html += `<div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:4px 0;border-bottom:1px solid var(--line);">
+    html += `<div style="display:flex;justify-content:space-between;font-family:var(--font-ui);font-size:0.72rem;padding:4px 0;border-bottom:1px solid var(--line);">
       <span>${LEVEL_LABELS[lvl]||lvl}</span>
       <span>${d.attempted}/${d.total} exersate (${coveragePct}%)${pct!==null ? ' · '+pct+'% corecte' : ''}</span>
     </div>`;
@@ -5228,8 +5334,8 @@ function renderAiHistList(){
     return `<div class="btn-block ai-hist-row" data-id="${e.id}" style="width:100%; margin-bottom:6px; cursor:pointer;">
       ${aiHistSelectMode ? `<input type="checkbox" class="ai-hist-checkbox" data-id="${e.id}" ${checked} style="margin-right:8px; width:18px; height:18px; flex-shrink:0;">` : ''}
       <span style="flex:1; overflow:hidden;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:0.65625rem; color:var(--ink-soft); display:block;">${dateStr}</span>
-        <span style="font-family:'Literata',serif; font-size:0.85rem;"><span style="font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--der); font-weight:600;">${srcTag}</span> ${preview}</span>
+        <span style="font-family:var(--font-ui); font-size:0.65625rem; color:var(--ink-soft); display:block;">${dateStr}</span>
+        <span style="font-family:var(--font-text); font-size:0.85rem;"><span style="font-family:var(--font-ui); font-size:0.78rem; color:var(--der); font-weight:600;">${srcTag}</span> ${preview}</span>
       </span>
       ${!aiHistSelectMode ? '<span>›</span>' : ''}
     </div>`;
@@ -5409,7 +5515,7 @@ document.getElementById('aiHistFrequentWordsBtn').addEventListener('click', ()=>
   }
   box.innerHTML = sorted.map(([w,c])=>
     `<div class="btn-block ai-freq-word-row" data-word="${escapeAttr(w)}" style="width:100%; margin-bottom:6px;">
-      <span>${escapeHtml(w)} <span style="color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:0.6875rem;">(×${c})</span></span>
+      <span>${escapeHtml(w)} <span style="color:var(--ink-soft); font-family:var(--font-ui); font-size:0.6875rem;">(×${c})</span></span>
       <span>+</span>
     </div>`
   ).join('');
@@ -5475,7 +5581,7 @@ document.getElementById('aiTranslateBtn').addEventListener('click', async ()=>{
       resultBox.textContent = parsedCorr.corrected;
       if(parsedCorr.explanations.length){
         explanationsBox.innerHTML = `<div class="sheet-label" style="margin-bottom:6px;">Ce am corectat</div>` +
-          parsedCorr.explanations.map(e => `<div style="margin-bottom:6px; font-family:'Literata',serif; font-size:0.85rem;">• ${escapeHtml(e)}</div>`).join('');
+          parsedCorr.explanations.map(e => `<div style="margin-bottom:6px; font-family:var(--font-text); font-size:0.85rem;">• ${escapeHtml(e)}</div>`).join('');
         explanationsBox.style.display = 'block';
       } else if(!parsedCorr.redirected){
         explanationsBox.innerHTML = `<div class="upload-status" style="color:var(--green);">✓ Fără greșeli găsite — textul era deja corect.</div>`;
@@ -5591,6 +5697,7 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
   updateMyWordsChipLabel();
   initFreqBands();
   renderLevelProgress();
+  initStorageProtection(); // fara await - nu intarzie pornirea; erorile sunt prinse intern
   refreshInstallUI(); // acopera cazul iOS, care nu declanseaza beforeinstallprompt
   buildRound();
 })();
@@ -5649,6 +5756,10 @@ if(ttsVolumeSlider){
 /* ---------- service worker registration (enables offline + installability) ---------- */
 if ('serviceWorker' in navigator) {
   let swRefreshing = false;
+  // la PRIMA vizita pagina nu e inca controlata de niciun service worker; preluarea controlului
+  // (clients.claim) declanseaza controllerchange, dar NU e o actualizare - fara acest test,
+  // un utilizator nou vedea "O versiune noua e gata" chiar la prima deschidere (bug din v122)
+  const swHadController = !!navigator.serviceWorker.controller;
   function showUpdateBanner(){
     document.getElementById('updateBanner').style.display = 'flex';
   }
@@ -5675,7 +5786,7 @@ if ('serviceWorker' in navigator) {
   // nu reincarcam fortat, doar confirmam prin acelasi banner, ca sa nu intrerupem un
   // exercitiu in curs fara voia utilizatorului
   navigator.serviceWorker.addEventListener('controllerchange', ()=>{
-    if(swRefreshing) return;
+    if(swRefreshing || !swHadController) return;
     swRefreshing = true;
     showUpdateBanner();
   });
