@@ -83,6 +83,11 @@
   /* butoanele aurii (ex. „Traducere liberă", „Continuă — rundă nouă") pastreaza fundalul auriu -
      textul deschis al temei ar avea contrast 2:1 pe el; textul inchis are 6,7:1 */
   [data-theme="dark"] .paste-highlight{ color:#1c1a17; }
+  /* stampila „corect/gresit" pastreaza culorile ei fixe, inchise, pe fundal crem - pe tema
+     intunecata, fundalul semitransparent (90%) si opacitatea 0,92 lasau sa treaca cardul inchis:
+     verdele cobora la 3,6:1. Opac pe ambele: 4,6:1 (verde) si 5,5:1 (rosu). Tema deschisa: neatinsa */
+  [data-theme="dark"] .stamp{ background:#fbf7ee; }
+  [data-theme="dark"] .stamp.show{ opacity:1; }
   [data-theme="dark"] .install-banner-close{ color:var(--ink); }
   /* Corecturile din textul utilizatorului, in rezultatul traducerii: de fond (gramatica, cuvinte,
      topica) evidentiate vizibil; de forma (diacritice, majuscule, cratime) doar subliniate punctat */

@@ -4,6 +4,10 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v137 — ștampila lizibilă pe tema întunecată**
+- **Ștampila „corect/greșit" pe tema întunecată** are acum fundal crem complet opac și opacitate completă. Înainte, fundalul semitransparent (90%) și opacitatea proprie a ștampilei (0,92) lăsau să treacă cardul închis, iar verdele „RICHTIG!" cobora la un contrast de 3,6:1. Acum: 4,6:1 la verde, 5,5:1 la roșu. Pe tema deschisă, ștampila rămâne neschimbată (capturi identice pixel cu pixel).
+- Ultima corecție din lista găsită la portarea în aplicația franceză. Regula folosită acolo (doar fundalul opac) n-ar fi fost suficientă aici, din cauza opacității suplimentare a ștampilei germane (ar fi rămas 4,3:1).
+
 **v136 — cuvântul centrat pe calculator; vocea, butoanele aurii și „Cuvinte în pereche" corectate**
 - **Pe calculator, cuvântul de tradus e centrat** în spațiul liber de deasupra variantelor, și poate crește puțin. Înainte, la fonturi mici, stătea lipit sus-stânga, cu un gol mare la mijloc. Telefoanele și tabletele nu sunt atinse: capturile sunt identice pixel cu pixel.
 - **Vocea aleasă nu mai e înlocuită la pornire.** Când vocile erau disponibile imediat (frecvent pe calculator), lista alegea prima voce de rețea și o salva peste alegerea ta, la fiecare pornire; cursoarele de viteză și volum arătau valorile implicite, deși rostirea le folosea pe cele salvate. Cauza: blocul care populează listele rula înaintea citirii preferințelor. Viteza salvată e limitată acum la intervalul cursorului (o valoare coruptă ajungea să fie folosită la rostire).
