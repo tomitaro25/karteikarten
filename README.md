@@ -4,6 +4,13 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v136 — cuvântul centrat pe calculator; vocea, butoanele aurii și „Cuvinte în pereche" corectate**
+- **Pe calculator, cuvântul de tradus e centrat** în spațiul liber de deasupra variantelor, și poate crește puțin. Înainte, la fonturi mici, stătea lipit sus-stânga, cu un gol mare la mijloc. Telefoanele și tabletele nu sunt atinse: capturile sunt identice pixel cu pixel.
+- **Vocea aleasă nu mai e înlocuită la pornire.** Când vocile erau disponibile imediat (frecvent pe calculator), lista alegea prima voce de rețea și o salva peste alegerea ta, la fiecare pornire; cursoarele de viteză și volum arătau valorile implicite, deși rostirea le folosea pe cele salvate. Cauza: blocul care populează listele rula înaintea citirii preferințelor. Viteza salvată e limitată acum la intervalul cursorului (o valoare coruptă ajungea să fie folosită la rostire).
+- **Butoanele aurii lizibile pe tema întunecată** (ex. „Traducere liberă", „Continuă — rundă nouă"): contrast 6,7:1, față de 2:1.
+- **„Cuvinte în pereche" fără perechi ambigue:** o rundă nu mai poate conține două cuvinte cu aceeași traducere (ex. „sie"/„Sie"), unde o alegere corectă ca sens era numărată greșeală. Cuvintele ratate își păstrează prioritatea.
+- Corecțiile de voce, butoane și perechi au fost găsite la portarea în aplicația franceză. Testat în browser real: 9 verificări pe corecții (versiunea anterioară le reproduce pe toate), inclusiv 300 de runde aleatoare fără nicio pereche ambiguă; regresia completă a trecut.
+
 **v135 — trei corecții găsite la portarea în aplicația franceză**
 - **Butoanele rapide 📖 / ⚡ / 🔄↔️ sincronizate cu nivelurile reale.** Înainte, la redeschiderea aplicației rămânea aprins 📖 chiar dacă se exersau verbe; 📖 revenea la valoarea implicită în loc de ultima selecție normală; iar orice click pe un nivel în Setări (inclusiv debifările intermediare) suprascria selecția memorată. Acum butonul aprins se deduce mereu din nivelurile exersate efectiv, ultima selecție normală se salvează și se păstrează peste reîncărcări, iar din Setări se memorează doar selecția finală, la închidere (prin ← sau prin fundal).
 - **Click pe fundal = ieșire completă.** Înainte, dacă lista de cuvinte era deschisă din „Cuvinte noi în context", un click pe fundal putea lăsa panoul AI deschis, fără fundal. Acum toate panourile se închid curat, iar ascultarea din „Exersează vorbitul" se oprește și la închiderea prin fundal, ca la butonul Înapoi.

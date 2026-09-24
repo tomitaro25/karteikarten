@@ -80,6 +80,9 @@
   /* "Sari" (skip-btn) foloseste intentionat o culoare mai discreta (--ink-soft), dar pe
      tema intunecata s-a dovedit prea putin vizibila - il facem alb, ca restul textului */
   [data-theme="dark"] .skip-btn{ color:var(--ink); }
+  /* butoanele aurii (ex. „Traducere liberă", „Continuă — rundă nouă") pastreaza fundalul auriu -
+     textul deschis al temei ar avea contrast 2:1 pe el; textul inchis are 6,7:1 */
+  [data-theme="dark"] .paste-highlight{ color:#1c1a17; }
   [data-theme="dark"] .install-banner-close{ color:var(--ink); }
   /* Corecturile din textul utilizatorului, in rezultatul traducerii: de fond (gramatica, cuvinte,
      topica) evidentiate vizibil; de forma (diacritice, majuscule, cratime) doar subliniate punctat */
@@ -224,6 +227,16 @@
   .speak-btn.inline{ width:32px; height:32px; font-size:1.05rem; margin-left:8px; }
 
   .options{ display:flex; flex-direction:column; gap:10px; margin-top:auto; }
+  /* Pe calculator (ecran cu mouse), cardul e mult mai inalt decat continutul lui: eticheta si
+     cuvantul se centreaza in spatiul liber de deasupra variantelor, iar cuvantul poate creste
+     putin, in loc sa ramana lipit sus-stanga, cu un gol mare la mijloc. Telefoanele si
+     tabletele (ecran tactil) nu sunt atinse - la ele containerul nu are niciun stil. */
+  @media (hover:hover) and (pointer:fine) and (min-width:600px){
+    .prompt-area{ flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center; padding:12px 0 20px; }
+    .prompt-area .prompt-row{ justify-content:center; }
+    .prompt-area .prompt-word{ font-size:clamp(1.6rem, 4vw, 2.6rem); margin-bottom:0; }
+  }
   .opt{
     text-align:left; font-family:var(--font-text); font-size:1rem; background:var(--paper); color:var(--ink);
     border:1.5px solid var(--ink); border-radius:10px; padding:14px 14px; cursor:pointer;
@@ -1464,7 +1477,7 @@ function loadSpeechRate(){
   try{
     const raw = localStorage.getItem('karteikarten_speechRate');
     speechRate = raw ? parseFloat(raw) : 1.0;
-    if(!speechRate || isNaN(speechRate)) speechRate = 1.0;
+    if(isNaN(speechRate) || speechRate < 0.5 || speechRate > 1.5) speechRate = 1.0; // intervalul cursorului
   }catch(e){ speechRate = 1.0; }
 }
 function saveSpeechRate(rate){
@@ -2587,10 +2600,12 @@ function renderQuestion(){
       ${wordStageStars(q.id)}
       <button class="skip-btn" id="skipBtn">Sari →</button>
     </div>
-    <div class="prompt-label">${promptLabel}</div>
-    <div class="prompt-row">
-      <div class="prompt-word">${q.prompt.html}</div>
-      ${promptSpeaker}
+    <div class="prompt-area">
+      <div class="prompt-label">${promptLabel}</div>
+      <div class="prompt-row">
+        <div class="prompt-word">${q.prompt.html}</div>
+        ${promptSpeaker}
+      </div>
     </div>
     <div class="options" id="options">
       ${q.options.map((opt,i)=>`<button class="opt" data-value="${encodeURIComponent(opt.value)}"><span class="letter">${letters[i]})</span> <span>${opt.html}</span></button>`).join("")}
@@ -3758,6 +3773,22 @@ function pmSpeakerIconHtml(){
 let pmPressState = null; // {id, startX, startY, moved, actionFired} - starea apasarii curente,
                           // urmarita separat de miscare, ca sa distingem atingere de derulare
 
+// eliminam complet explicatiile intre paranteze (ex. "dank (Präposition)" -> "dank") - la
+// acest modul nu ajuta la potrivire, doar ingreuneaza ascultarea/afisarea
+function pmStripParens(s){ return String(s).replace(/\s*\([^)]*\)\s*/g, ' ').trim(); }
+// primii 10 candidati fara conflict: nicio traducere romana (sau sens din ea, despartit prin "/")
+// comuna cu alt cuvant din runda, si nicio forma germana identica
+function pmPickUnambiguous(ordered){
+  const usedRo = new Set(), usedDe = new Set(), picked = [];
+  for(const w of ordered){
+    if(picked.length >= 10) break;
+    const senses = pmStripParens(w.ro).toLowerCase().split('/').map(s=>s.trim()).filter(Boolean);
+    const de = pmStripParens(w.de).toLowerCase();
+    if(!senses.length || usedDe.has(de) || senses.some(s=>usedRo.has(s))) continue;
+    senses.forEach(s=>usedRo.add(s)); usedDe.add(de); picked.push(w);
+  }
+  return picked;
+}
 function buildPairMatchRound(){
   const eligible = pmSource === 'learned'
     ? getPracticedWords().filter(w => selectedLevels.has(w.level))
@@ -3777,17 +3808,23 @@ function buildPairMatchRound(){
   // din prima, la o reaparitie - restul locurilor se completeaza normal
   const missedEligible = eligible.filter(w => pmMissedIds.has(w.id));
   const restEligible = eligible.filter(w => !pmMissedIds.has(w.id));
-  const missedChosen = shuffle(missedEligible).slice(0, 10);
-  const remainingSlots = 10 - missedChosen.length;
   // "invatate" - favorizeaza cuvinte mai putin consolidate (ponderare deja existenta, doar
   // citire); "complet aleator" - fara nicio ponderare, pur aleator, ca sa difere real de cealalta
-  const restChosen = remainingSlots > 0
-    ? (pmSource === 'learned' ? weightedSample(restEligible, remainingSlots) : shuffle(restEligible).slice(0, remainingSlots))
-    : [];
-  const chosen = shuffle([...missedChosen, ...restChosen]);
-  // eliminam complet explicatiile intre paranteze (ex. "dank (Präposition)" -> "dank") - la
-  // acest modul nu ajuta la potrivire, doar ingreuneaza ascultarea/afisarea
-  const stripParens = s => s.replace(/\s*\([^)]*\)\s*/g, ' ').trim();
+  // candidatii in ordinea de prioritate (ratatii intai), apoi primii 10 FARA ambiguitate: doua
+  // cuvinte cu aceeasi traducere (ex. "sie"/"Sie", sau sinonime ramase cu aceeasi traducere dupa
+  // curatarea vocabularului) ar face ca o alegere corecta ca sens sa fie numarata greseala
+  const ordered = [...shuffle(missedEligible),
+    ...(pmSource === 'learned' ? weightedSample(restEligible, restEligible.length) : shuffle(restEligible))];
+  const picked = pmPickUnambiguous(ordered);
+  if(picked.length < 10){
+    document.getElementById('pairMatchNoWordsNotice').querySelector('.upload-status').textContent =
+      'Nu ai suficiente cuvinte exersate la nivelul curent pentru acest joc — încearcă „Aleator", sau exersează mai întâi câteva runde normale.';
+    document.getElementById('pairMatchNoWordsNotice').style.display = 'block';
+    document.getElementById('pairMatchGameArea').style.display = 'none';
+    return;
+  }
+  const chosen = shuffle(picked);
+  const stripParens = pmStripParens;
   pmPairs = chosen.map(w => ({
     id: w.id,
     hidden: stripParens(pmHiddenLang === 'de' ? w.de : w.ro),
@@ -5960,6 +5997,14 @@ document.getElementById('aiDownloadBtn').addEventListener('click', ()=>{
 })();
 
 /* ---------- voice picker wiring ---------- */
+// Preferintele de voce se citesc AICI, sincron, inainte de popularea listelor: codul de mai jos
+// ruleaza inainte ca init() (async) sa ajunga la ele - init() cedeaza controlul la primul await.
+// Altfel, cand vocile sunt gata din prima (frecvent pe calculator), lista alegea prima voce de
+// retea si o SALVA peste vocea aleasa de utilizator, iar cursoarele aratau valorile implicite.
+try{ selectedVoiceURI = localStorage.getItem('karteikarten_voiceURI') || ''; }catch(e){ selectedVoiceURI = ''; }
+loadVoicePrefRo();
+loadSpeechRate();
+loadTtsVolume();
 if('speechSynthesis' in window){
   populateVoiceList();
   refreshRomanianVoices();
