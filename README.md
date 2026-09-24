@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v138 — bara de sus compactă pe telefon**
+- **Pe telefon (sub 600 px lățime), bara de sus are exact două rânduri**, aliniate ca pe calculator: titlul și butoanele Module / AI / Setări sus; 📖/⚡/🔄↔️, zoom-ul și scorul (pe o singură linie) jos. Înainte, titlul și modurile ocupau singure primul rând, iar restul se împingea pe 2–3 rânduri dedesubt, deși rămânea spațiu liber.
+- **Elementele barei și linia de sub ea nu mai cresc nelimitat cu zoom-ul.** Zoom-ul mărește în continuare tot conținutul de exersat, dar nu mai împinge bara pe 3–4 rânduri. Zona de sus avea între 142 și 203 px (până la 26% din ecran); acum are 124 px la orice zoom (circa 15%).
+- **Pe calculator, nimic schimbat:** capturi identice pixel cu pixel cu versiunea anterioară, în 12 combinații (lățimi, zoom, teme).
+- Testat pe trei mărimi de telefon și cinci niveluri de zoom (nimic tăiat sau ieșit din ecran), cu atingeri reale pe toate butoanele barei; regresia completă a trecut.
+
 **v137 — ștampila lizibilă pe tema întunecată**
 - **Ștampila „corect/greșit" pe tema întunecată** are acum fundal crem complet opac și opacitate completă. Înainte, fundalul semitransparent (90%) și opacitatea proprie a ștampilei (0,92) lăsau să treacă cardul închis, iar verdele „RICHTIG!" cobora la un contrast de 3,6:1. Acum: 4,6:1 la verde, 5,5:1 la roșu. Pe tema deschisă, ștampila rămâne neschimbată (capturi identice pixel cu pixel).
 - Ultima corecție din lista găsită la portarea în aplicația franceză. Regula folosită acolo (doar fundalul opac) n-ar fi fost suficientă aici, din cauza opacității suplimentare a ștampilei germane (ar fi rămas 4,3:1).
