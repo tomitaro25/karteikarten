@@ -4,6 +4,14 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v133 — partea AI: prompturi mai sigure și mai ieftine, securitate**
+- **Temperatura, pe tip de sarcină** — înainte nu era setată deloc. Verificările (revizuire, retraducere de control, comparare, marcare) rulează acum pe 0,2, pentru stabilitate și respectarea formatului; traducerea rămâne pe valoarea implicită, după ce testele din Workbench au arătat că temperatura mică inventa expresii idiomatice („ploua cu glas"). Generarea de exerciții și texte și conversația: 0,8. Plasă de siguranță: dacă un model refuză parametrul, cererea se repetă automat fără el.
+- **Revizuirea întoarce doar corecturile** (perechi numerotate sau „OK"), nu tot textul rescris: mai puțini tokeni de ieșire, cea mai scumpă categorie, și niciun risc de „îmbunătățire" a perechilor corecte. Răspunsurile în formatul vechi sunt acceptate în continuare; cele haotice lasă textul neatins.
+- **Trei reguli noi în revizuire**, pe categorii de greșeli găsite la testare: mai-mult-ca-perfectul („înțelesese", nu „înțeleguse"), colocațiile fixe verb + substantiv, și marcajul `[UNCERTAIN]` (escaladare la Sonnet) în loc de expresii idiomatice inventate.
+- **Textul utilizatorului între etichete XML** (`<text_utilizator>`, `<tema>`), în locul ghilimelelor triple; etichetele scrise de utilizator în text sunt eliminate înainte de trimitere.
+- **Corecții automate pe textul românesc**: „quando" → „când", ş/ţ cu sedilă → ș/ț cu virgulă. Liniile germane nu sunt atinse.
+- **Politică de securitate a conținutului (CSP)**: aplicația poate comunica doar cu propriul site și cu API-ul Anthropic. Escapare adăugată pentru numele vocilor și pentru textul recunoscut din microfon.
+
 **v132 — date protejate, fonturi găzduite local, fonturi centralizate**
 - **Protecția datelor** — aplicația cere browserului să nu șteargă automat progresul (`navigator.storage.persist()`), doar după ce există cuvinte exersate. Starea apare în Setări, lângă backup. Memento discret de backup: doar cu cel puțin 20 de cuvinte exersate și fără backup în ultimele 30 de zile; la ✕ tace încă 30 de zile.
 - **Fonturi găzduite local** — folderul nou `fonts/` (10 fișiere, 548 KB + licențele). Aceleași fonturi, aceleași axe și subseturi ca înainte, dar fără nicio dependență de Google Fonts. Salvate offline de la prima instalare; dacă lipsesc, actualizarea aplicației nu se blochează.
