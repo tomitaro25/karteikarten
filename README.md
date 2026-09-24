@@ -4,6 +4,17 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v135 — trei corecții găsite la portarea în aplicația franceză**
+- **Butoanele rapide 📖 / ⚡ / 🔄↔️ sincronizate cu nivelurile reale.** Înainte, la redeschiderea aplicației rămânea aprins 📖 chiar dacă se exersau verbe; 📖 revenea la valoarea implicită în loc de ultima selecție normală; iar orice click pe un nivel în Setări (inclusiv debifările intermediare) suprascria selecția memorată. Acum butonul aprins se deduce mereu din nivelurile exersate efectiv, ultima selecție normală se salvează și se păstrează peste reîncărcări, iar din Setări se memorează doar selecția finală, la închidere (prin ← sau prin fundal).
+- **Click pe fundal = ieșire completă.** Înainte, dacă lista de cuvinte era deschisă din „Cuvinte noi în context", un click pe fundal putea lăsa panoul AI deschis, fără fundal. Acum toate panourile se închid curat, iar ascultarea din „Exersează vorbitul" se oprește și la închiderea prin fundal, ca la butonul Înapoi.
+- **Ajutorul actualizat:** căutarea e descrisă în Module (butonul 🎤 din bară nu mai există din v115), iconița Module e grila de pătrate (nu 🧩), plus un paragraf nou despre bara de sus.
+- Testat în browser real: 15 scenarii, toate trecute; aceleași scenarii pe v134 reproduc cele 8 probleme corectate. Regresia completă a trecut integral.
+
+**v134 — corecturile din textul tău, vizibile și explicate**
+- **Corectura reală, nu doar de diacritice** — regula de traducere cere acum corectarea tuturor greșelilor reale din textul scris de utilizator (gramatică, gen, caz, conjugare, acord, topică, cuvinte folosite greșit), mai ales în germană; dar păstrează neschimbate formulările și expresiile care sunt deja corecte (după testul în care „A fost odată ca niciodată" fusese reformulat inutil).
+- **Evidențierea corecturilor** — în rezultatul traducerii, ce s-a schimbat față de textul tău apare marcat: fundal auriu pentru corecturile de fond, subliniere punctată pentru cele de formă (diacritice, majuscule, cratime, punctuație). Calculat local, fără cost. Dacă nu s-a corectat nimic: „✓ Textul tău era deja corect".
+- **Butonul „💬 Explică corecturile"** — deschide o fereastră cu explicații scurte pentru fiecare corectură (ce era greșit și regula aplicabilă), inclusiv o semnalare sinceră dacă o corectură e discutabilă. Un apel mic la Haiku, doar la apăsare; redeschiderea ferestrei nu mai costă nimic.
+
 **v133 — partea AI: prompturi mai sigure și mai ieftine, securitate**
 - **Temperatura, pe tip de sarcină** — înainte nu era setată deloc. Verificările (revizuire, retraducere de control, comparare, marcare) rulează acum pe 0,2, pentru stabilitate și respectarea formatului; traducerea rămâne pe valoarea implicită, după ce testele din Workbench au arătat că temperatura mică inventa expresii idiomatice („ploua cu glas"). Generarea de exerciții și texte și conversația: 0,8. Plasă de siguranță: dacă un model refuză parametrul, cererea se repetă automat fără el.
 - **Revizuirea întoarce doar corecturile** (perechi numerotate sau „OK"), nu tot textul rescris: mai puțini tokeni de ieșire, cea mai scumpă categorie, și niciun risc de „îmbunătățire" a perechilor corecte. Răspunsurile în formatul vechi sunt acceptate în continuare; cele haotice lasă textul neatins.
