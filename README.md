@@ -4,6 +4,12 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v140 — bara de sus pe telefon: un pas mai mică, titlul întreg pe orice ecran**
+- **Navigarea pe telefon coboară un pas, de la 110% la 100%.** Pe telefoanele care oferă paginii mai puțin de 360 px lățime (ecrane mici sau setarea Android de afișaj mărit), butoanele 📖/⚡/🔄↔️ se rupeau pe un al treilea rând, iar titlul era tăiat („Karteikart…").
+- **Butoanele de mod nu se mai pot rupe pe două rânduri**, iar sub 360 px spațiile dintre elemente se strâng puțin și titlul e ușor mai mic.
+- **Titlul are acum rezervă de spațiu:** 21 px la 360 px lățime (față de 3 px în v139, prea la limită pentru un telefon real) și 7 px chiar și la 320 px, unde înainte era tăiat.
+- Testat pe 7 lățimi, între 320 și 412 px: bara pe două rânduri, nimic rupt, tăiat sau ieșit din ecran. Metoda de verificare a titlului a fost și ea corectată: vechea verificare tolera 1 px de depășire și ratase tocmai cazul de la 320 px.
+
 **v139 — navigarea nu mai crește cu zoom-ul; instalare, recomandare și previzualizarea linkului**
 - **Zoom-ul (A−/A+) se aplică doar la ce e de citit:** flashcard-urile, modulele, Ajutorul, textele. Bara de sus, linia de sub ea și antetele tuturor panourilor (←, titlul, A−/A+, comutatoarele din „Cuvinte în pereche") au o mărime fixă: pe calculator cea de la 100%, pe telefon nivelul 1 de zoom (110%). Verificat pe toate cele 70 de elemente de navigare, la patru niveluri de zoom, pe calculator și pe două telefoane: zero diferențe; conținutul crește exact cu factorul de zoom. Pe calculator, la 100%, bara și antetele sunt identice pixel cu pixel cu v138. Titlul „Karteikarten" rămâne acum mereu vizibil (înainte dispărea peste 150%).
 - **Bannerul de instalare, inteligent:** apare abia după prima rundă terminată sau după 10 răspunsuri, niciodată peste un panou deschis; ✕ îl amână 14 zile (înainte: pentru totdeauna; închiderile vechi devin, prin migrare, aceeași amânare). Pe Android și în Chrome/Edge pe calculator: „Instalează"; pe iPhone/iPad: cei doi pași din Safari, cu iconița de Partajare (iPadOS recunoscut deși se prezintă drept Mac); pe Firefox și alte browsere fără instalare directă, nu apare automat.

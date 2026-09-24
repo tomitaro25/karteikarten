@@ -162,7 +162,7 @@
       column-gap:8px; row-gap:6px; align-items:center; padding:6px 12px 8px; }
     .brand, .top-right{ display:contents; }
     .topbar .brand-title{ grid-area:title; }
-    #modeRadioRow{ grid-area:radios; margin-top:0 !important; }
+    #modeRadioRow{ grid-area:radios; margin-top:0 !important; flex-wrap:nowrap !important; } /* 📖/⚡/🔄↔️ nu se mai rup pe doua randuri */
     #modeRadioRow .mode-radio{ padding:2px 7px !important; min-height:26px !important; }
     .topbar .top-actions{ grid-area:actions; justify-self:end; }
     .topbar .top-tools{ grid-area:tools; justify-self:end; gap:8px; }
@@ -479,13 +479,21 @@
     #aiPrintArea .print-text{ font-size:1rem; line-height:1.7; white-space:pre-wrap; }
   }
 
+  @media (max-width: 359px){
+    .topbar{ column-gap:4px !important; padding:6px 6px 8px !important; }
+    .topbar .gear-btn{ width:32px !important; height:32px !important; }
+    .topbar .top-actions, .topbar .top-tools{ gap:4px !important; }
+    .topbar .zoom-btn{ width:26px !important; height:26px !important; }
+    #modeRadioRow .mode-radio{ padding:2px 6px !important; }
+    body .topbar .brand, body .topbar .brand-title{ font-size:calc(var(--chrome-font) * 1.05) !important; } /* marja pentru titlu */
+  }
   /* ---------- Navigarea nu mai creste cu zoom-ul ----------
      Zoom-ul (A−/A+) e pentru citirea continutului: modulele, Ajutorul, textele. Bara de sus, linia
      de sub ea si antetele tuturor panourilor (Inapoi, titlu, zoom) au o marime fixa: pe calculator
      cea de la 100%, pe telefon nivelul 1 de zoom (110%) - destul de mare, dar incape pe doua randuri.
      Valorile de mai jos sunt exact cele de la 100%, doar ancorate la --chrome-font in loc de rem. */
   :root{ --chrome-font:16px; }
-  @media (max-width: 600px){ :root{ --chrome-font:17.6px; } }
+  @media (max-width: 600px){ :root{ --chrome-font:16px; } } /* telefon: 100% (110% se rupea pe ecranele sub 360 px) */
   .topbar, body .summary-line, .sheet-header-sticky{ font-size:var(--chrome-font); }
   .topbar .brand, .topbar .brand-title{ font-size:calc(var(--chrome-font) * 1.15) !important; }
   .topbar .mode-radio{ font-size:calc(var(--chrome-font) * 0.9) !important; }
