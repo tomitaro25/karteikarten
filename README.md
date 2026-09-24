@@ -4,6 +4,15 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v139 — navigarea nu mai crește cu zoom-ul; instalare, recomandare și previzualizarea linkului**
+- **Zoom-ul (A−/A+) se aplică doar la ce e de citit:** flashcard-urile, modulele, Ajutorul, textele. Bara de sus, linia de sub ea și antetele tuturor panourilor (←, titlul, A−/A+, comutatoarele din „Cuvinte în pereche") au o mărime fixă: pe calculator cea de la 100%, pe telefon nivelul 1 de zoom (110%). Verificat pe toate cele 70 de elemente de navigare, la patru niveluri de zoom, pe calculator și pe două telefoane: zero diferențe; conținutul crește exact cu factorul de zoom. Pe calculator, la 100%, bara și antetele sunt identice pixel cu pixel cu v138. Titlul „Karteikarten" rămâne acum mereu vizibil (înainte dispărea peste 150%).
+- **Bannerul de instalare, inteligent:** apare abia după prima rundă terminată sau după 10 răspunsuri, niciodată peste un panou deschis; ✕ îl amână 14 zile (înainte: pentru totdeauna; închiderile vechi devin, prin migrare, aceeași amânare). Pe Android și în Chrome/Edge pe calculator: „Instalează"; pe iPhone/iPad: cei doi pași din Safari, cu iconița de Partajare (iPadOS recunoscut deși se prezintă drept Mac); pe Firefox și alte browsere fără instalare directă, nu apare automat.
+- **Browserele din aplicații** (Facebook, Instagram, Messenger, TikTok etc.): banner după 2,5 secunde, cu „Deschide în Chrome" pe Android și „Copiază linkul" pe iPhone.
+- **Butoane permanente „📲 Instalează aplicația" și „📣 Recomandă aplicația"**, în Setări și în Ajutor. „Instalează" dispare când aplicația e instalată; „Recomandă" folosește partajarea telefonului sau copiază prezentarea și linkul.
+- **Bannerul „Versiune nouă" are prioritate** față de cel de instalare.
+- **Previzualizarea linkului:** etichete Open Graph și Twitter, plus `og-image.png` (1200×630), în fonturile și culorile aplicației, cu accent auriu. Fișierul trebuie încărcat în rădăcina repo-ului.
+- Testat: 23 de scenarii de browser (Chrome Android, Facebook Android, Instagram iPhone, iPad, aplicație instalată, Firefox pe calculator, recomandare, prioritatea actualizării, migrare), plus regresia completă.
+
 **v138 — bara de sus compactă pe telefon**
 - **Pe telefon (sub 600 px lățime), bara de sus are exact două rânduri**, aliniate ca pe calculator: titlul și butoanele Module / AI / Setări sus; 📖/⚡/🔄↔️, zoom-ul și scorul (pe o singură linie) jos. Înainte, titlul și modurile ocupau singure primul rând, iar restul se împingea pe 2–3 rânduri dedesubt, deși rămânea spațiu liber.
 - **Elementele barei și linia de sub ea nu mai cresc nelimitat cu zoom-ul.** Zoom-ul mărește în continuare tot conținutul de exersat, dar nu mai împinge bara pe 3–4 rânduri. Zona de sus avea între 142 și 203 px (până la 26% din ecran); acum are 124 px la orice zoom (circa 15%).

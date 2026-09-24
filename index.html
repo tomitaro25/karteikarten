@@ -21,6 +21,21 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Karteikarten — Deutsch ⇄ Română</title>
+<meta name="description" content="Flashcard-uri germană–română, niveluri A1–B2: pronunție, conjugări, exerciții și AI opțional. Gratuit, funcționează și offline.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Karteikarten">
+<meta property="og:title" content="Karteikarten — Deutsch ⇄ Română">
+<meta property="og:description" content="Flashcard-uri germană–română, niveluri A1–B2: pronunție, conjugări, exerciții și AI opțional. Gratuit, funcționează și offline.">
+<meta property="og:url" content="https://tomitaro25.github.io/karteikarten/">
+<meta property="og:image" content="https://tomitaro25.github.io/karteikarten/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Karteikarten: flashcard-uri germană–română, A1–B2">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Karteikarten — Deutsch ⇄ Română">
+<meta name="twitter:description" content="Flashcard-uri germană–română, niveluri A1–B2: pronunție, conjugări, exerciții și AI opțional. Gratuit, funcționează și offline.">
+<meta name="twitter:image" content="https://tomitaro25.github.io/karteikarten/og-image.png">
 <style>
   /* Fonturi gazduite local (folderul fonts/), fara dependenta de Google Fonts - aceleasi
      fisiere, aceleasi axe (Literata variabil: opsz 7-72 + wght 200-900), aceleasi subseturi
@@ -146,22 +161,20 @@
     .topbar{ display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"title actions" "radios tools";
       column-gap:8px; row-gap:6px; align-items:center; padding:6px 12px 8px; }
     .brand, .top-right{ display:contents; }
-    .topbar .brand-title{ grid-area:title; font-size:min(1.15rem, 20px); }
+    .topbar .brand-title{ grid-area:title; }
     #modeRadioRow{ grid-area:radios; margin-top:0 !important; }
-    #modeRadioRow .mode-radio{ font-size:min(0.9rem, 16px) !important; padding:2px 7px !important; min-height:26px !important; }
+    #modeRadioRow .mode-radio{ padding:2px 7px !important; min-height:26px !important; }
     .topbar .top-actions{ grid-area:actions; justify-self:end; }
     .topbar .top-tools{ grid-area:tools; justify-self:end; gap:8px; }
-    .topbar .gear-btn{ width:34px; height:34px; font-size:min(1rem, 17px); }
-    .topbar .zoom-btn{ width:28px; height:28px; font-size:min(0.78125rem, 13px); }
-    .topbar .zoom-percent{ font-size:min(0.65625rem, 11px); min-width:28px; }
-    .topbar .stats{ font-size:min(0.6875rem, 11px); }
-    .topbar .stats b{ font-size:min(0.85rem, 14px); }
+    .topbar .gear-btn{ width:34px; height:34px; }
+    .topbar .zoom-btn{ width:28px; height:28px; }
+    .topbar .zoom-percent{ min-width:28px; }
     /* scorul pe o singura linie ("rundă 1  scor: 0/0"), ca al doilea rand sa ramana subtire */
     .topbar .stats br{ display:none; }
     .topbar .stats #roundNo{ margin-right:6px; }
     .topbar .stats{ line-height:1.2; white-space:nowrap; }
     /* linia de sub bara (niveluri · directie · mod · serie) - tot pe un rand, fara sa creasca cu zoom-ul */
-    body .summary-line{ font-size:min(0.65625rem, 11px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    body .summary-line{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   }
   .zoom-controls{ display:flex; gap:3px; align-items:center; }
   .zoom-percent{ font-family:var(--font-ui); font-size:0.65625rem; color:var(--ink-soft); min-width:32px; text-align:center; }
@@ -465,6 +478,25 @@
       text-transform:uppercase; color:#666; margin:18px 0 6px; }
     #aiPrintArea .print-text{ font-size:1rem; line-height:1.7; white-space:pre-wrap; }
   }
+
+  /* ---------- Navigarea nu mai creste cu zoom-ul ----------
+     Zoom-ul (A−/A+) e pentru citirea continutului: modulele, Ajutorul, textele. Bara de sus, linia
+     de sub ea si antetele tuturor panourilor (Inapoi, titlu, zoom) au o marime fixa: pe calculator
+     cea de la 100%, pe telefon nivelul 1 de zoom (110%) - destul de mare, dar incape pe doua randuri.
+     Valorile de mai jos sunt exact cele de la 100%, doar ancorate la --chrome-font in loc de rem. */
+  :root{ --chrome-font:16px; }
+  @media (max-width: 600px){ :root{ --chrome-font:17.6px; } }
+  .topbar, body .summary-line, .sheet-header-sticky{ font-size:var(--chrome-font); }
+  .topbar .brand, .topbar .brand-title{ font-size:calc(var(--chrome-font) * 1.15) !important; }
+  .topbar .mode-radio{ font-size:calc(var(--chrome-font) * 0.9) !important; }
+  .topbar .stats{ font-size:calc(var(--chrome-font) * 0.6875) !important; }
+  .topbar .stats b{ font-size:calc(var(--chrome-font) * 0.85) !important; }
+  .topbar .gear-btn, .sheet-header-sticky .sheet-back-btn-icon{ font-size:calc(var(--chrome-font) * 1.15) !important; }
+  .topbar .zoom-btn, .sheet-header-sticky .zoom-btn{ font-size:calc(var(--chrome-font) * 0.78125) !important; }
+  .topbar .zoom-percent, .sheet-header-sticky .zoom-percent{ font-size:calc(var(--chrome-font) * 0.65625) !important; }
+  body .summary-line{ font-size:calc(var(--chrome-font) * 0.65625) !important; }
+  .sheet-header-sticky .sheet-title{ font-size:var(--chrome-font) !important; }
+  .sheet-header-sticky .chip{ font-size:calc(var(--chrome-font) * 0.7) !important; }
 </style>
 </head>
 <body>
@@ -551,9 +583,11 @@
     </div>
   </div>
 
-  <div class="sheet-section" id="installSection" style="display:none;">
-    <div class="sheet-label">Instalare</div>
-    <div id="installContent"></div>
+  <div class="sheet-section" id="installSection">
+    <div class="sheet-label">Instalare și recomandare</div>
+    <button class="btn-block install-app-btn" data-status="installStatusSettings" style="width:100%;"><span>📲 Instalează aplicația</span><span>›</span></button>
+    <button class="btn-block recommend-app-btn" data-status="installStatusSettings" style="width:100%; margin-top:8px;"><span>📣 Recomandă aplicația</span><span>›</span></button>
+    <div class="upload-status" id="installStatusSettings"></div>
   </div>
 
 
@@ -561,12 +595,16 @@
     <summary>❓ Ajutor</summary>
     <div class="sheet-section help-text">
       <div class="sheet-label">Cum funcționează aplicația</div>
+      <p><b>Instalare și recomandare</b> — Karteikarten se poate instala ca aplicație (pornește direct de pe ecran, fără browser, și merge offline). Pe Android și în Chrome/Edge pe calculator, butonul de mai jos pornește instalarea; pe iPhone/iPad îți arată cei doi pași din Safari. „Recomandă aplicația" trimite linkul, cu o scurtă prezentare, prin orice aplicație (WhatsApp, e-mail…).</p>
+      <button class="btn-block install-app-btn" data-status="installStatusHelp" style="width:100%;"><span>📲 Instalează aplicația</span><span>›</span></button>
+      <button class="btn-block recommend-app-btn" data-status="installStatusHelp" style="width:100%; margin:8px 0 12px;"><span>📣 Recomandă aplicația</span><span>›</span></button>
+      <div class="upload-status" id="installStatusHelp" style="margin-bottom:10px;"></div>
       <p>Alegi unul sau mai multe <b>niveluri</b> de vocabular din secțiunea „Vocabular", apoi răspunzi la întrebări cu 4 variante — una corectă, trei greșite. Direcția întrebării (germană→română sau invers) se alege din „Exersare".</p>
       <p><b>📖 / ⚡ / 🔄↔️</b>, sub titlul „Karteikarten" — comutare rapidă-ntre moduri, fără să intri-n Setări: <b>📖 Vocab</b> (vocabularul normal, exact ce aveai selectat înainte de-a schimba), <b>⚡ Verbe</b> (exersare conjugare), <b>🔄↔️ Ant/Sin</b> (antonime și sinonime). Funcționează ca-ntr-un grup radio — mereu unul singur activ. „Vocab" ține minte ultima ta selecție normală de niveluri, nu un implicit fix — inclusiv după redeschiderea aplicației. Butonul aprins corespunde mereu nivelurilor exersate efectiv, chiar dacă le-ai schimbat din Setări.</p>
       <p><b>Bara de sus</b> — grila de pătrate deschide <b>Module</b>, 🤖 deschide <b>AI</b>, ⚙ deschide <b>Setările</b>. Fiecare panou are sus un buton <b>←</b>, care te duce exact de unde ai venit; o atingere pe fundalul din afara panoului închide tot.</p>
       <p><b>☀️ Deschis / 🌙 Întunecat</b> — chiar la-nceputul acestui panou de Setări (secțiunea „Aspect") — schimbă tema-ntregii aplicații. Culorile cu sens (roșu/verde pentru corect/greșit, albastru/roz/verde pentru genul cuvintelor) rămân aceleași ca semnificație, doar puțin mai deschise-n modul-ntunecat, ca să rămână lizibile. Alegerea rămâne salvată data viitoare.</p>
       <p><b>„O versiune nouă e gata"</b> — un mesaj mic, sus, apare automat când s-a-ncărcat o versiune nouă a aplicației, în fundal — apasă „Reîncarcă", ca s-o vezi. Poți și ignora mesajul (✕) și continua ce faci — actualizarea rămâne pregătită, se aplică oricum la următoarea reîncărcare/redeschidere.</p>
-      <p>Butoanele <b>A− / A+</b> din bara de sus (sau din antetul acestui panou de Setări, mereu vizibil sus) măresc sau micșorează fontul din toată aplicația (util fără ochelari) — procentul curent e afișat între ele, iar butonul <b>↺</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
+      <p>Butoanele <b>A− / A+</b> din bara de sus (sau din antetul acestui panou de Setări, mereu vizibil sus) măresc sau micșorează textul de citit — flashcard-urile, modulele, Ajutorul (util fără ochelari). Bara de sus și antetele panourilor (←, titlul, A−/A+) rămân la aceeași mărime, ca să încapă mereu pe ecran — procentul curent e afișat între ele, iar butonul <b>↺</b> revine la 100%. Alegerea rămâne salvată data viitoare.</p>
     </div>
     <div class="sheet-section help-text">
       <div class="sheet-label">Voce și viteza de rostire</div>
@@ -1378,6 +1416,7 @@ function updateMistakesChipLabel(){
   if(chip) chip.textContent = `Doar greșeli (${mistakeIds.length})`;
 }
 function recordAnswer(id, correct){
+  noteEngagementAnswer(); // pentru bannerul de instalare: dupa o utilizare reala, nu la prima deschidere
   if(!wordStats[id]) wordStats[id] = {attempts:0, correct:0, streak:0, mistakeFlag:false};
   if(wordStats[id].streak === undefined) wordStats[id].streak = 0; // migrare date vechi, fara camp streak
   if(wordStats[id].mistakeFlag === undefined) wordStats[id].mistakeFlag = false; // migrare, fara camp mistakeFlag
@@ -2708,6 +2747,7 @@ function nextQuestion(){
 document.getElementById('nextBtnBottom').addEventListener('click', nextQuestion);
 
 function showEndScreen(){
+  markEngaged(); // prima runda terminata = utilizare reala
   const card = document.getElementById('card');
   const pct = sessionTotal ? Math.round((sessionScore/sessionTotal)*100) : 0;
   card.innerHTML = `
@@ -3547,74 +3587,137 @@ document.getElementById('moduleShortcutBtn').addEventListener('click', ()=>{
   sheetOverlay.classList.add('show');
 });
 
-/* ---------- instalare PWA (Android/desktop nativ + fallback iOS) ---------- */
+/* ---------- instalare PWA, recomandare, browsere din aplicatii ----------
+   Bannerul de instalare apare abia dupa o utilizare reala (prima runda terminata sau 10 raspunsuri),
+   niciodata peste un panou deschis, si nu concureaza cu bannerul "Versiune noua" (acela are prioritate).
+   ✕ il amana 14 zile (nu pentru totdeauna). In browserele din aplicatii (Facebook, Instagram...),
+   instalarea nu e posibila: bannerul apare devreme si trimite in Chrome (Android) sau copiaza linkul (iOS). */
+const APP_URL = 'https://tomitaro25.github.io/karteikarten/';
+const APP_PITCH = 'Karteikarten — flashcard-uri germană–română (A1–B2), cu pronunție, conjugări și exerciții. Gratuit, merge și offline.';
+const INSTALL_SNOOZE_DAYS = 14;
+const INSTALL_ENGAGE_ANSWERS = 10;
 let deferredInstallPrompt = null;
-const installSection = document.getElementById('installSection');
-const installContent = document.getElementById('installContent');
+let engagementAnswers = 0;
 const installBanner = document.getElementById('installBanner');
 const installBannerText = document.getElementById('installBannerText');
 const installBannerBtn = document.getElementById('installBannerBtn');
 const installBannerClose = document.getElementById('installBannerClose');
+const IOS_SHARE_SVG = '<svg width="15" height="17" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M7.5 1v10M4 4.5 7.5 1 11 4.5"/><path d="M5 7H2.5v8.5h10V7H10"/></svg>';
 
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
 function isStandaloneApp(){
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
-function isIOSDevice(){
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+function isIOSDevice(){ // iPadOS se prezinta drept Mac: il recunoastem dupa ecranul tactil
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
-function installDismissed(){
-  try{ return localStorage.getItem('karteikarten_installBannerDismissed') === '1'; }catch(e){ return false; }
+function isAndroidDevice(){ return /Android/i.test(navigator.userAgent); }
+function isInAppBrowser(){
+  return /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Line\/|musical_ly|BytedanceWebview|Snapchat|LinkedInApp|GSA\/|; wv\)/i.test(navigator.userAgent);
 }
-function dismissInstallBanner(){
+function isInstalled(){ return isStandaloneApp() || lsGet('karteikarten_installed') === '1'; }
+function installSnoozed(){ const t = Date.parse(lsGet('karteikarten_installSnoozeUntil') || ''); return !isNaN(t) && Date.now() < t; }
+function snoozeInstallBanner(){
   installBanner.style.display = 'none';
-  try{ localStorage.setItem('karteikarten_installBannerDismissed', '1'); }catch(e){}
+  lsSet('karteikarten_installSnoozeUntil', new Date(Date.now() + INSTALL_SNOOZE_DAYS * 86400000).toISOString());
 }
+// migrare: vechiul "inchis pentru totdeauna" devine o amanare de 14 zile de acum
+if(lsGet('karteikarten_installBannerDismissed') === '1'){
+  if(!lsGet('karteikarten_installSnoozeUntil')) lsSet('karteikarten_installSnoozeUntil', new Date(Date.now() + INSTALL_SNOOZE_DAYS * 86400000).toISOString());
+  try{ localStorage.removeItem('karteikarten_installBannerDismissed'); }catch(e){}
+}
+function isEngaged(){ return lsGet('karteikarten_engaged') === '1'; }
+function markEngaged(){ if(isEngaged()) return; lsSet('karteikarten_engaged', '1'); refreshInstallUI(); }
+function noteEngagementAnswer(){ engagementAnswers++; if(engagementAnswers >= INSTALL_ENGAGE_ANSWERS) markEngaged(); }
+function updateBannerVisible(){ const u = document.getElementById('updateBanner'); return !!u && u.style.display === 'flex'; }
+function intentUrl(){
+  const u = new URL(APP_URL);
+  return `intent://${u.host}${u.pathname}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(APP_URL)};end`;
+}
+function navigateTo(url){ location.href = url; }
+function installMode(){
+  if(isInstalled()) return 'installed';
+  if(isInAppBrowser()) return isAndroidDevice() ? 'inapp-android' : 'inapp-ios';
+  if(deferredInstallPrompt) return 'native';
+  if(isIOSDevice()) return 'ios';
+  return 'other';
+}
+function iosStepsHtml(){ return `1. Apasă ${IOS_SHARE_SVG} <b>Distribuie</b> în Safari · 2. Alege <b>„Adaugă pe ecranul principal"</b>.`; }
 
+function renderInstallControls(){
+  const installed = installMode() === 'installed';
+  document.querySelectorAll('.install-app-btn').forEach(b => { b.style.display = installed ? 'none' : ''; });
+}
 function refreshInstallUI(){
-  if(isStandaloneApp()){
-    installSection.style.display = 'none';
-    installBanner.style.display = 'none';
-    return;
-  }
-  if(deferredInstallPrompt){
-    // Chrome/Edge/Samsung Internet/majoritatea browserelor Android - prompt nativ disponibil
-    installSection.style.display = 'block';
-    installContent.innerHTML = `<button class="chip active" id="installBtnSheet" style="width:100%;text-align:center;">📲 Instalează aplicația</button>`;
-    document.getElementById('installBtnSheet').addEventListener('click', triggerNativeInstall);
-
-    if(!installDismissed()){
-      installBannerText.textContent = 'Poți instala Karteikarten pe telefon, ca aplicație.';
-      installBannerBtn.textContent = 'Instalează';
-      installBannerBtn.onclick = triggerNativeInstall;
-      installBanner.style.display = 'flex';
-    }
-  } else if(isIOSDevice()){
-    // Safari iOS nu are prompt programatic - doar instructiuni
-    const msg = 'Pe iPhone/iPad: apasă butonul Distribuie (pătrat cu săgeată în sus) din bara Safari, apoi „Adaugă pe ecranul principal".';
-    installSection.style.display = 'block';
-    installContent.innerHTML = `<div class="upload-status">${msg}</div>`;
-
-    if(!installDismissed()){
-      installBannerText.textContent = 'Poți instala aplicația: Distribuie → Adaugă pe ecranul principal.';
-      installBannerBtn.textContent = 'Am înțeles';
-      installBannerBtn.onclick = dismissInstallBanner;
-      installBanner.style.display = 'flex';
-    }
-  } else {
-    installSection.style.display = 'none';
-    installBanner.style.display = 'none';
-  }
+  renderInstallControls();
+  const mode = installMode();
+  if(mode === 'installed' || installSnoozed() || updateBannerVisible()){ installBanner.style.display = 'none'; return; }
+  if(mode === 'inapp-android' || mode === 'inapp-ios') return; // banner separat, afisat devreme (showInAppBanner)
+  if(!isEngaged() || document.querySelector('.sheet.show')) return;
+  if(mode === 'native'){
+    installBannerText.textContent = 'Poți instala Karteikarten ca aplicație: pornește direct de pe ecran și merge offline.';
+    installBannerBtn.textContent = 'Instalează';
+    installBannerBtn.onclick = triggerNativeInstall;
+    installBanner.style.display = 'flex';
+  } else if(mode === 'ios'){
+    installBannerText.innerHTML = 'Instalează aplicația: ' + iosStepsHtml();
+    installBannerBtn.textContent = 'Am înțeles';
+    installBannerBtn.onclick = snoozeInstallBanner;
+    installBanner.style.display = 'flex';
+  } // 'other' (ex. Firefox pe calculator): fara banner automat - doar indicatia din Setari/Ajutor
 }
+function showInAppBanner(){
+  const mode = installMode();
+  if(!(mode === 'inapp-android' || mode === 'inapp-ios') || installSnoozed() || updateBannerVisible()) return;
+  if(mode === 'inapp-android'){
+    installBannerText.textContent = 'Ești în browserul unei aplicații. Deschide Karteikarten în Chrome, ca s-o poți instala.';
+    installBannerBtn.textContent = 'Deschide în Chrome';
+    installBannerBtn.onclick = () => navigateTo(intentUrl());
+  } else {
+    installBannerText.textContent = 'Ești în browserul unei aplicații. Copiază linkul și deschide-l în Safari, ca să poți instala aplicația.';
+    installBannerBtn.textContent = 'Copiază linkul';
+    installBannerBtn.onclick = async () => {
+      try{ await navigator.clipboard.writeText(APP_URL); installBannerText.textContent = 'Link copiat — deschide Safari și lipește-l în bara de adrese.'; }
+      catch(e){ installBannerText.textContent = 'Deschide în Safari: ' + APP_URL; }
+    };
+  }
+  installBanner.style.display = 'flex';
+}
+setTimeout(showInAppBanner, 2500);
+
+async function copyAppLink(statusEl, msg){
+  try{ await navigator.clipboard.writeText(APP_URL); statusEl.textContent = msg; }
+  catch(e){ statusEl.textContent = 'Linkul aplicației: ' + APP_URL; }
+}
+async function onInstallButton(statusEl){
+  const mode = installMode();
+  if(mode === 'native') return triggerNativeInstall();
+  if(mode === 'inapp-android'){ navigateTo(intentUrl()); return; }
+  if(mode === 'inapp-ios'){ await copyAppLink(statusEl, 'Link copiat — deschide-l în Safari și instalează aplicația de acolo.'); return; }
+  if(mode === 'ios'){ statusEl.innerHTML = iosStepsHtml(); return; }
+  statusEl.textContent = 'Browserul acesta nu permite instalarea directă. Deschide aplicația în Chrome sau Edge; pe Mac, în Safari: meniul Fișier → Adaugă în Dock.';
+}
+async function recommendApp(statusEl){
+  if(navigator.share){
+    try{ await navigator.share({ title: 'Karteikarten', text: APP_PITCH, url: APP_URL }); return; }
+    catch(e){ if(e && e.name === 'AbortError') return; } // anulat de utilizator: nimic de facut
+  }
+  try{ await navigator.clipboard.writeText(`${APP_PITCH} ${APP_URL}`); statusEl.textContent = 'Prezentarea și linkul au fost copiate — le poți lipi oriunde (WhatsApp, e-mail…).'; }
+  catch(e){ statusEl.textContent = 'Trimite linkul: ' + APP_URL; }
+}
+document.querySelectorAll('.install-app-btn').forEach(b => b.addEventListener('click', () => onInstallButton(document.getElementById(b.dataset.status))));
+document.querySelectorAll('.recommend-app-btn').forEach(b => b.addEventListener('click', () => recommendApp(document.getElementById(b.dataset.status))));
 
 async function triggerNativeInstall(){
   if(!deferredInstallPrompt) return;
   deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
+  const choice = await deferredInstallPrompt.userChoice;
   deferredInstallPrompt = null;
+  if(choice && choice.outcome === 'accepted') lsSet('karteikarten_installed', '1');
   installBanner.style.display = 'none';
-  installSection.style.display = 'none';
+  refreshInstallUI();
 }
-
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
@@ -3622,10 +3725,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 window.addEventListener('appinstalled', () => {
   deferredInstallPrompt = null;
+  lsSet('karteikarten_installed', '1');
   installBanner.style.display = 'none';
-  installSection.style.display = 'none';
+  refreshInstallUI();
 });
-installBannerClose.addEventListener('click', dismissInstallBanner);
+installBannerClose.addEventListener('click', snoozeInstallBanner);
 
 function updateStreak(){
   try{
@@ -4113,10 +4217,7 @@ function applyZoom(){
   document.documentElement.style.fontSize = (16 * fontZoom) + 'px';
   try{ localStorage.setItem('karteikarten_fontZoom', String(fontZoom)); }catch(e){}
   document.querySelectorAll('.zoom-percent').forEach(el => el.textContent = Math.round(fontZoom * 100) + '%');
-  // la zoom mare, nu mai incape titlul alaturi de restul barei de sus - il scoatem de tot,
-  // in loc sa-l lasam trunchiat/ingramadit
-  const brandTitle = document.querySelector('.brand-title');
-  if(brandTitle) brandTitle.style.display = fontZoom > 1.5 ? 'none' : '';
+  // titlul barei de sus ramane mereu vizibil: bara are acum marime fixa, nu mai creste cu zoom-ul
 }
 document.querySelectorAll('.zoom-in-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -6100,6 +6201,7 @@ if ('serviceWorker' in navigator) {
   const swHadController = !!navigator.serviceWorker.controller;
   function showUpdateBanner(){
     document.getElementById('updateBanner').style.display = 'flex';
+    document.getElementById('installBanner').style.display = 'none'; // actualizarea are prioritate
   }
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(reg=>{
