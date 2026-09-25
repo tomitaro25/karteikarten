@@ -2593,7 +2593,17 @@ function buildRound(){
     const answerSide = deToRo ? 'ro' : 'de';
     const prompt = formatSide(word, promptSide);
     const correct = formatSide(word, answerSide);
-    const others = shuffle(words.filter(w => w.id !== word.id && w.level !== 'ANTSYN' && w.level !== 'VERBS'));
+    // Un cuvant poate avea mai multe intrari (ex. „nach” = spre / după), iar mai multe cuvinte pot avea
+    // aceeasi traducere (ex. „înăuntru” = rein / herein / drin). Toate raspunsurile corecte pentru
+    // textul afisat sunt excluse din variantele gresite, ca un distractor sa nu fie tot un raspuns corect.
+    const promptVal = formatSide(word, promptSide).value;
+    const acceptable = new Set();
+    words.concat(BUILTIN).forEach(x => {
+      if(x.level === 'ANTSYN' || x.level === 'VERBS') return;
+      if(formatSide(x, promptSide).value === promptVal) acceptable.add(formatSide(x, answerSide).value);
+    });
+    const others = shuffle(words.filter(w => w.id !== word.id && w.level !== 'ANTSYN' && w.level !== 'VERBS'
+      && !acceptable.has(formatSide(w, answerSide).value)));
     const wordCategory = classifyWord(word);
     const sameCategory = others.filter(o => classifyWord(o) === wordCategory);
     const candidatePools = [sameCategory, others]; // incercam mai intai aceeasi categorie, apoi relaxam

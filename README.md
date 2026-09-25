@@ -4,6 +4,15 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v141 — vocabularul verificat integral: articole, traduceri, sensuri, dubluri**
+- **Audit complet al celor 7.133 de intrări**, în două faze. Faza 1 (mecanică): articolele comparate cu datele Wiktionary, pozițiile comparate cu lista de frecvență, 61 de dubluri eliminate. Faza 2 (semantică): fiecare intrare verificată pentru traducere, sens principal și potrivirea articolului cu sensul. Rezultat: **7.060 de intrări**.
+- **Cuvinte lipsă adăugate.** Lista de frecvență e scrisă cu litere mici, așa că substantivele care se scriu ca un verb sau un adjectiv fuseseră absorbite de acestea. Au intrat acum, la același nivel: der Weg, das Leben, das Essen, der Morgen, das Recht, der Arm, die Klasse, das Unternehmen și altele (29 în total), plus verbul „wissen" (a ști) și substantivul „die Ehre".
+- **Al doilea sens frecvent, ca intrare separată** (circa 70): nach = spre / după, über = peste / despre, zu = la / prea, sie = ea / ei, ihr = al ei / voi, das Eis = înghețată / gheață, das Gericht = fel de mâncare / tribunal, die Steuer = impozit / das Steuer = volan, der Kater = motan / mahmureală etc.
+- **Traduceri corectate** (circa 275): sensul cel mai comun (die Geschichte = poveste, die Uhr = ceas, das Geschäft = afacere), traduceri greșite (zurecht, die Klappe, aufstehen), articole care nu corespundeau traducerii (der Fremde, der Erwachsene, der Verwandte), note rămase în traducere („mare — big", „păr — atenție…") și sinonime care se suprapuneau (Maschine = mașinărie, nu „mașină").
+- **Eliminate**: variante ortografice și regionale duble (gerne, alleine, selber, Frisör, Phantasie…), forme flexionate (eure, deine, blöde, verfiel), greșeli de scriere (siebenzig, Wandrung, glücklicheweise) și o intrare coruptă. Cuvinte ajunse la nivel prea mic din cauza frecvenței altui cuvânt (fällen, der Rum, rege) mutate în Suplimentar. Pluralele scrise în câmpul german au fost curățate.
+- **Exercițiul cu variante:** dintre variantele greșite sunt excluse acum toate răspunsurile corecte pentru textul afișat. La „nach" nu mai apare „după" ca variantă greșită când răspunsul așteptat e „spre", iar la „înăuntru" nu mai apar împreună rein, herein și drin. Testat pe 400 de runde (6.000 de întrebări): zero variante greșite care să fie de fapt corecte.
+- Progresul salvat rămâne atașat de aceleași ID-uri; intrările eliminate nu mai apar în exerciții.
+
 **v140 — bara de sus pe telefon: un pas mai mică, titlul întreg pe orice ecran**
 - **Navigarea pe telefon coboară un pas, de la 110% la 100%.** Pe telefoanele care oferă paginii mai puțin de 360 px lățime (ecrane mici sau setarea Android de afișaj mărit), butoanele 📖/⚡/🔄↔️ se rupeau pe un al treilea rând, iar titlul era tăiat („Karteikart…").
 - **Butoanele de mod nu se mai pot rupe pe două rânduri**, iar sub 360 px spațiile dintre elemente se strâng puțin și titlul e ușor mai mic.
