@@ -1,4 +1,4 @@
-const CACHE_NAME = 'karteikarten-v141';
+const CACHE_NAME = 'karteikarten-v142';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
@@ -8,6 +8,9 @@ const APP_SHELL = [
   './icon-512-maskable.png',
   './vocab-data.js'
 ];
+// Biblioteci opționale (ex. importul Excel): salvate la instalare, ca să meargă offline din prima,
+// dar separat de APP_SHELL, ca lipsa lor să nu blocheze actualizarea.
+const OPTIONAL_FILES = ['./lib/xlsx.full.min.js'];
 // Fonturile se salvează separat, fiecare pe cont propriu: dacă vreunul lipsește de pe server,
 // instalarea versiunii noi NU eșuează (cache.addAll e "totul sau nimic") - textul cade doar
 // pe fonturile de rezervă, iar aplicația continuă să se actualizeze normal.
@@ -28,7 +31,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
       await cache.addAll(APP_SHELL);
-      await Promise.allSettled(FONT_FILES.map((f) => cache.add(f)));
+      await Promise.allSettled(FONT_FILES.concat(OPTIONAL_FILES).map((f) => cache.add(f)));
     })
   );
   self.skipWaiting();

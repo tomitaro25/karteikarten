@@ -4,6 +4,16 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v142 — 💬 Conversație: traducător de buzunar română ⇄ germană (versiune de test)**
+- **Modul nou în AI, primul din listă:** „💬 Conversație cu un vorbitor de germană”. Doar tu atingi telefonul, interlocutorul doar vorbește. Tu dictezi sau scrii în română, verifici și corectezi textul, apeși „Rostește în germană”, iar telefonul spune traducerea și pornește singur ascultarea în germană. Când interlocutorul a terminat, apeși „A terminat — tradu” și vezi traducerea pe ecran.
+- **Microfonul nu se oprește la pauze:** ascultă până apeși tu butonul, în ambele direcții. Textul german auzit apare pe ecran în timp real.
+- **Traduceri nesigure marcate** cu „⚠ posibil greșit înțeles” (recunoaștere vocală nesigură sau transcriere fără sens), iar butonul „🔁 Roagă-l să repete” devine principal.
+- **Fraze fixe, rostite fără cost:** deschidere politicoasă („Entschuldigung, mein Deutsch ist noch nicht ganz sicher. Können Sie bitte langsam sprechen?”), „Repetați”, „Mai rar”, „O clipă”. Adresare „Sie” sau „du”, reținută. Fiecare replică poate fi rostită din nou (🔊 DE), iar traducerea replicilor lui, rostită opțional în română (🔊 RO).
+- **Cost minim:** un singur apel Haiku pe replică, cu ultimele replici drept context.
+- **Acces rapid:** la apăsare lungă pe iconița aplicației instalate apare scurtătura „Conversație”, care deschide direct modulul.
+- **Offline, importul Excel:** biblioteca `lib/xlsx.full.min.js` se salvează acum la instalare, nu abia la prima folosire.
+- Testat în browser cu recunoaștere vocală și rostire simulate: ciclul complet în ambele direcții, pauză în mijlocul frazei germane (textul se lipește corect), marcarea traducerilor nesigure, scurtătura, oprirea microfonului la ieșire; regresia exercițiului cu variante a trecut. Revenire: reinstalează fișierele din v141.
+
 **v141 — vocabularul verificat integral: articole, traduceri, sensuri, dubluri**
 - **Audit complet al celor 7.133 de intrări**, în două faze. Faza 1 (mecanică): articolele comparate cu datele Wiktionary, pozițiile comparate cu lista de frecvență, 61 de dubluri eliminate. Faza 2 (semantică): fiecare intrare verificată pentru traducere, sens principal și potrivirea articolului cu sensul. Rezultat: **7.060 de intrări**.
 - **Cuvinte lipsă adăugate.** Lista de frecvență e scrisă cu litere mici, așa că substantivele care se scriu ca un verb sau un adjectiv fuseseră absorbite de acestea. Au intrat acum, la același nivel: der Weg, das Leben, das Essen, der Morgen, das Recht, der Arm, die Klasse, das Unternehmen și altele (29 în total), plus verbul „wissen" (a ști) și substantivul „die Ehre".
