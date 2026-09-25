@@ -4,6 +4,26 @@ Aplicație de exersat vocabular german-român, sub formă de PWA (Progressive We
 
 ## Actualizări recente
 
+**v145 — 💬 Conversație: un singur buton mare care comută sensul (versiune de test)**
+- **Microfonul pe română pornește singur** când intri în modul. Vorbești sau scrii; textul apare pe ecran pe măsură ce vorbești.
+- **Butonul mare comută sensul:** pe partea română (roșu-violet) „🔊 Spune în germană” oprește microfonul RO, traduce, rostește în germană și, la final, pornește singur microfonul pe germană. Pe partea germană (albastru) „✓ A terminat” oprește microfonul DE, afișează traducerea și repornește imediat microfonul RO, fără să aștepte traducerea. Fără text românesc, butonul arată „👂 Ascultă germana” și trece direct pe ascultare (pentru când vorbește el primul).
+- **Două butoane mici:** „✕ Șterge” (golește textul și repornește dictarea) și „Citire RO” (da/nu, reținut): cu citirea pornită, traducerea lui e rostită în română, iar microfonul RO pornește la sfârșitul rostirii. Apăsat în timpul unei rostiri, butonul mare o întrerupe și trece la pasul următor.
+- **Editare:** o atingere în câmpul de text pune microfonul pe pauză; o atingere pe mesajul de stare îl repornește.
+- Rămân sus, mici: „👋 Deschidere”, Sie/du și „↺ Nouă”. Butoanele „Repetați”, „Mai rar”, „O clipă” și „Doar tradu” au fost scoase (le poți spune pur și simplu).
+- Testat în browser (recunoaștere și rostire simulate): toate tranzițiile, citirea în română, editarea, ieșirea din modul, tema întunecată; regresia a trecut. Revenire: v141–v144.
+
+**v144 — 💬 Conversație: răspunzi dintr-o singură apăsare (versiune de test)**
+- **„🎤 Răspund în română” direct din ascultarea germanului:** o singură apăsare oprește microfonul pe germană, pornește dictarea ta în română și, în paralel, afișează traducerea a ce a spus el. Înainte erau două apăsări („A terminat”, apoi „Răspund”).
+- Dacă traducerea lui iese marcată nesigură cât dictezi tu, apare lângă „Gata” butonul „🔁 Roagă-l să repete”. Replica lui intră mereu în istoric înaintea răspunsului tău.
+- „Doar tradu” rămâne ca opțiune discretă, când vrei doar să citești traducerea fără să răspunzi imediat.
+- Testat în browser (recunoaștere și rostire simulate, traducere cu întârziere de rețea): ordinea replicilor, butoanele din fiecare stare, regresia. Revenire: v141–v143.
+
+**v143 — 💬 Conversație: text mare și butoane cu roluri clare (versiune de test)**
+- **Text mult mai mare în tot modulul**, lizibil și de la distanță: ultima replică apare cea mai mare (traducerea pe care o citești acum), cele anterioare puțin mai mici; textul german auzit în timp real, câmpul de scris și mesajele de stare au crescut și ele.
+- **Butoanele au trei roluri vizibile:** pasul următor firesc e mare, plin, cu contur și inel auriu, cel mult unul pe ecran; alternativa are contur plin; renunțarea e discretă, fără chenar, ca să nu fie apăsată din greșeală.
+- **Mai puține decizii:** după traducerea replicii lui, butonul principal e „🎤 Răspund în română”; dacă traducerea e marcată nesigură, principal devine „🔁 Roagă-l să repete”. Câmpul de scris stă pe un singur rând cât e gol, iar „Ajutor — AI” e ascuns în acest modul, ca să rămână loc pentru conversație.
+- Testat în browser (recunoaștere și rostire simulate): ciclul complet, stările butoanelor, tema întunecată. Revenire: v141 sau v142.
+
 **v142 — 💬 Conversație: traducător de buzunar română ⇄ germană (versiune de test)**
 - **Modul nou în AI, primul din listă:** „💬 Conversație cu un vorbitor de germană”. Doar tu atingi telefonul, interlocutorul doar vorbește. Tu dictezi sau scrii în română, verifici și corectezi textul, apeși „Rostește în germană”, iar telefonul spune traducerea și pornește singur ascultarea în germană. Când interlocutorul a terminat, apeși „A terminat — tradu” și vezi traducerea pe ecran.
 - **Microfonul nu se oprește la pauze:** ascultă până apeși tu butonul, în ambele direcții. Textul german auzit apare pe ecran în timp real.

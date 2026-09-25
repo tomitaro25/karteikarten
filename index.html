@@ -455,45 +455,63 @@
   .upload-status.ok{ color:var(--green); }
   .upload-status.err{ color:var(--red); }
   /* ---------- Conversație (traducător de buzunar RO ⇄ DE) ----------
-     germana în albastrul lui „DE” din iconiță, româna în roșu-violetul lui „RO” */
-  .cv-intro{ margin-bottom:10px; }
-  .cv-phrases .chip{ padding:7px 12px; min-height:36px; font-size:0.75rem; }
-  .cv-settings{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px;
-    font-family:var(--font-ui); font-size:0.7rem; color:var(--ink-soft); }
-  .cv-settings .chip{ padding:5px 12px; min-height:30px; font-size:0.7rem; }
-  .cv-log{ display:flex; flex-direction:column; gap:12px; padding:4px 0 12px; min-height:30vh; }
-  .cv-empty{ font-family:var(--font-text); font-size:0.9rem; line-height:1.55; color:var(--ink-soft);
-    border:1.5px dashed var(--line); border-radius:12px; padding:14px 16px; }
-  .cv-msg{ border-radius:12px; padding:10px 14px; background:var(--card-bg); border:1px solid var(--line); max-width:92%; }
-  .cv-msg.them{ align-self:flex-start; border-left:4px solid var(--der); }
-  .cv-msg.me{ align-self:flex-end; border-right:4px solid var(--die); }
-  .cv-msg.phrase{ align-self:flex-end; border-right:4px solid var(--line); opacity:0.85; }
-  .cv-main{ font-family:var(--font-text); font-size:1.15rem; line-height:1.45; }
+     text mare, lizibil de la distanță; germana în albastrul lui „DE” din iconiță, româna în
+     roșu-violetul lui „RO”. Butoane pe trei niveluri: pasul următor (contur auriu), alternativă
+     (contur plin), renunțare (discret). */
+  .cv-intro{ margin-bottom:12px; }
+  .cv-phrases .chip{ padding:9px 14px; min-height:44px; font-size:0.9rem; }
+  .cv-settings{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px;
+    font-family:var(--font-ui); font-size:0.8rem; color:var(--ink-soft); }
+  .cv-settings .chip{ padding:6px 14px; min-height:36px; font-size:0.8rem; }
+  .cv-log{ display:flex; flex-direction:column; gap:14px; padding:4px 0 14px; min-height:30vh; }
+  .cv-empty{ font-family:var(--font-text); font-size:1.1rem; line-height:1.55; color:var(--ink-soft);
+    border:1.5px dashed var(--line); border-radius:12px; padding:16px 18px; }
+  .cv-msg{ border-radius:14px; padding:12px 16px; background:var(--card-bg); border:1px solid var(--line); max-width:94%; }
+  .cv-msg.them{ align-self:flex-start; border-left:5px solid var(--der); }
+  .cv-msg.me{ align-self:flex-end; border-right:5px solid var(--die); }
+  .cv-msg.phrase{ align-self:flex-end; border-right:5px solid var(--line); }
+  .cv-main{ font-family:var(--font-text); font-size:1.35rem; line-height:1.4; font-weight:500; }
   .cv-msg.them .cv-main{ color:var(--die); }
   .cv-msg.me .cv-main, .cv-msg.phrase .cv-main{ color:var(--der); }
-  .cv-sub{ font-family:var(--font-text); font-size:0.8rem; line-height:1.4; color:var(--ink-soft); margin-top:4px; }
-  .cv-meta{ display:flex; align-items:center; gap:8px; margin-top:6px; font-family:var(--font-ui); font-size:0.65rem; color:var(--ink-soft); }
-  .cv-warn{ color:var(--red); font-weight:600; }
-  .cv-mini{ font-family:var(--font-ui); font-size:0.75rem; border:1px solid var(--line); background:var(--paper);
-    color:var(--ink); border-radius:8px; padding:4px 9px; min-height:30px; }
+  /* ultima replică: cea care se citește acum, eventual de la distanță */
+  .cv-msg.latest{ box-shadow:0 2px 10px rgba(0,0,0,0.12); }
+  .cv-msg.latest .cv-main{ font-size:1.9rem; line-height:1.3; font-weight:600; }
+  .cv-sub{ font-family:var(--font-text); font-size:1rem; line-height:1.4; color:var(--ink-soft); margin-top:6px; }
+  .cv-meta{ display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:8px; font-family:var(--font-ui); font-size:0.8rem; color:var(--ink-soft); }
+  .cv-warn{ color:var(--red); font-weight:600; font-size:0.9rem; }
+  .cv-mini{ font-family:var(--font-ui); font-size:0.9rem; border:1.5px solid var(--ink-soft); background:var(--paper);
+    color:var(--ink); border-radius:10px; padding:6px 12px; min-height:40px; }
   .cv-dock{ position:sticky; bottom:calc(-20px - var(--safe-bottom)); background:var(--paper);
-    border-top:1.5px solid var(--line); margin:0 -18px; padding:10px 18px calc(12px + var(--safe-bottom));
-    display:flex; flex-direction:column; gap:8px; }
-  .cv-state{ font-family:var(--font-ui); font-size:0.75rem; color:var(--ink-soft); min-height:1.1em; }
+    border-top:1.5px solid var(--line); margin:0 -18px; padding:12px 18px calc(14px + var(--safe-bottom));
+    display:flex; flex-direction:column; gap:10px; box-shadow:0 -4px 12px rgba(0,0,0,0.06); }
+  .cv-state{ font-family:var(--font-ui); font-size:0.95rem; line-height:1.35; color:var(--ink-soft); min-height:1.3em; }
   .cv-state.listening{ color:var(--der); font-weight:600; }
-  .cv-state.listening::before{ content:''; display:inline-block; width:9px; height:9px; border-radius:50%;
-    background:var(--red); margin-right:7px; vertical-align:1px; animation:cv-rec 1.2s ease-in-out infinite; }
+  .cv-state.listening::before{ content:''; display:inline-block; width:12px; height:12px; border-radius:50%;
+    background:var(--red); margin-right:8px; vertical-align:0; animation:cv-rec 1.2s ease-in-out infinite; }
   @keyframes cv-rec{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
-  @media (prefers-reduced-motion: reduce){ .cv-state.listening::before{ animation:none; } }
-  .cv-live{ font-family:var(--font-text); font-size:1rem; line-height:1.45; color:var(--der);
-    background:var(--card-bg); border:1px dashed var(--der); border-radius:10px; padding:8px 12px; min-height:2.9em; }
+  .cv-live{ font-family:var(--font-text); font-size:1.5rem; line-height:1.35; color:var(--der); font-weight:500;
+    background:var(--card-bg); border:2px dashed var(--der); border-radius:12px; padding:10px 14px; min-height:3em; }
   .cv-live .interim{ color:var(--ink-soft); }
-  .cv-input{ font-family:var(--font-text); font-size:1rem; line-height:1.45; color:var(--ink); background:var(--card-bg);
-    border:1.5px solid var(--die); border-radius:10px; padding:8px 12px; resize:vertical; width:100%; box-sizing:border-box; }
-  .cv-buttons{ display:flex; flex-wrap:wrap; gap:8px; }
-  .cv-buttons .btn-block{ flex:1 1 140px; justify-content:center; text-align:center; gap:6px; }
-  .cv-buttons .cv-primary{ background:var(--ink); color:var(--paper); border-color:var(--ink); font-weight:600; flex-basis:100%; }
-  .cv-buttons .cv-primary:active{ background:var(--ink-pressed); }
+  .cv-input{ font-family:var(--font-text); font-size:1.4rem; line-height:1.35; color:var(--ink); background:var(--card-bg);
+    border:2px solid var(--die); border-radius:12px; padding:10px 14px; resize:vertical; width:100%; box-sizing:border-box; }
+  /* zona de comandă colorată după cine vorbește: RO (roșu-violet), DE (albastru) */
+  .cv-dock.mode-ro{ border-top:4px solid var(--die); background:color-mix(in srgb, var(--die) 7%, var(--paper)); }
+  .cv-dock.mode-de{ border-top:4px solid var(--der); background:color-mix(in srgb, var(--der) 9%, var(--paper)); }
+  .mode-ro .cv-state.listening{ color:var(--die); }
+  .cv-state.paused{ cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+  .cv-main-btn{ width:100%; min-height:76px; border-radius:16px; font-family:var(--font-ui); font-size:1.3rem; font-weight:600;
+    color:#fff; border:3px solid var(--ink); box-shadow:0 0 0 4px color-mix(in srgb, var(--gold) 45%, transparent), 0 4px 12px rgba(0,0,0,0.2); }
+  .mode-ro .cv-main-btn{ background:var(--die); }
+  .mode-de .cv-main-btn{ background:var(--der); }
+  [data-theme="dark"] .cv-main-btn{ color:#1c1a17; }
+  .cv-main-btn:active{ transform:translateY(1px); box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 45%, transparent); }
+  .cv-main-btn:disabled{ opacity:0.55; }
+  .cv-small{ display:flex; gap:10px; justify-content:space-between; flex-wrap:nowrap; }
+  .cv-small-btn{ font-family:var(--font-ui); font-size:0.9rem; min-height:44px; padding:8px 12px; border-radius:10px;
+    background:var(--paper); color:var(--ink); border:1.5px solid var(--ink-soft); }
+  .cv-small-btn.active{ border-color:var(--ink); font-weight:600; }
+  .cv-small-btn:disabled{ opacity:0.4; }
+  @media (prefers-reduced-motion: reduce){ .cv-state.listening::before{ animation:none; } }
   .sheet-close{
     width:100%; font-family:var(--font-ui); font-size:0.85rem; background:var(--ink); color:var(--paper);
     border:none; border-radius:10px; padding:14px; min-height:50px; margin-top:6px;
@@ -1264,32 +1282,30 @@
 
   <div id="aiConversationView" style="display:none;">
     <div class="sheet-section cv-intro">
-      <div class="chip-row cv-phrases">
-        <button class="chip cv-phrase" data-phrase="intro">👋 Salut + „vorbiți rar”</button>
-        <button class="chip cv-phrase" data-phrase="repeat">🔁 Repetați</button>
-        <button class="chip cv-phrase" data-phrase="slower">🐢 Mai rar</button>
-        <button class="chip cv-phrase" data-phrase="moment">⏳ O clipă</button>
-      </div>
       <div class="cv-settings">
-        <span>Te adresezi cu</span>
-        <button class="chip cv-address" data-address="Sie">Sie (politicos)</button>
-        <button class="chip cv-address" data-address="du">du (familiar)</button>
+        <button class="chip" id="cvIntroBtn">👋 Deschidere</button>
+        <button class="chip cv-address" data-address="Sie">Sie</button>
+        <button class="chip cv-address" data-address="du">du</button>
         <button class="chip" id="cvResetBtn" style="margin-left:auto;">↺ Nouă</button>
       </div>
     </div>
 
     <div class="cv-log" id="cvLog" aria-live="polite">
       <div class="cv-empty" id="cvEmpty">
-        Pune telefonul între voi. Dacă vrei, începe cu 👋: telefonul îi spune politicos că germana ta nu e încă sigură și îl roagă să vorbească rar, apoi ascultă răspunsul.<br><br>
-        Tu vorbești în română și verifici textul înainte să fie rostit în germană. Când vorbește el, apeși „A terminat” și vezi traducerea.
+        Microfonul e pornit: vorbește în română sau scrie. Apasă butonul mare, iar telefonul spune în germană și ascultă răspunsul.<br><br>
+        Când interlocutorul a terminat, apasă din nou butonul: vezi traducerea și poți răspunde. Butonul „👋 Deschidere” îl roagă politicos să vorbească rar.
       </div>
     </div>
 
-    <div class="cv-dock" id="cvDock">
-      <div class="cv-state" id="cvState"></div>
+    <div class="cv-dock mode-ro" id="cvDock">
+      <div class="cv-state" id="cvState" role="status"></div>
       <div class="cv-live" id="cvLiveDe" style="display:none;"></div>
-      <textarea id="cvInputRo" class="cv-input" rows="2" placeholder="Scrie în română, sau apasă 🎤" style="display:none;"></textarea>
-      <div class="cv-buttons" id="cvButtons"></div>
+      <textarea id="cvInputRo" class="cv-input" rows="2" placeholder="Vorbește sau scrie în română…"></textarea>
+      <button class="cv-main-btn" id="cvMainBtn"><span>👂 Ascultă germana</span></button>
+      <div class="cv-small">
+        <button class="cv-small-btn" id="cvClearBtn">✕ Șterge</button>
+        <button class="cv-small-btn" id="cvSpeakRoToggle">🔇 Citire RO: nu</button>
+      </div>
     </div>
   </div>
 
@@ -2863,49 +2879,49 @@ function closeSheet(){
   if(wasOpen){ syncModeRadioFromLevels(true); savePreferences(); } // selectia finala din Setari
 }
 /* ---------- 💬 Conversație: traducător de buzunar RO ⇄ DE ----------
-   Doar utilizatorul (român) atinge telefonul. Ciclul:
-   tu dictezi/scrii în română -> verifici/corectezi -> „Rostește în germană” -> telefonul rostește
-   și pornește singur ascultarea în germană -> interlocutorul vorbește -> tu apeși „A terminat”
-   -> traducerea apare pe ecran -> tu răspunzi ... (sau „Repetați”, dacă traducerea pare dubioasă).
-   Microfonul NU se oprește singur la pauze: recunoașterea din browser se oprește după câteva
-   secunde de liniște, așa că o repornim imediat și lipim textul, până apasă utilizatorul butonul.
-   Microfonul e mereu oprit cât timp telefonul vorbește (altfel și-ar traduce propria voce). */
-const CV_PHRASES = {
-  intro:  { de: 'Entschuldigung, mein Deutsch ist noch nicht ganz sicher. Können Sie bitte langsam sprechen?',
-            ro: 'Scuzați, germana mea nu e încă foarte sigură. Puteți vorbi rar, vă rog?', listenAfter: true },
-  repeat: { de: 'Entschuldigung, können Sie das bitte noch einmal sagen?',
-            ro: 'Scuzați, puteți repeta, vă rog?', listenAfter: true },
-  slower: { de: 'Etwas langsamer, bitte.', ro: 'Puțin mai rar, vă rog.', listenAfter: true },
-  moment: { de: 'Einen Moment, bitte.', ro: 'O clipă, vă rog.', listenAfter: false }
-};
-let cvState = 'idle';          // idle | listen_ro | edit_ro | translating | speaking | listen_de
+   Un singur buton mare comută sensul conversației:
+   RO (microfonul pe română pornit): vorbești/scrii -> butonul oprește microfonul RO, traduce, rostește
+     în germană, apoi pornește singur microfonul DE. Fără text, butonul trece direct pe ascultarea DE.
+   DE (microfonul pe germană pornit): când interlocutorul a terminat, butonul oprește microfonul DE,
+     afișează traducerea și repornește microfonul RO (imediat; sau după rostirea în română, dacă e activă).
+   Microfonul nu se oprește singur la pauze: recunoașterea din browser se oprește după câteva secunde de
+   liniște, așa că o repornim imediat și lipim textul. Microfonul e mereu oprit cât vorbește telefonul. */
+const CV_INTRO = { de: 'Entschuldigung, mein Deutsch ist noch nicht ganz sicher. Können Sie bitte langsam sprechen?',
+                   ro: 'Scuzați, germana mea nu e încă foarte sigură. Puteți vorbi rar, vă rog?' };
+let cvState = 'ro';            // ro | translating | speaking_de | de | speaking_ro
+let cvRoPaused = false;        // microfonul RO oprit (editare, eroare, aplicație în fundal)
 let cvHistory = [];            // {who:'me'|'them'|'phrase', ro, de, unsure}
 let cvAddress = 'Sie';
-let cvRec = null;              // recunoașterea activă
-let cvRecLang = '';
-let cvRecWanted = false;       // true cât timp vrem să ascultăm (repornim la oprirea automată)
-let cvCommitted = '';          // text final acumulat din sesiunile anterioare de recunoaștere
-let cvSessionFinal = '';       // text final din sesiunea curentă
-let cvInterim = '';            // text provizoriu din sesiunea curentă
+let cvSpeakRo = false;         // rostirea în română a traducerii lui
+let cvRec = null, cvRecLang = '', cvRecWanted = false;
+let cvCommitted = '', cvSessionFinal = '', cvInterim = '';
 let cvLowConfidence = false;
-let cvStopResolver = null;     // așteaptă evenimentul end după „Gata”
+let cvStopResolver = null;
 let cvSpeakTimer = null;
 let cvRunId = 0;               // invalidează apelurile/rostirile vechi după Nouă/Înapoi
+let cvPendingDe = null;        // traducerea replicii lui, în curs
+let cvRoBase = '';             // textul RO existent în câmp când a pornit dictarea
+let cvNote = '';               // mesaj de stare temporar (eroare, „nu am auzit nimic”)
 
 function cvLoadPrefs(){
-  try{ const p = JSON.parse(localStorage.getItem('karteikarten_convPrefs') || '{}'); if(p.address === 'du' || p.address === 'Sie') cvAddress = p.address; }catch(e){}
+  try{
+    const p = JSON.parse(localStorage.getItem('karteikarten_convPrefs') || '{}');
+    if(p.address === 'du' || p.address === 'Sie') cvAddress = p.address;
+    cvSpeakRo = !!p.speakRo;
+  }catch(e){}
 }
 function cvSavePrefs(){
-  try{ localStorage.setItem('karteikarten_convPrefs', JSON.stringify({ address: cvAddress })); }catch(e){}
+  try{ localStorage.setItem('karteikarten_convPrefs', JSON.stringify({ address: cvAddress, speakRo: cvSpeakRo })); }catch(e){}
 }
 function cvRefreshAddressChips(){
   document.querySelectorAll('.cv-address').forEach(b => b.classList.toggle('active', b.dataset.address === cvAddress));
 }
 function cvSR(){ return window.SpeechRecognition || window.webkitSpeechRecognition; }
+function cvInput(){ return document.getElementById('cvInputRo'); }
 
-/* ---- recunoașterea vocală, fără oprire automată ---- */
+/* ---- recunoașterea vocală, fără oprire automată la pauze ---- */
 function cvStartRecognition(lang){
-  cvStopRecognition(true);
+  cvStopRecognition();
   cvRecLang = lang; cvRecWanted = true;
   cvCommitted = ''; cvSessionFinal = ''; cvInterim = ''; cvLowConfidence = false;
   cvSpawnRecognizer();
@@ -2935,21 +2951,18 @@ function cvSpawnRecognizer(){
   };
   rec.onerror = (e)=>{
     if(rec !== cvRec) return;
-    if(e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'permission-denied'){
-      cvRecWanted = false;
-      cvSetStatusNote('Acces la microfon refuzat. Permite microfonul pentru această pagină, sau scrie textul.');
-    } else if(e.error === 'network'){
-      cvRecWanted = false;
-      cvSetStatusNote('Recunoașterea vocală are nevoie de internet. Verifică conexiunea.');
-    } else if(e.error === 'audio-capture'){
-      cvRecWanted = false;
-      cvSetStatusNote('Microfonul nu e disponibil (poate îl folosește altă aplicație).');
+    let msg = '';
+    if(e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'permission-denied')
+      msg = 'Microfonul nu a putut porni. Atinge aici ca să-l pornești (sau permite microfonul pentru această pagină).';
+    else if(e.error === 'network') msg = 'Recunoașterea vocală are nevoie de internet. Verifică conexiunea, apoi atinge aici.';
+    else if(e.error === 'audio-capture') msg = 'Microfonul nu e disponibil (poate îl folosește altă aplicație). Atinge aici ca să reîncerci.';
+    if(msg){
+      cvRecWanted = false; cvNote = msg;
+      if(cvRecLang === 'ro-RO') cvRoPaused = true;
     }
-    // no-speech / aborted: le tratăm în onend (repornire dacă încă ascultăm)
   };
   rec.onend = ()=>{
     if(rec !== cvRec) return;
-    // mutăm textul sesiunii în textul acumulat; dacă sesiunea n-a apucat să finalizeze, păstrăm provizoriul
     const piece = (cvSessionFinal || cvInterim).trim();
     if(piece) cvCommitted = (cvCommitted + ' ' + piece).trim();
     cvSessionFinal = ''; cvInterim = '';
@@ -2958,13 +2971,13 @@ function cvSpawnRecognizer(){
     } else {
       cvRec = null;
       if(cvStopResolver){ const r = cvStopResolver; cvStopResolver = null; r(); }
-      else if(cvState === 'listen_de' || cvState === 'listen_ro') cvRender(); // oprire din eroare
+      else cvRender();
     }
     cvRenderLive();
   };
-  try{ rec.start(); }catch(e){ /* deja pornit - ignorăm */ }
+  try{ rec.start(); }catch(e){}
 }
-// oprire la cererea utilizatorului: așteptăm ultimul rezultat (maxim 1,5 s), apoi întoarcem textul
+// oprire la cererea utilizatorului: așteptăm ultimul rezultat (maxim 1,5 s)
 function cvFinishRecognition(){
   return new Promise(resolve => {
     cvRecWanted = false;
@@ -2986,19 +2999,36 @@ function cvFinishRecognition(){
     try{ rec.stop(); }catch(e){ cvStopResolver = null; cvRec = null; done(); }
   });
 }
-function cvStopRecognition(silent){
+function cvStopRecognition(){
   cvRecWanted = false;
   cvStopResolver = null;
   if(cvRec){ const r = cvRec; cvRec = null; try{ r.abort(); }catch(e){} }
-  if(!silent) cvRenderLive();
 }
-function cvCurrentText(){
+function cvHeardText(){
   return (cvCommitted + ' ' + (cvSessionFinal || '') + ' ' + (cvInterim || '')).replace(/\s+/g,' ').trim();
 }
 
+/* ---- microfonul RO ---- */
+function cvStartRoMic(){
+  cvState = 'ro';
+  if(!cvSR()){ cvRoPaused = true; cvRender(); return; }
+  cvRoPaused = false;
+  cvRoBase = cvInput().value.trim();
+  cvStartRecognition('ro-RO');
+  cvRender();
+}
+// pauză (ex. utilizatorul atinge câmpul ca să editeze): textul dictat rămâne în câmp
+function cvPauseRoMic(){
+  if(cvState !== 'ro' || cvRoPaused) return;
+  cvInput().value = (cvRoBase + ' ' + cvHeardText()).replace(/\s+/g,' ').trim();
+  cvStopRecognition();
+  cvRoPaused = true;
+  cvRender();
+}
+
 /* ---- rostire ---- */
-function cvSpeakGerman(text, then){
-  cvStopRecognition(true);
+function cvSpeak(lang, text, then){
+  cvStopRecognition();
   const myRun = cvRunId;
   clearTimeout(cvSpeakTimer);
   let finished = false;
@@ -3008,14 +3038,24 @@ function cvSpeakGerman(text, then){
     if(myRun !== cvRunId) return;
     then && then();
   };
-  if(!('speechSynthesis' in window)){ cvSetStatusNote('Telefonul nu poate rosti text (sinteza vocală lipsește).'); finish(); return; }
-  speakGerman(text, finish);
+  let ok = true;
+  if(!('speechSynthesis' in window)) ok = false;
+  else if(lang === 'de') speakGerman(text, finish);
+  else ok = speakRomanian(text, finish);
+  if(!ok){
+    cvNote = lang === 'de' ? 'Telefonul nu poate rosti text (sinteza vocală lipsește).' : 'Nu există o voce românească pe acest dispozitiv.';
+    finish(); return;
+  }
   // plasă de siguranță: unele browsere nu trimit evenimentul de sfârșit la texte lungi
   const est = 2500 + text.length * 90 / Math.max(0.5, speechRate || 1);
-  cvSpeakTimer = setTimeout(()=>{
-    if(!window.speechSynthesis.speaking) finish();
-    else cvSpeakTimer = setTimeout(function poll(){ if(!window.speechSynthesis.speaking) finish(); else cvSpeakTimer = setTimeout(poll, 500); }, 500);
+  cvSpeakTimer = setTimeout(function poll(){
+    if(!window.speechSynthesis.speaking) finish(); else cvSpeakTimer = setTimeout(poll, 500);
   }, est);
+}
+function cvInterruptSpeech(){
+  cvRunId++;                     // anulează continuarea rostirii curente
+  clearTimeout(cvSpeakTimer);
+  try{ window.speechSynthesis.cancel(); }catch(e){}
 }
 
 /* ---- traducere (Haiku, un singur apel pe replică) ---- */
@@ -3067,7 +3107,7 @@ function cvRenderLog(){
   empty.style.display = cvHistory.length ? 'none' : 'block';
   cvHistory.forEach((h, idx)=>{
     const div = document.createElement('div');
-    div.className = 'cv-msg ' + h.who;
+    div.className = 'cv-msg ' + h.who + (idx === cvHistory.length - 1 ? ' latest' : '');
     if(h.who === 'them'){
       div.innerHTML = `<div class="cv-main">${escapeHtml(h.ro)}</div>` +
         `<div class="cv-sub">${escapeHtml(h.de)}</div>` +
@@ -3084,220 +3124,201 @@ function cvRenderLog(){
 }
 function cvAddHistory(entry){ cvHistory.push(entry); cvRenderLog(); }
 
-/* ---- zona de control (stările ciclului) ---- */
-let cvStatusNote = '';
-function cvSetStatusNote(t){ cvStatusNote = t; cvRender(); }
+/* ---- zona de comandă ---- */
 function cvRenderLive(){
-  const live = document.getElementById('cvLiveDe');
-  if(cvState === 'listen_de'){
+  if(cvState === 'de'){
     const fin = (cvCommitted + ' ' + cvSessionFinal).trim();
-    live.innerHTML = fin || cvInterim
+    document.getElementById('cvLiveDe').innerHTML = fin || cvInterim
       ? `${escapeHtml(fin)} <span class="interim">${escapeHtml(cvInterim)}</span>`
       : '<span class="interim">…</span>';
   }
-  if(cvState === 'listen_ro'){
-    const input = document.getElementById('cvInputRo');
-    input.value = cvCurrentText();
+  if(cvState === 'ro' && !cvRoPaused){
+    cvInput().value = (cvRoBase + ' ' + cvHeardText()).replace(/\s+/g,' ').trim();
+    cvUpdateMainLabel();
   }
 }
-function cvBtn(label, id, cls){ return `<button class="btn-block ${cls||''}" id="${id}"><span>${label}</span></button>`; }
+function cvUpdateMainLabel(){
+  const main = document.getElementById('cvMainBtn');
+  if(cvState !== 'ro') return;
+  const hasText = cvInput().value.trim().length > 0;
+  main.innerHTML = hasText ? '<span>🔊 Spune în germană</span>' : '<span>👂 Ascultă germana</span>';
+  document.getElementById('cvClearBtn').disabled = !hasText;
+}
 function cvRender(){
-  const state = document.getElementById('cvState');
+  const dock = document.getElementById('cvDock');
+  const stateEl = document.getElementById('cvState');
   const live = document.getElementById('cvLiveDe');
-  const input = document.getElementById('cvInputRo');
-  const btns = document.getElementById('cvButtons');
-  state.className = 'cv-state' + ((cvState === 'listen_de' || cvState === 'listen_ro') && cvRecWanted ? ' listening' : '');
-  live.style.display = cvState === 'listen_de' ? 'block' : 'none';
-  input.style.display = (cvState === 'idle' || cvState === 'listen_ro' || cvState === 'edit_ro') ? 'block' : 'none';
-  input.readOnly = cvState === 'listen_ro';
-  const hasText = input.value.trim().length > 0;
-  let html = '', label = '';
-  const canListen = !!cvSR();
+  const input = cvInput();
+  const main = document.getElementById('cvMainBtn');
+  const side = (cvState === 'de' || cvState === 'speaking_de') ? 'de' : 'ro';
+  dock.classList.toggle('mode-de', side === 'de');
+  dock.classList.toggle('mode-ro', side === 'ro');
+  live.style.display = cvState === 'de' ? 'block' : 'none';
+  input.style.display = (cvState === 'ro' || cvState === 'translating' && !cvPendingDe) ? 'block' : 'none';
+  input.readOnly = cvState !== 'ro';
+  input.rows = cvState === 'ro' && input.value.trim() ? 3 : 2;
+  const listening = cvRecWanted && (cvState === 'ro' || cvState === 'de');
+  stateEl.className = 'cv-state' + (listening ? ' listening' : '') + (cvState === 'ro' && cvRoPaused ? ' paused' : '');
+  let label = '', mainLabel = '', mainDisabled = false;
   switch(cvState){
-    case 'idle':
-      label = cvStatusNote || 'Scrie sau dictează în română. Dacă vorbește el primul, apasă 👂.';
-      html = hasText ? cvBtn('🔊 Rostește în germană', 'cvSpeakBtn', 'cv-primary') : '';
-      { const last = cvHistory[cvHistory.length - 1];
-        if(!hasText && last && last.who === 'them')
-          html += cvBtn('🔁 Roagă-l să repete', 'cvRepeatBtn', last.unsure ? 'cv-primary' : ''); }
-      html += canListen ? cvBtn('🎤 Vorbesc eu', 'cvMicRoBtn') + cvBtn('👂 Ascultă germana', 'cvListenDeBtn') : '';
-      break;
-    case 'listen_ro':
-      label = cvRecWanted ? 'Te ascult în română… apasă „Gata” când ai terminat.' : (cvStatusNote || 'Microfonul s-a oprit.');
-      html = cvBtn('✓ Gata', 'cvDoneRoBtn', 'cv-primary') + cvBtn('✕ Renunță', 'cvCancelBtn');
-      break;
-    case 'edit_ro':
-      label = 'Verifică textul. Îl poți corecta înainte de rostire.';
-      html = cvBtn('🔊 Rostește în germană', 'cvSpeakBtn', 'cv-primary') +
-             (canListen ? cvBtn('🎤 Dictează din nou', 'cvMicRoBtn') : '') + cvBtn('✕ Șterge', 'cvCancelBtn');
+    case 'ro':
+      label = cvRoPaused
+        ? (cvNote || (cvSR() ? '⏸ Microfonul e oprit. Atinge aici ca să dictezi.' : 'Browserul nu are recunoaștere vocală: scrie textul.'))
+        : (cvNote || 'Te ascult în română. Poți și scrie.');
       break;
     case 'translating':
-      label = cvStatusNote || 'Se traduce…';
-      html = '';
-      break;
-    case 'speaking':
-      label = 'Telefonul vorbește în germană… apoi ascultă răspunsul.';
-      html = cvBtn('⏹ Oprește', 'cvStopSpeakBtn');
-      break;
-    case 'listen_de':
-      label = cvRecWanted ? 'Ascult germana… apasă „A terminat” când s-a oprit din vorbit.' : (cvStatusNote || 'Microfonul s-a oprit.');
-      html = cvBtn('✓ A terminat — tradu', 'cvDoneDeBtn', 'cv-primary') +
-             cvBtn('🎤 Vorbesc eu', 'cvMicRoBtn') + cvBtn('✕ Nu mai asculta', 'cvCancelBtn');
-      break;
+      label = 'Se traduce…'; mainLabel = '<span>Se traduce…</span>'; mainDisabled = true; break;
+    case 'speaking_de':
+      label = 'Telefonul vorbește în germană, apoi îl ascultă.'; mainLabel = '<span>⏭ Ascultă-l acum</span>'; break;
+    case 'de':
+      label = cvNote || 'Ascult germana… apasă când a terminat.'; mainLabel = '<span>✓ A terminat</span>'; break;
+    case 'speaking_ro':
+      label = 'Telefonul citește traducerea în română.'; mainLabel = '<span>⏭ Oprește și răspund</span>'; break;
   }
-  state.textContent = label;
-  btns.innerHTML = html;
+  stateEl.textContent = label;
+  main.disabled = mainDisabled;
+  if(cvState === 'ro') cvUpdateMainLabel(); else { main.innerHTML = mainLabel; document.getElementById('cvClearBtn').disabled = true; }
+  const ro = document.getElementById('cvSpeakRoToggle');
+  ro.classList.toggle('active', cvSpeakRo);
+  ro.innerHTML = cvSpeakRo ? '🔊 Citire RO: da' : '🔇 Citire RO: nu';
+  ro.title = 'Telefonul citește cu voce tare traducerea în română';
+  document.getElementById('cvClearBtn').style.visibility = side === 'ro' ? 'visible' : 'hidden';
   cvRenderLive();
 }
-function cvSetState(s){ cvState = s; if(s !== 'translating') cvStatusNote = cvStatusNote && (s === 'idle') ? cvStatusNote : ''; cvRender(); }
 
-/* ---- acțiuni ---- */
-function cvStartListenDe(){
-  if(!cvSR()){ cvSetState('idle'); return; }
-  cvStatusNote = '';
-  cvState = 'listen_de';
+/* ---- butonul mare ---- */
+async function cvMainPress(){
+  const myRun = cvRunId;
+  switch(cvState){
+    case 'ro': {
+      cvNote = '';
+      let text;
+      if(cvRoPaused) text = cvInput().value.trim();
+      else { await cvFinishRecognition(); text = (cvRoBase + ' ' + cvCommitted).replace(/\s+/g,' ').trim(); cvInput().value = text; }
+      if(myRun !== cvRunId) return;
+      if(!text){ cvStartDeMic(); return; }         // fără text: ascultăm direct germana
+      cvState = 'translating'; cvRender();
+      try{
+        if(cvPendingDe) await cvPendingDe;          // replica lui intră în istoric înaintea răspunsului tău
+        const de = await cvTranslateRoToDe(text);
+        if(myRun !== cvRunId) return;
+        cvInput().value = ''; cvRoBase = '';
+        cvAddHistory({ who:'me', ro: text, de });
+        cvState = 'speaking_de'; cvRender();
+        cvSpeak('de', de, ()=> cvStartDeMic());
+      }catch(err){
+        if(myRun !== cvRunId) return;
+        cvNote = 'Traducerea a eșuat: ' + err.message + ' Textul tău a rămas.';
+        cvState = 'ro'; cvRoPaused = true; cvRender();
+      }
+      break;
+    }
+    case 'speaking_de':
+      cvInterruptSpeech(); cvStartDeMic(); break;
+    case 'de': {
+      cvNote = '';
+      const heard = await cvFinishRecognition();
+      const lowConf = cvLowConfidence;
+      if(myRun !== cvRunId) return;
+      if(!heard){ cvNote = 'Nu am auzit nimic în germană.'; cvInput().value = ''; cvStartRoMic(); return; }
+      const run2 = cvRunId;
+      cvPendingDe = (async ()=>{
+        let entry;
+        try{ const r = await cvTranslateDeToRo(heard); entry = { who:'them', de: heard, ro: r.ro, unsure: r.unsure || lowConf }; }
+        catch(err){ entry = { who:'them', de: heard, ro: '(traducerea a eșuat: ' + err.message + ')', unsure: true }; }
+        if(run2 === cvRunId) cvAddHistory(entry);
+        return entry;
+      })();
+      const pending = cvPendingDe;
+      if(!cvSpeakRo){
+        cvInput().value = ''; cvStartRoMic();      // microfonul RO pornește imediat, traducerea apare când e gata
+        await pending; if(cvPendingDe === pending) cvPendingDe = null;
+        cvRender();
+      } else {
+        cvState = 'translating'; cvRender();
+        const entry = await pending; if(cvPendingDe === pending) cvPendingDe = null;
+        if(run2 !== cvRunId) return;
+        cvState = 'speaking_ro'; cvRender();
+        cvSpeak('ro', entry.ro, ()=>{ cvInput().value = ''; cvStartRoMic(); });
+      }
+      break;
+    }
+    case 'speaking_ro':
+      cvInterruptSpeech(); cvInput().value = ''; cvStartRoMic(); break;
+  }
+}
+function cvStartDeMic(){
+  cvState = 'de';
+  if(!cvSR()){ cvNote = 'Browserul nu are recunoaștere vocală: răspunsul lui nu poate fi ascultat.'; cvState = 'ro'; cvRoPaused = true; cvRender(); return; }
   cvStartRecognition('de-DE');
   cvRender();
 }
-function cvStartListenRo(){
-  if(!cvSR()) return;
-  const input = document.getElementById('cvInputRo');
-  input.value = '';
-  cvStatusNote = '';
-  cvState = 'listen_ro';
-  cvStartRecognition('ro-RO');
-  cvRender();
-}
-async function cvDoneRo(){
-  const text = await cvFinishRecognition();
-  const input = document.getElementById('cvInputRo');
-  input.value = text;
-  cvState = text ? 'edit_ro' : 'idle';
-  if(!text) cvStatusNote = 'Nu am auzit nimic. Încearcă din nou sau scrie textul.';
-  cvRender();
-  if(text){ input.focus(); input.setSelectionRange(text.length, text.length); }
-}
-async function cvDoneDe(){
-  const heard = await cvFinishRecognition();
-  if(!heard){
-    cvState = 'idle';
-    cvStatusNote = 'Nu am auzit nimic în germană. Poți apăsa 🔁 Repetați.';
-    cvRender();
-    return;
-  }
-  const lowConf = cvLowConfidence;
-  const myRun = cvRunId;
-  cvState = 'translating'; cvStatusNote = 'Se traduce…'; cvRender();
-  try{
-    const r = await cvTranslateDeToRo(heard);
-    if(myRun !== cvRunId) return;
-    cvAddHistory({ who:'them', de: heard, ro: r.ro, unsure: r.unsure || lowConf });
-    cvStatusNote = (r.unsure || lowConf) ? 'Traducerea pare nesigură. Poți apăsa 🔁 Repetați.' : '';
-  }catch(err){
-    if(myRun !== cvRunId) return;
-    cvAddHistory({ who:'them', de: heard, ro: '(traducerea a eșuat)', unsure: true });
-    cvStatusNote = 'Eroare la traducere: ' + err.message;
-  }
-  cvState = 'idle'; cvRender();
-}
-async function cvSpeakMine(){
-  const input = document.getElementById('cvInputRo');
-  const ro = input.value.trim();
-  if(!ro) return;
-  const myRun = cvRunId;
-  cvStopRecognition(true);
-  cvState = 'translating'; cvStatusNote = 'Se traduce…'; cvRender();
-  try{
-    const de = await cvTranslateRoToDe(ro);
-    if(myRun !== cvRunId) return;
-    input.value = '';
-    cvAddHistory({ who:'me', ro, de });
-    cvState = 'speaking'; cvStatusNote = ''; cvRender();
-    cvSpeakGerman(de, ()=> cvStartListenDe());
-  }catch(err){
-    if(myRun !== cvRunId) return;
-    cvState = 'edit_ro'; cvRender();
-    document.getElementById('cvState').textContent = 'Eroare la traducere: ' + err.message + ' Textul tău a rămas, încearcă din nou.';
-  }
-}
-function cvSayPhrase(key){
-  const p = CV_PHRASES[key]; if(!p) return;
-  cvStopRecognition(true);
-  cvRunId++;                     // anulează o traducere/rostire în curs
-  cvAddHistory({ who:'phrase', ro: p.ro, de: p.de });
-  cvState = 'speaking'; cvStatusNote = ''; cvRender();
-  cvSpeakGerman(p.de, ()=>{ if(p.listenAfter) cvStartListenDe(); else cvSetState('idle'); });
+function cvSayIntro(){
+  cvStopRecognition(); cvInterruptSpeech();
+  if(cvState === 'ro' && !cvRoPaused) cvInput().value = (cvRoBase + ' ' + cvHeardText()).trim();
+  cvAddHistory({ who:'phrase', ro: CV_INTRO.ro, de: CV_INTRO.de });
+  cvState = 'speaking_de'; cvNote = ''; cvRender();
+  cvSpeak('de', CV_INTRO.de, ()=> cvStartDeMic());
 }
 function cvStopAll(){
-  cvRunId++;
-  cvStopRecognition(true);
-  clearTimeout(cvSpeakTimer);
-  try{ window.speechSynthesis.cancel(); }catch(e){}
-  if(cvState !== 'idle' && cvState !== 'edit_ro'){ cvState = 'idle'; }
-  cvStatusNote = '';
+  cvInterruptSpeech();
+  if(cvState === 'ro' && !cvRoPaused) cvInput().value = (cvRoBase + ' ' + cvHeardText()).trim();
+  cvStopRecognition();
+  cvState = 'ro'; cvRoPaused = true; cvNote = '';
 }
 function initConversationView(){
   cvLoadPrefs(); cvRefreshAddressChips();
-  const hasKey = loadClaudeKey().startsWith('sk-ant-');
-  cvStatusNote = hasKey ? '' : 'Ai nevoie de o cheie API salvată (vezi „❓ Ajutor — AI”).';
-  if(!cvSR() && hasKey) cvStatusNote = 'Browserul nu are recunoaștere vocală: poți scrie textul, iar răspunsul lui nu poate fi ascultat.';
-  cvState = 'idle';
-  cvRenderLog(); cvRender();
+  cvNote = '';
+  if(!loadClaudeKey().startsWith('sk-ant-')){
+    cvState = 'ro'; cvRoPaused = true; cvNote = 'Ai nevoie de o cheie API salvată (vezi „❓ Ajutor — AI”).';
+    cvRenderLog(); cvRender(); return;
+  }
+  cvRenderLog();
+  cvStartRoMic();                                   // intri în modul: microfonul RO e deja pornit
 }
 
-document.getElementById('cvButtons').addEventListener('click', (e)=>{
-  const b = e.target.closest('button'); if(!b) return;
-  switch(b.id){
-    case 'cvSpeakBtn': cvSpeakMine(); break;
-    case 'cvMicRoBtn': cvStartListenRo(); break;
-    case 'cvListenDeBtn': cvStartListenDe(); break;
-    case 'cvRepeatBtn': cvSayPhrase('repeat'); break;
-    case 'cvDoneRoBtn': cvDoneRo(); break;
-    case 'cvDoneDeBtn': cvDoneDe(); break;
-    case 'cvStopSpeakBtn':
-      cvRunId++; clearTimeout(cvSpeakTimer); try{ window.speechSynthesis.cancel(); }catch(err){}
-      cvSetState('idle'); break;
-    case 'cvCancelBtn':
-      cvStopRecognition(true);
-      document.getElementById('cvInputRo').value = '';
-      cvStatusNote = ''; cvSetState('idle'); break;
-  }
+document.getElementById('cvMainBtn').addEventListener('click', cvMainPress);
+document.getElementById('cvClearBtn').addEventListener('click', ()=>{
+  if(cvState !== 'ro') return;
+  cvInput().value = ''; cvRoBase = ''; cvNote = '';
+  cvStartRoMic();                                   // textul șters, microfonul RO pornește din nou
 });
-document.getElementById('cvInputRo').addEventListener('input', ()=>{
-  if(cvState === 'idle' || cvState === 'edit_ro'){
-    const hasText = document.getElementById('cvInputRo').value.trim().length > 0;
-    const next = hasText ? 'edit_ro' : 'idle';
-    if(next !== cvState){
-      const input = document.getElementById('cvInputRo'); const pos = input.selectionStart;
-      cvState = next; cvRender(); input.focus(); try{ input.setSelectionRange(pos, pos); }catch(err){}
-    }
-  }
+document.getElementById('cvSpeakRoToggle').addEventListener('click', ()=>{
+  cvSpeakRo = !cvSpeakRo; cvSavePrefs(); cvRender();
 });
+document.getElementById('cvState').addEventListener('click', ()=>{
+  if(cvState === 'ro' && cvRoPaused && loadClaudeKey().startsWith('sk-ant-')){ cvNote = ''; cvStartRoMic(); }
+});
+// atingerea câmpului de text = editare: microfonul RO intră în pauză, textul rămâne
+cvInput().addEventListener('focus', ()=> cvPauseRoMic());
+cvInput().addEventListener('input', ()=>{ if(cvState === 'ro') cvUpdateMainLabel(); });
 document.getElementById('cvLog').addEventListener('click', (e)=>{
   const ro = e.target.closest('[data-cv-say-ro]');
   const de = e.target.closest('[data-cv-say-de]');
+  if(!ro && !de) return;
+  if(cvState === 'translating') return;
+  if(cvState === 'ro' && !cvRoPaused) cvInput().value = (cvRoBase + ' ' + cvHeardText()).trim();
+  cvStopRecognition(); cvInterruptSpeech();
   if(ro){
     const h = cvHistory[+ro.dataset.cvSayRo]; if(!h) return;
-    cvStopRecognition(true);
-    if(cvState === 'listen_de' || cvState === 'listen_ro') cvSetState('idle');
-    if(!speakRomanian(h.ro)) cvSetStatusNote('Nu există o voce românească pe acest dispozitiv.');
-  } else if(de){
+    cvState = 'speaking_ro'; cvRender();
+    cvSpeak('ro', h.ro, ()=> cvStartRoMic());
+  } else {
     const h = cvHistory[+de.dataset.cvSayDe]; if(!h) return;
-    cvStopRecognition(true);
-    cvRunId++;
-    cvState = 'speaking'; cvRender();
-    cvSpeakGerman(h.de, ()=> cvStartListenDe());
+    cvState = 'speaking_de'; cvRender();
+    cvSpeak('de', h.de, ()=> cvStartDeMic());
   }
 });
-document.querySelectorAll('.cv-phrase').forEach(b => b.addEventListener('click', ()=> cvSayPhrase(b.dataset.phrase)));
+document.getElementById('cvIntroBtn').addEventListener('click', cvSayIntro);
 document.querySelectorAll('.cv-address').forEach(b => b.addEventListener('click', ()=>{
   cvAddress = b.dataset.address; cvSavePrefs(); cvRefreshAddressChips();
 }));
 document.getElementById('cvResetBtn').addEventListener('click', ()=>{
   cvStopAll();
-  cvHistory = [];
-  document.getElementById('cvInputRo').value = '';
-  cvState = 'idle'; cvRenderLog(); cvRender();
+  cvHistory = []; cvPendingDe = null;
+  cvInput().value = ''; cvRoBase = '';
+  cvRenderLog();
+  if(loadClaudeKey().startsWith('sk-ant-')) cvStartRoMic(); else cvRender();
 });
 // aplicația trece în fundal (ecran blocat, altă aplicație): oprim microfonul și rostirea
 document.addEventListener('visibilitychange', ()=>{
@@ -3317,6 +3338,7 @@ window.addEventListener('load', ()=> setTimeout(cvOpenFromShortcut, 50));
 
 function showAiView(view){
   document.getElementById('aiConversationView').style.display = view === 'conversation' ? 'block' : 'none';
+  document.getElementById('aiHelpDetails').style.display = view === 'conversation' ? 'none' : '';
   if(view !== 'conversation' && typeof cvStopAll === 'function' && currentAiView === 'conversation') cvStopAll();
   document.getElementById('aiHubView').style.display = view === 'hub' ? 'block' : 'none';
   document.getElementById('aiTranslateView').style.display = view === 'translate' ? 'block' : 'none';
